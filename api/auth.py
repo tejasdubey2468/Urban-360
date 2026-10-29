@@ -55,7 +55,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
 from api.utils.auth import require_auth, JWT_SECRET, JWT_AUDIENCE
-from api.utils.db import db_error_response, get_client, SUPABASE_URL, SUPABASE_SERVICE_KEY
+import os
+from api.utils.db import db_error_response, get_client
 from supabase import create_client
 from api.utils.logger import get_logger
 from api.utils.rate_limit import RateLimiter
@@ -246,7 +247,10 @@ async def login(request: Request):
         raise HTTPException(status_code=422, detail=str(e))
 
     # Dedicated client for sign_in to avoid mutating the service-role client session
-    auth_client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+    auth_client = create_client(
+        os.environ.get("SUPABASE_URL", ""),
+        os.environ.get("SUPABASE_SERVICE_KEY", ""),
+    )
     try:
         result = auth_client.auth.sign_in_with_password({
             "email":    payload.email,
