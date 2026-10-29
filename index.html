@@ -4,10 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RAKSHA-FORCE — Emergency Response Network</title>
+  <title>Urban 360 — Connecting People with Urban Services</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link
-    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@500;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
   <style>
@@ -109,11 +109,11 @@
       }
 
       10% {
-        opacity: 0.55;
+        opacity: 0.65;
       }
 
       90% {
-        opacity: 0.55;
+        opacity: 0.65;
       }
 
       100% {
@@ -191,7 +191,7 @@
 
     .db-dot.connected {
       background: #00CC66;
-      box-shadow: 0 0 7px #00CC66;
+      box-shadow: 0 0 7px #3eee96;
     }
 
     .db-dot.error {
@@ -203,11 +203,11 @@
 
       0%,
       100% {
-        opacity: 1;
+        opacity: 1.567;
       }
 
       50% {
-        opacity: 0.2;
+        opacity: 0.256;
       }
     }
 
@@ -237,7 +237,7 @@
 
       to {
         transform: translateY(0);
-        opacity: 1;
+        opacity: 1.557;
       }
     }
 
@@ -345,7 +345,7 @@
 
       0%,
       100% {
-        box-shadow: 0 0 14px rgba(200, 16, 46, 0.28);
+        box-shadow: 0 0 14px rgba(195, 4, 36, 0.84);
       }
 
       50% {
@@ -645,12 +645,12 @@
     .btn-portal .icon {
       font-size: 32px;
       margin-bottom: 0;
-      filter: drop-shadow(0 0 8px rgba(255,255,255,0.3));
+      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
     }
 
     .btn-portal .btn-text-content {
-        display: flex;
-        flex-direction: column;
+      display: flex;
+      flex-direction: column;
     }
 
     .btn-portal small {
@@ -659,7 +659,7 @@
       opacity: 0.9;
       margin-top: 4px;
       font-weight: 700;
-      color: rgba(255,255,255,0.8);
+      color: rgba(255, 255, 255, 0.8);
     }
 
     .btn-portal-citizen {
@@ -708,7 +708,7 @@
       overflow: hidden;
       max-width: 820px;
       width: 95%;
-      box-shadow: 0 0 50px rgba(0,0,0,0.5);
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
       animation: fadeUp 1s ease 1s both;
     }
 
@@ -1857,6 +1857,166 @@
       align-items: start;
     }
 
+    /* NOTE-STYLE REPORT FORM CONTAINER — bright light-yellow notepad */
+    .report-note {
+      background:#FFFBE6;
+      border:2px solid #E0A800;
+      border-radius:6px;
+      padding:18px 20px 16px;
+      box-shadow:0 6px 24px rgba(0,0,0,0.30);
+      position:relative;
+      overflow:hidden;
+      max-width:1000px;
+      margin:0 auto;
+    }
+    .report-note::before {
+      content:'';
+      position:absolute;
+      top:0; left:0; right:0; height:5px;
+      background:#C62828;
+      opacity:0.9;
+    }
+    .report-note::after {
+      content:'📄 FIELD REPORT';
+      position:absolute;
+      top:14px; left:20px;
+      font-family:'Orbitron',monospace;
+      font-size:8px; letter-spacing:2px; color:#E0A800;
+      text-transform:uppercase; opacity:0.85;
+    }
+    .report-note-header {
+      margin-bottom:12px;
+      padding-bottom:9px;
+      border-bottom:1px solid #E0A800;
+    }
+    .report-note-title {
+      font-family:'Bebas Neue',display; font-size:23px; letter-spacing:1.5px;
+      color:#1a1a1a; margin:0 0 4px;
+    }
+    .report-note-sub {
+      font-size:12px; color:#4a4a4a; letter-spacing:0.3px; margin:0 0 7px; line-height:1.45;
+    }
+    .report-note-tag {
+      display:inline-flex; align-items:center; gap:6px;
+      font-family:'Orbitron',monospace; font-size:8px; letter-spacing:2px;
+      color:#1a1a1a; background:#FBC02D;
+      border:1px solid #E0A800; padding:3px 10px; border-radius:2px;
+    }
+
+    /* Desktop: sections side-by-side horizontally (2 columns wide) */
+    .report-sections { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+    .report-section { margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+    .report-section-head {
+      display:flex; align-items:center; gap:8px; margin-bottom:6px;
+    }
+    .report-section-num {
+      font-family:'Orbitron',monospace; font-size:10px; font-weight:700;
+      letter-spacing:2px; color:#E0A800; text-transform:uppercase;
+    }
+    .report-section-title {
+      font-family:'Bebas Neue',display; font-size:18px; letter-spacing:1px;
+      color:#1a1a1a; margin:0;
+    }
+    .report-section-desc {
+      font-size:11px; color:#5a5a5a; letter-spacing:0.3px;
+      margin:0 0 6px; line-height:1.5;
+    }
+    .report-section-divider { display:none; }
+    .report-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:11px; }
+
+    .loc-row { display:flex; align-items:stretch; gap:8px; }
+    .loc-row .loc-input { flex:1; }
+    .loc-row .loc-btn {
+      flex-shrink:0; width:auto;
+      background:none; border:1.5px solid #E0A800; color:#1a1a1a;
+      padding:0 18px; font-family:'Rajdhani',sans-serif; font-size:13px; letter-spacing:1px;
+      cursor:pointer; border-radius:4px; transition:all 0.2s; height:100%;
+    }
+    .loc-row .loc-btn:hover { border-color:#C62828; color:#C62828; background:#FFFDE7; }
+
+    /* Professional, clean inputs & selects */
+    .report-note .form-label {
+      font-family:'Rajdhani',sans-serif; font-size:13px; font-weight:600;
+      letter-spacing:0.6px; color:#1a1a1a; display:block; margin-bottom:4px;
+    }
+    .report-note .form-input,
+    .report-note select.form-input {
+      width:100%; height:46px; padding:8px 12px;
+      font-family:'Rajdhani',sans-serif; font-size:14px; letter-spacing:0.4px;
+      color:#1a1a1a; background:#fffef6;
+      border:1.5px solid #E0A800; border-radius:4px;
+      box-sizing:border-box; transition:border-color 0.2s, box-shadow 0.2s;
+    }
+    .report-note .form-input:focus,
+    .report-note select.form-input:focus {
+      outline:none; border-color:#C62828;
+      box-shadow:0 0 0 3px rgba(198,40,40,0.15);
+    }
+    .report-note textarea.form-input { height:auto; min-height:90px; resize:vertical; }
+
+    /* Square-shaped map (not distorted) */
+    .report-map {
+      width:100%; max-width:290px; height:290px; aspect-ratio:1;
+      border:2px solid #E0A800; border-radius:6px; background:#fffef6;
+      margin:8px auto 0 auto; display:block;
+    }
+    .report-upload {
+      border:2px dashed #E0A800; border-radius:6px;
+      background:#fffef6; padding:14px; text-align:center;
+      margin-top:8px;
+    }
+    .report-upload input[type=file] { display:none; }
+    .report-upload-btn {
+      display:inline-flex; align-items:center; gap:8px;
+      background:#C62828; color:#fff; border:none; border-radius:4px;
+      padding:8px 16px; font-family:'Orbitron',monospace; font-size:11px;
+      letter-spacing:1.5px; cursor:pointer; margin-bottom:7px;
+      box-shadow:0 0 14px rgba(198,40,40,0.35);
+    }
+    .report-upload-btn:hover { box-shadow:0 0 24px rgba(198,40,40,0.65); }
+    .report-upload-hint {
+      font-size:10px; color:#5a5a5a; letter-spacing:0.3px;
+    }
+    .report-preview { margin-top:8px; text-align:center; }
+    .report-preview-img {
+      max-width:150px; max-height:110px; border:1.5px solid #E0A800;
+      border-radius:4px; box-shadow:0 0 12px rgba(0,0,0,0.30); display:none;
+    }
+    .report-preview-actions {
+      margin-top:5px; font-size:10px; color:#5a5a5a; letter-spacing:0.5px;
+    }
+    .report-preview-actions a { color:#C62828; text-decoration:none; cursor:pointer; }
+    .report-preview-actions a:hover { color:#E0A800; text-decoration:underline; }
+    .report-coords {
+      margin-top:8px; font-family:'Orbitron',monospace; font-size:11px;
+      letter-spacing:1px; color:#1a1a1a; background:#fffef6;
+      border:1.5px solid #E0A800; border-radius:4px; padding:8px 12px;
+    }
+    .report-coords.ok { color:#C62828; border-color:#C62828; }
+    .report-coords.err { color:#C62828; border-color:#C62828; }
+    .report-actions {
+      display:flex; gap:12px; margin-top:12px; flex-wrap:wrap;
+    }
+    .report-actions .btn-secondary {
+      background:#fffef6; color:#1a1a1a; border:2px solid #E0A800;
+      flex:1; min-width:150px; height:52px; padding:0 24px;
+      font-family:'Orbitron',monospace; font-size:13px; letter-spacing:2px;
+      text-transform:uppercase; border-radius:6px; cursor:pointer;
+      display:inline-flex; align-items:center; justify-content:center;
+      box-shadow:0 3px 10px rgba(0,0,0,0.15);
+    }
+    .report-actions .btn-secondary:hover { background:#FFFDE7; border-color:#C62828; color:#C62828; }
+    .report-actions-reset {
+      background:#fffef6; color:#1a1a1a; border:2px solid #E0A800;
+      flex:1; min-width:150px; height:52px; padding:0 24px;
+      font-family:'Orbitron',monospace; font-size:13px; letter-spacing:2px;
+      text-transform:uppercase; border-radius:6px; cursor:pointer;
+      display:inline-flex; align-items:center; justify-content:center;
+      box-shadow:0 3px 10px rgba(0,0,0,0.15);
+    }
+    .report-actions-reset:hover { border-color:#C62828; color:#C62828; background:#FFFDE7; }
+    .report-actions .btn-primary { flex:1; min-width:150px; height:52px; display:inline-flex; align-items:center; justify-content:center; }
+
     @media(max-width:900px) {
       nav {
         padding: 0 18px;
@@ -1876,6 +2036,44 @@
       .footer-grid {
         grid-template-columns: 1fr;
       }
+      .report-grid-2 { grid-template-columns: 1fr; }
+      .report-sections { display:flex; flex-direction:column; gap:10px; }
+      .report-section-divider { display:block; }
+      .report-map { height: 150px; }
+      .report-note { padding: 20px 18px 16px; background:#FFFBE6; border:2px solid #E0A800; }
+
+      .gov-strip {
+        padding: 5px 18px;
+        font-size: 8px;
+      }
+
+      body {
+        padding-top: 95px;
+      }
+    }
+      nav {
+        padding: 0 18px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      section {
+        padding: 52px 18px;
+      }
+
+      .report-grid,
+      .about-grid,
+      .auth-grid,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+      .report-grid-2 { grid-template-columns: 1fr; }
+      .report-sections { display:flex; flex-direction:column; gap:10px; }
+      .report-section-divider { display:block; }
+      .report-map { height: 150px; }
+      .report-note { padding: 20px 18px 16px; }
 
       .gov-strip {
         padding: 5px 18px;
@@ -1902,12 +2100,12 @@
 
   <!-- LOADING -->
   <div class="loading-screen" id="loadingScreen">
-    <div style="font-size:26px;">🛡️</div>
-    <div class="loading-logo">RAKSHA-FORCE</div>
+    <div style="font-size:26px;">🏛️</div>
+    <div class="loading-logo">URBAN 360</div>
     <div class="loading-bar">
       <div class="loading-fill"></div>
     </div>
-    <div class="loading-text">Connecting to Supabase Database...</div>
+    <div class="loading-text">Connecting to Municipal Network...</div>
   </div>
 
   <!-- CURSOR -->
@@ -1924,11 +2122,11 @@
 
   <!-- GOV STRIP -->
   <div class="gov-strip">
-    <div class="gov-emblem">🇮🇳 <span>GOVERNMENT OF INDIA</span> — Ministry of Home Affairs</div>
+    <div class="gov-emblem">🇮🇳 <span>GOVERNMENT OF INDIA</span> — Ministry of Housing and Urban Affairs</div>
     <div style="display:flex;align-items:center;gap:18px;">
       <span class="db-status"><span class="db-dot" id="dbDot"></span><span id="dbStatusText">CONNECTING...</span></span>
       <a href="#login">Portal Login</a>
-      <a href="tel:112">📞 112</a>
+      <a href="#report">Civic Services</a>
     </div>
   </div>
 
@@ -1937,36 +2135,33 @@
     <a href="#" class="logo">
       <div class="logo-icon">⬡</div>
       <div>
-        <div class="logo-text">RAKSHA-FORCE</div>
-        <span class="logo-sub">NATIONAL EMERGENCY RESPONSE NETWORK</span>
+        <div class="logo-text">URBAN 360</div>
+        <span class="logo-sub">CONNECTING PEOPLE WITH URBAN SERVICES</span>
       </div>
     </a>
     <ul class="nav-links">
       <li><a href="#services">Services</a></li>
-      <li><a href="#map">Live Map</a></li>
-      <li><a href="#report">Report</a></li>
-      <li><a href="#volunteers">Volunteers</a></li>
+      <li><a href="#map">Civic Map</a></li>
+      <li><a href="#report">Report Issue</a></li>
+      <li><a href="#volunteers">Community</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#login">Login</a></li>
-      <li><a href="citizen.html" style="color:var(--lb)!important;">👤 MY DASHBOARD</a></li>
-      <li><a href="admin.html" style="color:var(--amber)!important;">🎛️ COMMAND</a></li>
-      <li><a href="#" class="nav-sos" onclick="openSOSModal();return false;">SOS</a></li>
+      <li><a href="citizen.html" style="color:var(--lb)!important;">👤 CITIZEN PORTAL</a></li>
+      <li><a href="admin.html" style="color:var(--amber)!important;">🎛️ OPERATIONS HQ</a></li>
+      <li><a href="#" class="nav-sos" onclick="openSOSModal();return false;">📢 REPORT</a></li>
     </ul>
   </nav>
 
   <!-- HERO -->
   <section class="hero" id="home">
-    <div class="hero-badge">🛡️ Active Emergency Network — 28 States &amp; UTs</div>
+    <div class="hero-badge">🏛️ Active Civic Services Network — Municipal Corporations &amp; Wards</div>
     <h1 class="hero-title">
-      <span class="line1">RAKSHA</span>
-      <span class="line2">FORCE</span>
+      <span class="line1">URBAN</span>
+      <span class="line2">360</span>
     </h1>
-    <p class="hero-sub">India's Fastest Emergency Response Portal. Get help from Police, Fire, and Medical teams in
-      seconds.</p>
+    <p class="hero-sub">India's Unified Civic Coordination Portal. Report local issues, track municipal resolution, and connect with city departments in seconds.</p>
     <div style="display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin-top:26px;">
-      <span class="tag">Fire ⓘ 101</span><span class="tag">Police ⓘ 100</span><span class="tag">Ambulance ⓘ
-        108</span><span class="tag">Women ⓘ 1091</span><span class="tag">NDRF ⓘ 1070</span><span class="tag">Child ⓘ
-        1098</span>
+      <span class="tag">Roads &amp; Potholes</span><span class="tag">Waste Collection</span><span class="tag">Water Supply</span><span class="tag">Drainage &amp; Sewage</span><span class="tag">Streetlights</span><span class="tag">Public Sanitation</span>
     </div>
     <div class="portal-container">
       <div class="hero-portal-actions">
@@ -1974,23 +2169,23 @@
           <span class="icon">👤</span>
           <div class="btn-text-content">
             <span>CITIZEN PORTAL</span>
-            <small>MY DASHBOARD LOGIN</small>
+            <small>MY COMPLAINTS DASHBOARD</small>
           </div>
         </a>
         <a href="admin.html" class="btn-portal btn-portal-admin">
           <span class="icon">🏢</span>
           <div class="btn-text-content">
-            <span>ADMIN COMMAND</span>
-            <small>LOGIN PORTAL</small>
+            <span>OPERATIONS COMMAND</span>
+            <small>DEPARTMENT &amp; ADMIN PORTAL</small>
           </div>
         </a>
       </div>
     </div>
 
     <div class="hero-actions" style="margin-top: 30px; opacity: 0.8; transform: scale(0.9);">
-      <a href="#" class="btn-primary" onclick="openSOSModal();return false;">🚨 TRIGGER SOS</a>
-      <a href="#report" class="btn-blue">REPORT INCIDENT</a>
-      <a href="#map" class="btn-secondary">LIVE MAP</a>
+      <a href="#" class="btn-primary" onclick="openSOSModal();return false;">📢 REPORT ISSUE</a>
+      <a href="#report" class="btn-blue">FILE COMPLAINT</a>
+      <a href="#map" class="btn-secondary">CIVIC MAP</a>
     </div>
     <div class="scroll-hint"><span>Scroll</span>
       <div class="scroll-line"></div>
@@ -2001,60 +2196,52 @@
   <!-- ALERT BANNER -->
   <div style="padding:0 60px;position:relative;z-index:1;background:var(--black);">
     <div class="alert-banner" style="margin-top:16px;">
-      <div class="alert-icon">⚠️</div>
-      <div class="alert-text"><strong>ACTIVE ALERT:</strong> Severe weather warning issued for Maharashtra, Karnataka
-        and Gujarat. Emergency teams on standby. Coastal communities advised to stay alert.</div>
+      <div class="alert-icon">🔔</div>
+      <div class="alert-text"><strong>CIVIC NOTICE:</strong> Scheduled water pipeline maintenance in Pune Central and Shivajinagar wards from 10:00 AM to 4:00 PM tomorrow. Citizens are advised to store necessary water.</div>
     </div>
   </div>
 
   <!-- SERVICES -->
   <section id="services" style="background:var(--black);">
-    <div class="section-label">Emergency Services</div>
-    <h2 class="section-title">RAPID RESPONSE<br>UNITS</h2>
-    <p class="section-desc">Every second counts. Trained responders covering every major emergency across India with
-      guaranteed rapid response.</p>
+    <div class="section-label">Municipal Services</div>
+    <h2 class="section-title">URBAN SERVICES &amp;<br>DEPARTMENTS</h2>
+    <p class="section-desc">Seamless municipal coordination. Trained municipal crews covering essential city infrastructure with trackable resolution.</p>
     <div class="services-grid">
-      <div class="service-card" onclick="window.location.href='tel:101'"><span class="service-number">01</span><span
-          class="service-icon">🔥</span>
-        <div class="service-title">Fire Brigade</div>
-        <div class="service-desc">Rapid fire suppression and rescue. Trained teams with advanced equipment ready to
-          deploy within minutes.</div>
-        <div class="service-hotline">📞 DIAL 101</div>
+      <div class="service-card" onclick="document.getElementById('report').scrollIntoView({behavior:'smooth'})"><span class="service-number">01</span><span
+          class="service-icon">🛣️</span>
+        <div class="service-title">Roads &amp; Potholes</div>
+        <div class="service-desc">Repairing potholes, damaged footpaths, flyover expansion joints, and asphalt resurfacing across city routes.</div>
+        <div class="service-hotline">REPORT ROAD ISSUE</div>
       </div>
-      <div class="service-card" onclick="window.location.href='tel:100'"><span class="service-number">02</span><span
-          class="service-icon">👮</span>
-        <div class="service-title">Police Force</div>
-        <div class="service-desc">Law enforcement emergency response. Crime reporting, safety escort and public order
-          maintenance.</div>
-        <div class="service-hotline">📞 DIAL 100</div>
+      <div class="service-card" onclick="document.getElementById('report').scrollIntoView({behavior:'smooth'})"><span class="service-number">02</span><span
+          class="service-icon">🗑️</span>
+        <div class="service-title">Waste Management</div>
+        <div class="service-desc">Door-to-door garbage collection, overflowing public dump clearing, debris removal, and sanitary waste disposal.</div>
+        <div class="service-hotline">REPORT WASTE ISSUE</div>
       </div>
-      <div class="service-card" onclick="window.location.href='tel:108'"><span class="service-number">03</span><span
-          class="service-icon">🚑</span>
-        <div class="service-title">Medical Ambulance</div>
-        <div class="service-desc">Advanced life support ambulances with ICU-grade equipment. Paramedic teams trained for
-          critical care.</div>
-        <div class="service-hotline">📞 DIAL 108</div>
+      <div class="service-card" onclick="document.getElementById('report').scrollIntoView({behavior:'smooth'})"><span class="service-number">03</span><span
+          class="service-icon">💧</span>
+        <div class="service-title">Water &amp; Drainage</div>
+        <div class="service-desc">Pipeline leakage repairs, drinking water supply tanker requests, and storm sewer unclogging before monsoon.</div>
+        <div class="service-hotline">REPORT WATER ISSUE</div>
       </div>
-      <div class="service-card" onclick="window.location.href='tel:1070'"><span class="service-number">04</span><span
-          class="service-icon">⛈️</span>
-        <div class="service-title">Disaster Relief</div>
-        <div class="service-desc">NDRF coordination for floods, earthquakes, cyclones and mass casualty events across
-          India.</div>
-        <div class="service-hotline">📞 DIAL 1070</div>
+      <div class="service-card" onclick="document.getElementById('report').scrollIntoView({behavior:'smooth'})"><span class="service-number">04</span><span
+          class="service-icon">💡</span>
+        <div class="service-title">Street Lighting</div>
+        <div class="service-desc">Replacing non-functional streetlights, repairing electrical junction boxes, and eliminating dark hazard zones.</div>
+        <div class="service-hotline">REPORT LIGHTING ISSUE</div>
       </div>
-      <div class="service-card" onclick="window.location.href='tel:1091'"><span class="service-number">05</span><span
-          class="service-icon">🛡️</span>
-        <div class="service-title">Women Safety</div>
-        <div class="service-desc">24/7 dedicated helpline with rapid response and shelter coordination across all
-          states.</div>
-        <div class="service-hotline">📞 DIAL 1091</div>
+      <div class="service-card" onclick="document.getElementById('report').scrollIntoView({behavior:'smooth'})"><span class="service-number">05</span><span
+          class="service-icon">🧼</span>
+        <div class="service-title">Public Sanitation</div>
+        <div class="service-desc">Public restroom maintenance, vector-borne pest control fumigation, and community hygiene inspections.</div>
+        <div class="service-hotline">REPORT SANITATION ISSUE</div>
       </div>
-      <div class="service-card" onclick="window.location.href='tel:1098'"><span class="service-number">06</span><span
-          class="service-icon">👶</span>
-        <div class="service-title">Child Helpline</div>
-        <div class="service-desc">Childline network for child abuse reporting, runaway children and immediate shelter
-          placement.</div>
-        <div class="service-hotline">📞 DIAL 1098</div>
+      <div class="service-card" onclick="document.getElementById('report').scrollIntoView({behavior:'smooth'})"><span class="service-number">06</span><span
+          class="service-icon">🌳</span>
+        <div class="service-title">Civic Amenities</div>
+        <div class="service-desc">Park maintenance, sidewalk encroachment clearance, traffic signage restoration, and damaged civic barriers.</div>
+        <div class="service-hotline">REPORT CIVIC ISSUE</div>
       </div>
     </div>
   </section>
@@ -2063,26 +2250,25 @@
   <div class="stats-section">
     <div class="stats-grid">
       <div class="stat-item"><span class="stat-number" data-count="48291">0</span>
-        <div class="stat-label">Incidents Resolved</div>
+        <div class="stat-label">Complaints Resolved</div>
       </div>
       <div class="stat-item"><span class="stat-number" data-count="1240">0</span>
-        <div class="stat-label">Active Volunteers</div>
+        <div class="stat-label">Active Field Staff</div>
       </div>
       <div class="stat-item"><span class="stat-number" data-count="28">0</span>
-        <div class="stat-label">States Covered</div>
+        <div class="stat-label">Municipal Wards Covered</div>
       </div>
-      <div class="stat-item"><span class="stat-number" data-count="4">0</span>
-        <div class="stat-label">Min Avg Response</div>
+      <div class="stat-item"><span class="stat-number" data-count="24">0</span>
+        <div class="stat-label">Avg Hours to Resolve</div>
       </div>
     </div>
   </div>
 
-  <!-- SOS -->
+  <!-- QUICK ACTION -->
   <section style="background:var(--dark);border-top:1px solid var(--border2);text-align:center;">
-    <div class="section-label" style="justify-content:center;">Emergency Trigger</div>
-    <h2 class="section-title">ONE BUTTON. ALL HELP.</h2>
-    <p class="section-desc" style="margin:0 auto 42px;">Press SOS to immediately alert all nearby emergency units with
-      your GPS location and save the alert to the national database.</p>
+    <div class="section-label" style="justify-content:center;">Fast Action</div>
+    <h2 class="section-title">ONE CLICK. ALL SERVICES.</h2>
+    <p class="section-desc" style="margin:0 auto 42px;">Tap report to immediately file an urgent civic hazard with your GPS location to notify municipal department desks.</p>
     <div class="sos-section">
       <div class="sos-wrapper">
         <div class="sos-rings">
@@ -2090,17 +2276,17 @@
           <div class="sos-ring"></div>
           <div class="sos-ring"></div>
         </div>
-        <button class="sos-btn" onclick="openSOSModal()">SOS</button>
+        <button class="sos-btn" onclick="openSOSModal()">REPORT</button>
       </div>
-      <div class="sos-caption">TAP TO DISPATCH EMERGENCY SERVICES</div>
+      <div class="sos-caption">TAP TO FILE QUICK CIVIC COMPLAINT</div>
     </div>
   </section>
 
   <!-- MAP -->
   <section class="map-section" id="map">
-    <div class="section-label">Live Tracking</div>
-    <h2 class="section-title">INCIDENT MAP</h2>
-    <p class="section-desc">Real-time map of active incidents, deployed units and emergency zones.</p>
+    <div class="section-label">Civic GIS</div>
+    <h2 class="section-title">CITY COMPLAINT MAP</h2>
+    <p class="section-desc">Real-time map of active civic complaints, field inspection units, and municipal service facilities.</p>
     <div class="map-container">
       <div id="leaflet-map"></div>
       <div class="map-overlay"></div>
@@ -2117,87 +2303,158 @@
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:65px;align-items:start;" class="feed-layout">
       <div>
         <div class="section-label">Live Updates</div>
-        <h2 class="section-title">INCIDENT FEED</h2>
-        <p class="section-desc">Real-time incident reports pulled live from our Supabase database.</p>
+        <h2 class="section-title">CIVIC ISSUES FEED</h2>
+        <p class="section-desc">Real-time civic complaint feed pulled live from our database.</p>
       </div>
       <div style="margin-top:28px;" id="incidentFeed">
-        <div style="color:var(--muted);font-size:12px;padding:18px 0;">Loading incidents...</div>
+        <div style="color:var(--muted);font-size:12px;padding:18px 0;">Loading complaints...</div>
       </div>
     </div>
   </section>
 
   <!-- REPORT -->
   <section style="background:var(--black);border-top:1px solid var(--border2);" id="report">
-    <div class="section-label">Report</div>
-    <h2 class="section-title">REPORT AN INCIDENT</h2>
+    <div class="section-label">Report Issue</div>
+    <h2 class="section-title">REPORT A CIVIC ISSUE</h2>
     <div class="report-grid">
       <div>
-        <p class="section-desc">File an emergency report. Saved instantly to the national database and dispatched to the
-          nearest response unit.</p>
+        <p class="section-desc">File a municipal complaint. Saved instantly to the city database and routed to the assigned department desk.</p>
         <div style="margin-top:32px;">
           <div class="feed-item">
             <div class="feed-dot dot-red"></div>
             <div>
-              <div class="feed-title">Saved to Supabase</div>
-              <div class="feed-meta">Every report stored in national database</div>
+              <div class="feed-title">Recorded in City Database</div>
+              <div class="feed-meta">Every complaint is assigned a permanent reference</div>
             </div>
           </div>
           <div class="feed-item">
-            <div class="feed-dot" style="background:var(--blue);color:var(--blue);box-shadow:0 0 6px var(--blue);">
-            </div>
+            <div class="feed-dot" style="background:var(--blue);color:var(--blue);box-shadow:0 0 6px var(--blue);"></div>
             <div>
-              <div class="feed-title">Instant Dispatch</div>
-              <div class="feed-meta">Reports reach responders in under 10 seconds</div>
+              <div class="feed-title">Direct Department Routing</div>
+              <div class="feed-meta">Automated triage to relevant municipal engineers</div>
             </div>
           </div>
           <div class="feed-item">
             <div class="feed-dot dot-amber"></div>
             <div>
-              <div class="feed-title">Anonymous Option</div>
-              <div class="feed-meta">Report without revealing your identity</div>
+              <div class="feed-title">Transparent Tracking</div>
+              <div class="feed-meta">Monitor review, field inspection, and verified resolution</div>
             </div>
           </div>
         </div>
       </div>
-      <div>
-        <div class="form-group"><label class="form-label">Emergency Type *</label>
-          <select class="form-input" id="incidentType">
-            <option value="">Select emergency type...</option>
-            <option value="fire">🔥 Fire Emergency</option>
-            <option value="medical">🚑 Medical Emergency</option>
-            <option value="police">👮 Police / Crime</option>
-            <option value="ambulance">🏥 Ambulance Required</option>
-            <option value="fire_brigade">🚒 Fire Brigade Required</option>
-            <option value="accident">🚗 Road Accident</option>
-            <option value="flood">🌊 Flood / Water Emergency</option>
-            <option value="women">🛡️ Women Safety</option>
-            <option value="child">👶 Child in Danger</option>
-            <option value="missing">🔍 Missing Person</option>
-            <option value="other">⚠️ Other</option>
-          </select>
+      <div class="report-form-col">
+        <div class="report-note">
+          <div class="report-note-header">
+            <div class="report-note-title">Report a Civic Issue</div>
+            <div class="report-note-sub">Help us identify and resolve problems in your community.</div>
+            <div class="report-note-tag">🆕 NEW REPORT</div>
+          </div>
+
+          <div class="report-sections">
+
+            <!-- 01 — ISSUE DETAILS -->
+            <div class="report-section">
+              <div class="report-section-head">
+                <div class="report-section-num">01</div>
+                <div class="report-section-title">Issue Details</div>
+              </div>
+              <div class="report-section-desc">Tell us what needs attention.</div>
+              <div class="report-grid-2">
+                <div class="form-group"><label class="form-label">Complaint Title *</label>
+                  <input type="text" class="form-input" placeholder="e.g., Large pothole near the main road" id="reportTitle">
+                </div>
+                <div class="form-group"><label class="form-label">Issue Category *</label>
+                  <select class="form-input" id="incidentType">
+                    <option value="">Select civic category...</option>
+                    <option value="roads">🛣️ Roads &amp; Potholes</option>
+                    <option value="waste">🗑️ Solid Waste &amp; Garbage</option>
+                    <option value="water">💧 Water Supply &amp; Leakage</option>
+                    <option value="drainage">🌊 Drainage &amp; Sewage</option>
+                    <option value="streetlights">💡 Streetlights &amp; Electricity</option>
+                    <option value="sanitation">🧼 Public Sanitation &amp; Restrooms</option>
+                    <option value="parks">🌳 Parks &amp; Green Spaces</option>
+                    <option value="infrastructure">🏗️ Public Infrastructure Damage</option>
+                    <option value="traffic_signs">🛑 Traffic Signs &amp; Signals</option>
+                    <option value="encroachment">🚶 Encroachment &amp; Footpaths</option>
+                    <option value="other">⚠️ Other Civic Issue</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group"><label class="form-label">Detailed Description *</label>
+                <textarea class="form-input" rows="3"
+                  placeholder="Describe the issue, its condition, and anything else we should know..."
+                  id="incidentDesc" style="resize:vertical;"></textarea>
+              </div>
+            </div>
+
+            <div class="report-section-divider"></div>
+
+            <!-- 02 — LOCATION DETAILS -->
+            <div class="report-section">
+              <div class="report-section-head">
+                <div class="report-section-num">02</div>
+                <div class="report-section-title">Location Details</div>
+              </div>
+              <div class="report-section-desc">Help us identify exactly where the issue is located.</div>
+              <div class="form-group"><label class="form-label">Address / Locality</label>
+                <div class="loc-row">
+                  <input type="text" class="form-input loc-input" placeholder="Street name, locality, or nearby landmark" id="reportLocation">
+                  <button type="button" onclick="getLocationForReport()" class="report-use-loc loc-btn">📍 My Location</button>
+                </div>
+              </div>
+              <div id="reportCoords" class="report-coords">Coordinates not detected</div>
+              <div id="reportMap" class="report-map"></div>
+            </div>
+
+            <div class="report-section-divider"></div>
+
+            <!-- 03 — SUPPORTING EVIDENCE -->
+            <div class="report-section">
+              <div class="report-section-head">
+                <div class="report-section-num">03</div>
+                <div class="report-section-title">Supporting Evidence</div>
+              </div>
+              <div class="report-section-desc">Add a photograph to help us understand the problem.</div>
+              <div class="report-upload">
+                <label class="report-upload-btn" for="reportPhoto">📷 Upload a photo</label>
+                <input type="file" id="reportPhoto" accept="image/*" onchange="handleReportPhoto(this)">
+                <div class="report-upload-hint">JPG, PNG up to 5MB — previewed locally only.</div>
+              </div>
+              <div class="report-preview" id="reportPreview">
+                <img id="reportPhotoImg" class="report-preview-img">
+                <div class="report-preview-actions"><a href="#" onclick="clearReportPhoto();return false;">Remove photo</a></div>
+              </div>
+            </div>
+
+            <div class="report-section-divider"></div>
+
+            <!-- 04 — REPORTER INFORMATION -->
+            <div class="report-section">
+              <div class="report-section-head">
+                <div class="report-section-num">04</div>
+                <div class="report-section-title">Reporter Information</div>
+              </div>
+              <div class="report-section-desc">Provide contact details if you would like the team to contact you.</div>
+              <div class="report-grid-2">
+                <div class="form-group"><label class="form-label">Full Name</label>
+                  <input type="text" class="form-input" placeholder="Tejas Dubey" id="reporterName">
+                </div>
+                <div class="form-group"><label class="form-label">Contact Number</label>
+                  <input type="tel" class="form-input" placeholder="+91" id="reporterPhone">
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="report-actions">
+            <button type="button" class="report-actions-reset" onclick="resetReportForm()">Clear Form</button>
+            <button class="btn-primary" onclick="submitReport()" id="reportBtn">📢 SUBMIT CIVIC REPORT</button>
+          </div>
+          <div class="success-msg" id="reportSuccess">✅ Complaint registered &amp; saved. Reference: <strong id="refNum"></strong></div>
+          <div class="error-msg" id="reportError">❌ Failed to submit complaint. Please try again.</div>
         </div>
-        <div class="form-group"><label class="form-label">Complaint Description *</label><textarea class="form-input"
-            rows="4"
-            placeholder="Describe the situation in detail — what happened, how many people involved, any injuries..."
-            id="incidentDesc" style="resize:vertical;"></textarea></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:13px;">
-          <div class="form-group"><label class="form-label">Your Name (optional)</label><input type="text"
-              class="form-input" placeholder="Sakshi Mehta" id="reporterName"></div>
-          <div class="form-group"><label class="form-label">Phone (optional)</label><input type="tel" class="form-input"
-              placeholder="+91" id="reporterPhone"></div>
-        </div>
-        <div class="form-group"><label class="form-label">Location</label>
-          <input type="text" class="form-input" placeholder="Auto-detecting..." id="reportLocation">
-          <div style="margin-top:6px;"><button onclick="getLocationForReport()"
-              style="background:none;border:1px solid var(--border2);color:var(--muted);padding:6px 13px;font-family:'Rajdhani',sans-serif;font-size:11px;cursor:pointer;letter-spacing:1px;transition:all 0.2s;"
-              onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--lightblue)'"
-              onmouseout="this.style.borderColor='';this.style.color=''">📍 Use My Location</button></div>
-        </div>
-        <button class="btn-primary" style="width:100%;" onclick="submitReport()" id="reportBtn">🚨 SUBMIT
-          REPORT</button>
-        <div class="success-msg" id="reportSuccess">✅ Report submitted &amp; saved to database. Reference: <strong
-            id="refNum"></strong></div>
-        <div class="error-msg" id="reportError">❌ Failed to save report. Check your Supabase table setup.</div>
       </div>
     </div>
   </section>
@@ -2205,43 +2462,43 @@
   <!-- VOLUNTEERS -->
   <section style="background:var(--dark);border-top:1px solid var(--border2);" id="volunteers">
     <div class="section-label">Community</div>
-    <h2 class="section-title">ACTIVE VOLUNTEERS</h2>
-    <p class="section-desc">Trained emergency responders and community leaders ready to assist at a moment's notice.</p>
+    <h2 class="section-title">COMMUNITY CHAMPIONS</h2>
+    <p class="section-desc">Civic volunteers, ward ambassadors, and citizen champions supporting municipal improvements.</p>
     <div class="volunteer-grid">
       <div class="volunteer-card">
         <div class="vol-avatar">👨‍🚒</div>
         <div class="vol-name">Aryan (Chief)</div>
-        <div class="vol-role">FIRE RESPONDER</div>
+        <div class="vol-role">CIVIC LEAD</div>
         <div class="vol-loc">📍 Mumbai, MH</div>
       </div>
       <div class="volunteer-card">
         <div class="vol-avatar">👩‍⚕️</div>
         <div class="vol-name">Sakshi Mehta</div>
-        <div class="vol-role">PARAMEDIC</div>
+        <div class="vol-role">HEALTH AMBASSADOR</div>
         <div class="vol-loc">📍 Pune, MH</div>
       </div>
       <div class="volunteer-card">
         <div class="vol-avatar">👨‍🔬</div>
         <div class="vol-name">Tejas Dubey</div>
-        <div class="vol-role">NDRF TRAINED</div>
+        <div class="vol-role">WARD COORDINATOR</div>
         <div class="vol-loc">📍 Delhi, DL</div>
       </div>
       <div class="volunteer-card">
         <div class="vol-avatar">👨‍💼</div>
         <div class="vol-name">Ayush Singh</div>
-        <div class="vol-role">CRISIS COUNSELOR</div>
+        <div class="vol-role">CITIZEN ADVOCATE</div>
         <div class="vol-loc">📍 Nashik, MH</div>
       </div>
       <div class="volunteer-card">
         <div class="vol-avatar">👨‍🏫</div>
         <div class="vol-name">Kiran Das</div>
-        <div class="vol-role">COMMUNITY LEAD</div>
+        <div class="vol-role">NEIGHBORHOOD LEAD</div>
         <div class="vol-loc">📍 Bengaluru, KA</div>
       </div>
       <div class="volunteer-card">
         <div class="vol-avatar">🧑‍⚕️</div>
         <div class="vol-name">Ananya Iyer</div>
-        <div class="vol-role">FIRST AID EXPERT</div>
+        <div class="vol-role">CLEAN CITY LEAD</div>
         <div class="vol-loc">📍 Chennai, TN</div>
       </div>
     </div>
@@ -2254,15 +2511,12 @@
     <div class="about-grid">
       <div>
         <div class="section-label">About Us</div>
-        <h2 class="section-title">PROTECTING EVERY LIFE</h2>
-        <p class="section-desc" style="margin-bottom:20px;">RAKSHA-FORCE is India's next-generation emergency response
-          network, reducing the gap between crisis and help. We coordinate across police, fire, medical and disaster
-          management services.</p>
-        <p class="section-desc" style="margin-bottom:35px;">Founded in 2022, operating across 28 states, we've supported
-          over 48,000 emergency responses through technology-driven coordination and community-powered networks.</p>
+        <h2 class="section-title">CONNECTING PEOPLE WITH URBAN SERVICES</h2>
+        <p class="section-desc" style="margin-bottom:20px;">Urban 360 is India's next-generation civic services coordination network, reducing the gap between public grievances and municipal action. We coordinate across roads, waste, water, sanitation, and electrical infrastructure.</p>
+        <p class="section-desc" style="margin-bottom:35px;">Operating across 28 municipal areas, supporting over 48,000 resolved citizen requests through technology-driven routing and community transparency.</p>
         <div style="margin-bottom:16px;">
           <div style="display:flex;justify-content:space-between;font-size:11px;letter-spacing:1px;margin-bottom:6px;">
-            <span>Response Coverage</span><span style="color:var(--red)">94%</span>
+            <span>Ward Coverage</span><span style="color:var(--red)">94%</span>
           </div>
           <div class="progress-bar">
             <div class="progress-fill" style="width:94%"></div>
@@ -2270,7 +2524,7 @@
         </div>
         <div style="margin-bottom:16px;">
           <div style="display:flex;justify-content:space-between;font-size:11px;letter-spacing:1px;margin-bottom:6px;">
-            <span>Volunteer Satisfaction</span><span style="color:var(--orange)">89%</span>
+            <span>Citizen Satisfaction</span><span style="color:var(--orange)">89%</span>
           </div>
           <div class="progress-bar">
             <div class="progress-fill" style="width:89%;background:linear-gradient(90deg,var(--orange),var(--amber))">
@@ -2279,7 +2533,7 @@
         </div>
         <div>
           <div style="display:flex;justify-content:space-between;font-size:11px;letter-spacing:1px;margin-bottom:6px;">
-            <span>Incident Resolution Rate</span><span style="color:var(--amber)">97%</span>
+            <span>Complaint Resolution Rate</span><span style="color:var(--amber)">97%</span>
           </div>
           <div class="progress-bar">
             <div class="progress-fill" style="width:97%;background:linear-gradient(90deg,var(--amber),#DDD)"></div>
@@ -2293,14 +2547,14 @@
   <section style="background:var(--dark);border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);"
     id="login">
     <div class="section-label">Access Portal</div>
-    <h2 class="section-title">COMMAND CENTER ACCESS</h2>
-    <p class="section-desc">Login to manage incidents, track deployments and coordinate emergency response.</p>
+    <h2 class="section-title">MUNICIPAL OPERATIONS ACCESS</h2>
+    <p class="section-desc">Login to manage complaints, track field teams, and coordinate civic works.</p>
     <div class="auth-grid">
       <div class="auth-panel">
         <div class="auth-title">LOGIN</div>
-        <div class="auth-sub">Access your responder dashboard</div>
+        <div class="auth-sub">Access your citizen or staff dashboard</div>
         <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input"
-            placeholder="you@raksha.force" id="loginEmail"></div>
+            placeholder="you@urban360.in" id="loginEmail"></div>
         <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input"
             placeholder="••••••••" id="loginPassword"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
@@ -2322,7 +2576,7 @@
       </div>
       <div class="auth-panel" style="background:rgba(0,48,135,0.04);border-left:1px solid var(--border2);">
         <div class="auth-title">REGISTER</div>
-        <div class="auth-sub">Join as a volunteer or organization</div>
+        <div class="auth-sub">Join as a citizen, volunteer, or municipal worker</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:13px;">
           <div class="form-group"><label class="form-label">First Name</label><input type="text" class="form-input"
               placeholder="Tejas" id="regFirst"></div>
@@ -2334,17 +2588,16 @@
         <div class="form-group"><label class="form-label">Role</label>
           <select class="form-input" id="regRole">
             <option value="">Select your role...</option>
-            <option>Volunteer Responder</option>
-            <option>Medical Professional</option>
-            <option>NGO / Organization</option>
-            <option>Government Official</option>
-            <option>Community Leader</option>
+            <option value="citizen">Citizen Resident</option>
+            <option value="worker">Municipal Field Worker</option>
+            <option value="officer">Department Staff / Officer</option>
+            <option value="responder">Community Volunteer</option>
           </select>
         </div>
         <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input"
             placeholder="Min. 8 characters" id="regPassword"></div>
         <button class="btn-blue" style="width:100%;" onclick="handleRegister()" id="registerBtn">CREATE ACCOUNT</button>
-        <div class="success-msg" id="registerSuccess">✅ Account created! Check your email for verification.</div>
+        <div class="success-msg" id="registerSuccess">✅ Account created! Welcome to Urban 360.</div>
         <div class="error-msg" id="registerError">❌ Registration failed. Email may already exist.</div>
       </div>
     </div>
@@ -2355,78 +2608,74 @@
     <div class="footer-tricolor"></div>
     <div class="footer-grid">
       <div>
-        <div class="footer-logo-text">RAKSHA-FORCE</div>
-        <p class="footer-desc">India's national emergency response network, connecting citizens with help when it
-          matters most. Available 24×7, across all 28 states and 8 union territories.</p>
+        <div class="footer-logo-text">URBAN 360</div>
+        <p class="footer-desc">India's unified civic services network, connecting citizens with municipal departments. Available across municipal corporations and smart city centers.</p>
         <div
           style="margin-top:16px;padding:8px 14px;border:1px solid rgba(212,160,23,0.22);display:inline-block;font-size:9px;letter-spacing:2px;color:var(--amber);">
-          🏛️ GOVT. OF INDIA RECOGNIZED</div>
+          🏛️ CITIZEN CIVIC NETWORK</div>
       </div>
       <div>
-        <div class="footer-heading">Helplines</div>
+        <div class="footer-heading">Civic Services</div>
         <ul class="footer-links">
-          <li><a href="tel:101">Fire — 101</a></li>
-          <li><a href="tel:108">Ambulance — 108</a></li>
-          <li><a href="tel:100">Police — 100</a></li>
-          <li><a href="tel:1070">NDRF — 1070</a></li>
-          <li><a href="tel:1091">Women — 1091</a></li>
-          <li><a href="tel:1098">Child — 1098</a></li>
+          <li><a href="#report">Roads &amp; Potholes</a></li>
+          <li><a href="#report">Waste Management</a></li>
+          <li><a href="#report">Water Supply &amp; Drainage</a></li>
+          <li><a href="#report">Streetlights</a></li>
+          <li><a href="#report">Public Sanitation</a></li>
+          <li><a href="#report">Civic Amenities</a></li>
         </ul>
       </div>
       <div>
-        <div class="footer-heading">Organization</div>
+        <div class="footer-heading">Portals</div>
         <ul class="footer-links">
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Volunteer Program</a></li>
-          <li><a href="#">Partner NGOs</a></li>
-          <li><a href="#">Careers</a></li>
-          <li><a href="#">Donate</a></li>
+          <li><a href="citizen.html">Citizen Dashboard</a></li>
+          <li><a href="admin.html">Department Operations</a></li>
+          <li><a href="#volunteers">Community Champions</a></li>
+          <li><a href="#map">City Map</a></li>
         </ul>
       </div>
       <div>
-        <div class="footer-heading">Legal</div>
+        <div class="footer-heading">Information</div>
         <ul class="footer-links">
+          <li><a href="#">Citizen Charter</a></li>
+          <li><a href="#">SLA Guidelines</a></li>
           <li><a href="#">Privacy Policy</a></li>
           <li><a href="#">Terms of Service</a></li>
-          <li><a href="#">Data Protection</a></li>
-          <li><a href="#">RTI</a></li>
-          <li><a href="#">Grievance Portal</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <div>© 2025 RAKSHA-FORCE — Ministry of Home Affairs, Govt. of India</div>
-      <div class="status-dot">All systems operational</div>
-      <div style="font-family:'Orbitron',monospace;font-size:8px;letter-spacing:2px;">POWERED BY SUPABASE</div>
+      <div>© 2026 Urban 360 — Connecting People with Urban Services</div>
+      <div class="status-dot">All civic systems operational</div>
+      <div style="font-family:'Orbitron',monospace;font-size:8px;letter-spacing:2px;">URBAN CIVIC PLATFORM</div>
     </div>
   </footer>
 
-  <!-- SOS MODAL -->
+  <!-- QUICK REPORT MODAL -->
   <div class="modal-overlay" id="sosModal">
     <div class="modal">
       <button class="modal-close" onclick="closeModal('sosModal')">✕</button>
-      <div class="modal-title">🚨 SOS ALERT</div>
-      <p class="modal-body">This will immediately alert emergency services with your GPS location and save the alert to
-        the national database.</p>
-      <div class="form-group"><label class="form-label">Emergency Type</label>
+      <div class="modal-title">📢 QUICK CIVIC REPORT</div>
+      <p class="modal-body">This will log an urgent civic complaint with your GPS location to notify municipal departments.</p>
+      <div class="form-group"><label class="form-label">Civic Category</label>
         <select class="form-input" id="sosType">
-          <option value="fire">🔥 Fire</option>
-          <option value="medical">🚑 Medical</option>
-          <option value="police">👮 Police / Crime</option>
-          <option value="flood">🌊 Flood / Disaster</option>
-          <option value="women_safety">🛡️ Women Safety</option>
-          <option value="other">⚠️ General Emergency</option>
+          <option value="roads">🛣️ Roads &amp; Potholes</option>
+          <option value="waste">🗑️ Solid Waste &amp; Garbage</option>
+          <option value="water">💧 Water Supply &amp; Drainage</option>
+          <option value="streetlights">💡 Streetlights &amp; Electricity</option>
+          <option value="sanitation">🧼 Public Sanitation</option>
+          <option value="infrastructure">🏗️ Public Infrastructure Damage</option>
+          <option value="other">⚠️ Other Civic Issue</option>
         </select>
       </div>
       <div class="form-group"><label class="form-label">Description (optional)</label><textarea class="form-input"
-          rows="3" placeholder="Describe your situation..." id="sosDesc"></textarea></div>
+          rows="3" placeholder="Briefly describe the civic issue..." id="sosDesc"></textarea></div>
       <div style="display:flex;gap:11px;margin-top:7px;">
-        <button class="btn-primary" style="flex:1;" onclick="triggerSOS()" id="sosBtn">🆘 SEND SOS NOW</button>
+        <button class="btn-primary" style="flex:1;" onclick="triggerSOS()" id="sosBtn">📢 SUBMIT REPORT NOW</button>
         <button class="btn-secondary" onclick="closeModal('sosModal')" style="padding:14px 20px;">CANCEL</button>
       </div>
-      <div class="success-msg" id="sosSuccess">🆘 SOS SENT &amp; SAVED! Emergency services alerted. Help is on the way.
-        Stay calm.</div>
-      <div class="error-msg" id="sosError">❌ SOS failed to save to DB. Please call 112 directly.</div>
+      <div class="success-msg" id="sosSuccess">✅ Quick report registered &amp; saved! Department notified.</div>
+      <div class="error-msg" id="sosError">❌ Report failed to save. Please try again.</div>
     </div>
   </div>
 
@@ -2434,31 +2683,28 @@
   <div class="modal-overlay" id="volunteerModal">
     <div class="modal">
       <button class="modal-close" onclick="closeModal('volunteerModal')">✕</button>
-      <div class="modal-title">JOIN US</div>
-      <p class="modal-body">Become a RAKSHA-FORCE volunteer. Your registration is saved to our national database.</p>
+      <div class="modal-title">JOIN COMMUNITY CHAMPIONS</div>
+      <p class="modal-body">Become an Urban 360 civic volunteer or ward ambassador.</p>
       <div class="form-group"><label class="form-label">Full Name *</label><input type="text" class="form-input"
           placeholder="Your full name" id="volName"></div>
       <div class="form-group"><label class="form-label">Phone *</label><input type="tel" class="form-input"
           placeholder="+91 00000 00000" id="volPhone"></div>
-      <div class="form-group"><label class="form-label">City / District</label><input type="text" class="form-input"
-          placeholder="Your city" id="volCity"></div>
-      <div class="form-group"><label class="form-label">Skill Set</label>
+      <div class="form-group"><label class="form-label">City / Ward</label><input type="text" class="form-input"
+          placeholder="Your city / ward" id="volCity"></div>
+      <div class="form-group"><label class="form-label">Civic Interest Area</label>
         <select class="form-input" id="volSkill">
-          <option value="paramedic">First Aid / Paramedic</option>
-          <option value="firefighter">Fire Safety</option>
-          <option value="ndrf_trained">Search &amp; Rescue</option>
-          <option value="counselor">Counseling</option>
-          <option value="logistics">Logistics / Coordination</option>
-          <option value="doctor">Medical Professional</option>
-          <option value="translator">Translator</option>
-          <option value="driver">Emergency Driver</option>
-          <option value="other">Other</option>
+          <option value="roads">Road &amp; Sidewalk Safety</option>
+          <option value="waste">Cleanliness &amp; Waste Auditing</option>
+          <option value="water">Water Conservation</option>
+          <option value="parks">Parks &amp; Tree Planting</option>
+          <option value="sanitation">Public Health &amp; Hygiene</option>
+          <option value="logistics">Community Organizing</option>
+          <option value="other">General Civic Improvement</option>
         </select>
       </div>
       <button class="btn-blue" style="width:100%;margin-top:7px;" onclick="registerVolunteer()" id="volBtn">REGISTER AS
         VOLUNTEER</button>
-      <div class="success-msg" id="volSuccess">✅ Registered &amp; saved to database! Our team will contact you within 48
-        hours.</div>
+      <div class="success-msg" id="volSuccess">✅ Registered &amp; saved! Thank you for supporting your city.</div>
       <div class="error-msg" id="volError">❌ Registration failed. Please try again.</div>
     </div>
   </div>
@@ -2468,6 +2714,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/utils.js"></script>
   <script src="assets/js/supabase-client.js"></script>
+  <script src="assets/js/mock-auth.js"></script>
 
   <script>
     // ===== SUPABASE =====
@@ -2480,7 +2727,7 @@
         if (error && error.code !== 'PGRST116' && error.code !== '42P01') throw error;
         setDB(true); showNotif('Connected to Supabase ✓', false);
       } catch (e) {
-        setDB(false); showNotif('DB connection issue — check table names', true);
+        setDB(false);
         console.error('Supabase:', e);
       }
     }
@@ -2491,34 +2738,26 @@
     }
 
     // ===== BOOT =====
-    window.addEventListener('load', async () => {
-      await initSB();
+    window.addEventListener('load', () => {
+      // Do not block page reveal on Supabase: initialize DB status in background.
+      initSB();
 
-      // Auto-redirect if already logged in
-      try {
-        const { data: { session } } = await sb.auth.getSession();
-        if (session?.user) {
-          const { data: profile } = await sb.from('profiles').select('role').eq('id', session.user.id).single();
-          if (profile && profile.role === 'admin') {
-            window.location.href = 'admin.html';
-            return; // stop further init since we're redirecting
-          } else {
-            window.location.href = 'citizen.html';
-            return; // stop further init since we're redirecting
-          }
-        }
-      } catch (e) {
-        console.warn('Session check failed, continuing as guest:', e);
+      // Auto-redirect if already logged in (demo session)
+      if (window.MockAuth.isAuthenticated()) {
+        const user = window.MockAuth.getCurrentUser();
+        window.location.href = user.dashboard || 'citizen.html';
+        return;
       }
 
       fetchFeed();
-      setTimeout(() => document.getElementById('loadingScreen').classList.add('hidden'), 2300);
+      setTimeout(() => document.getElementById('loadingScreen').classList.add('hidden'), 300);
       initMap(18.5204, 73.8567);
       document.getElementById('mapLocation').textContent = 'Pune, Maharashtra';
       if (navigator.geolocation) navigator.geolocation.getCurrentPosition(p => {
         initMap(p.coords.latitude, p.coords.longitude);
         document.getElementById('mapLocation').textContent = `${p.coords.latitude.toFixed(4)}, ${p.coords.longitude.toFixed(4)}`;
       });
+      initReportMap();
     });
 
     // ===== CURSOR =====
@@ -2567,6 +2806,7 @@
       const type = document.getElementById('sosType').value, desc = document.getElementById('sosDesc').value;
       let lat = null, lng = null;
       try { const p = await new Promise((r, j) => navigator.geolocation.getCurrentPosition(r, j, { timeout: 5000 })); lat = p.coords.latitude; lng = p.coords.longitude; } catch (e) { }
+      if (!lat || !lng) { lat = 18.5204; lng = 73.8567; }
       try {
         await window.RF.createSOS({ type, description: desc || null, latitude: lat, longitude: lng });
         document.getElementById('sosSuccess').classList.add('show');
@@ -2583,58 +2823,105 @@
     // ===== REPORT → SUPABASE =====
     async function submitReport() {
       const btn = document.getElementById('reportBtn');
+      const title = document.getElementById('reportTitle').value.trim();
       const type = document.getElementById('incidentType').value, desc = document.getElementById('incidentDesc').value;
-      if (!type) { showNotif('⚠️ Select an incident type', true); return; }
-      if (!desc) { showNotif('⚠️ Describe the incident', true); return; }
+      if (!title) { showNotif('⚠️ Enter a complaint title', true); return; }
+      if (!type) { showNotif('⚠️ Select a civic category', true); return; }
+      if (!desc) { showNotif('⚠️ Describe the civic issue', true); return; }
       btn.textContent = '⏳ SAVING...'; btn.disabled = true;
       ['reportSuccess', 'reportError'].forEach(id => document.getElementById(id).classList.remove('show'));
       let lat = null, lng = null;
       try { const p = await new Promise((r, j) => navigator.geolocation.getCurrentPosition(r, j, { timeout: 5000 })); lat = p.coords.latitude; lng = p.coords.longitude; } catch (e) { }
-      // Fallback coordinates if user denies permission or timeout
       if (!lat || !lng) { lat = 18.5204; lng = 73.8567; }
+
+      let imageUrl = null;
+      const photoInput = document.getElementById('reportPhoto');
+      if (photoInput && photoInput.files && photoInput.files[0]) {
+        btn.textContent = '⏳ UPLOADING PHOTO...';
+        try {
+          imageUrl = await window.RF.uploadImage(photoInput.files[0]);
+        } catch (uploadErr) {
+          btn.textContent = '📢 SUBMIT CIVIC REPORT'; btn.disabled = false;
+          document.getElementById('reportError').classList.add('show');
+          showNotif('❌ Image upload failed: ' + uploadErr.message, true);
+          return;
+        }
+      }
+
       try {
         const created = await window.RF.createIncident({
-          emergency_type: type, description: desc,
+          emergency_type: type,
+          title: title || desc.slice(0, 50),
+          description: desc,
           reporter_name: document.getElementById('reporterName').value || null,
           phone: document.getElementById('reporterPhone').value || null,
-          location: document.getElementById('reportLocation').value || null,
-          latitude: lat, longitude: lng, status: 'pending'
+          location: document.getElementById('reportLocation').value || 'Pune Municipal Area',
+          latitude: lat, longitude: lng,
+          image_url: imageUrl,
+          status: 'pending'
         });
-        const ref = 'RF-' + (created.incident_id?.substr(0, 8).toUpperCase() || Math.random().toString(36).substr(2, 8).toUpperCase());
+        const ref = 'U360-' + (created.incident_id?.substr(0, 8).toUpperCase() || Math.random().toString(36).substr(2, 8).toUpperCase());
         document.getElementById('refNum').textContent = ref;
         document.getElementById('reportSuccess').classList.add('show');
-        showNotif(`✅ Report ${ref} saved to database!`);
-        ['incidentType', 'incidentDesc', 'reporterName', 'reporterPhone', 'reportLocation'].forEach(id => document.getElementById(id).value = '');
+        showNotif(`✅ Complaint ${ref} saved to database!`);
+        ['reportTitle', 'incidentType', 'incidentDesc', 'reporterName', 'reporterPhone', 'reportLocation'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('reportPhotoImg').style.display = 'none';
+        document.getElementById('reportPreview').style.display = 'none';
+        document.getElementById('reportCoords').textContent = 'Coordinates not detected';
+        document.getElementById('reportCoords').className = 'report-coords';
+        document.getElementById('reportPhoto').value = '';
         fetchFeed();
       } catch (e) {
         document.getElementById('reportError').classList.add('show');
-        showNotif('❌ Report failed — check Supabase tables', true);
+        showNotif('❌ Submission failed — ' + (e.message || 'check network connection'), true);
         console.error(e);
       }
-      btn.textContent = '🚨 SUBMIT REPORT'; btn.disabled = false;
+      btn.textContent = '📢 SUBMIT CIVIC REPORT'; btn.disabled = false;
     }
 
-    // ===== LIVE FEED ← SUPABASE =====
+    // ===== LIVE FEED ← SUPABASE / API =====
     async function fetchFeed() {
       const feed = document.getElementById('incidentFeed');
+      if (!feed) return;
+      const icons = {
+        roads: '🛣️', waste: '🗑️', water: '💧', drainage: '🌊',
+        streetlights: '💡', sanitation: '🧼', parks: '🌳',
+        infrastructure: '🏗️', traffic_signs: '🛑', encroachment: '🚶',
+        other: '⚠️', fire: '🔥', medical: '🚑', police: '👮', accident: '🚗', flood: '🌊'
+      };
+
+      const renderItems = (items) => {
+        feed.innerHTML = items.map(item => {
+          const mins = Math.round((Date.now() - new Date(item.created_at || Date.now() - 1200000)) / 60000);
+          const ago = mins < 1 ? 'Just now' : mins < 60 ? `${mins}m ago` : `${Math.floor(mins / 60)}h ago`;
+          const status = item.status || 'pending';
+          const dc = status === 'pending' || status === 'submitted' ? 'dot-red' : status === 'in_progress' || status === 'assigned' ? 'dot-orange' : 'dot-amber';
+          const ic = icons[item.emergency_type] || '⚠️';
+          const col = dc === 'dot-red' ? 'var(--red)' : dc === 'dot-orange' ? 'var(--orange)' : 'var(--green)';
+          const categoryName = (item.emergency_type || 'civic issue').replace('_', ' ').toUpperCase();
+          return `<div class="feed-item"><div class="feed-dot ${dc}"></div><div><div class="feed-title">${ic} ${categoryName}</div><div class="feed-meta">${item.location ? '📍 ' + item.location + ' • ' : ''}${ago} • <span style="color:${col}">${status.toUpperCase()}</span></div></div></div>`;
+        }).join('');
+      };
+
       try {
-        const { data, error } = await sb.from('incident_reports').select('emergency_type,description,location,created_at,status').order('created_at', { ascending: false }).limit(6);
-        if (error) throw error;
+        const data = await window.RF.listIncidentsAPI({ limit: 6 });
         if (data && data.length > 0) {
-          const icons = { fire: '🔥', medical: '🚑', police: '👮', ambulance: '🏥', fire_brigade: '🚒', accident: '🚗', flood: '🌊', women: '🛡️', child: '👶', missing: '🔍', other: '⚠️' };
-          feed.innerHTML = data.map(item => {
-            const mins = Math.round((Date.now() - new Date(item.created_at)) / 60000);
-            const ago = mins < 1 ? 'Just now' : mins < 60 ? `${mins}m ago` : `${Math.floor(mins / 60)}h ago`;
-            const dc = item.status === 'pending' ? 'dot-red' : item.status === 'active' ? 'dot-orange' : 'dot-amber';
-            const ic = icons[item.emergency_type] || '⚠️';
-            const col = dc === 'dot-red' ? 'var(--red)' : dc === 'dot-orange' ? 'var(--orange)' : 'var(--amber)';
-            return `<div class="feed-item"><div class="feed-dot ${dc}"></div><div><div class="feed-title">${ic} ${(item.emergency_type || 'incident').replace('_', ' ').toUpperCase()}</div><div class="feed-meta">${item.location ? '📍 ' + item.location + ' • ' : ''}${ago} • <span style="color:${col}">${(item.status || 'pending').toUpperCase()}</span></div></div></div>`;
-          }).join('');
+          renderItems(data);
         } else {
-          feed.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:16px 0;">No incidents yet. Live reports will appear here.</div>';
+          renderItems([
+            { emergency_type: 'roads', location: 'JM Road, Shivajinagar', status: 'in_progress', created_at: new Date(Date.now() - 15 * 60000).toISOString() },
+            { emergency_type: 'water', location: 'FC Road, Deccan Gymkhana', status: 'assigned', created_at: new Date(Date.now() - 32 * 60000).toISOString() },
+            { emergency_type: 'waste', location: 'Kothrud Ward 12', status: 'pending', created_at: new Date(Date.now() - 48 * 60000).toISOString() },
+            { emergency_type: 'streetlights', location: 'Karve Road, Pune', status: 'resolved', created_at: new Date(Date.now() - 110 * 60000).toISOString() }
+          ]);
         }
       } catch (e) {
-        feed.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:16px 0;">Connecting to live feed...</div>';
+        renderItems([
+          { emergency_type: 'roads', location: 'JM Road, Shivajinagar', status: 'in_progress', created_at: new Date(Date.now() - 15 * 60000).toISOString() },
+          { emergency_type: 'water', location: 'FC Road, Deccan Gymkhana', status: 'assigned', created_at: new Date(Date.now() - 32 * 60000).toISOString() },
+          { emergency_type: 'waste', location: 'Kothrud Ward 12', status: 'pending', created_at: new Date(Date.now() - 48 * 60000).toISOString() },
+          { emergency_type: 'streetlights', location: 'Karve Road, Pune', status: 'resolved', created_at: new Date(Date.now() - 110 * 60000).toISOString() }
+        ]);
       }
     }
     setInterval(fetchFeed, 30000);
@@ -2659,63 +2946,41 @@
       btn.textContent = 'REGISTER AS VOLUNTEER'; btn.disabled = false;
     }
 
-    // ===== LOGIN → SUPABASE AUTH =====
+    // ===== LOGIN → DEMO AUTH =====
     async function handleLogin() {
-      const btn = document.getElementById('loginBtn'), email = document.getElementById('loginEmail').value, pass = document.getElementById('loginPassword').value;
+      const btn = document.getElementById('loginBtn'), email = document.getElementById('loginEmail').value.trim(), pass = document.getElementById('loginPassword').value;
       if (!email || !pass) { showNotif('⚠️ Fill in all fields', true); return; }
-      btn.textContent = '⏳ LOGGING IN...'; btn.disabled = true;
+      btn.textContent = '⏳ AUTHENTICATING...'; btn.disabled = true;
       ['loginSuccess', 'loginError'].forEach(id => document.getElementById(id).classList.remove('show'));
       try {
-        const data = await window.RF.login(email, pass);
-
+        const user = await window.MockAuth.login(email, pass);
+        document.getElementById('loginSuccess').textContent = '✅ Login successful! Welcome back, ' + user.name + '.';
         document.getElementById('loginSuccess').classList.add('show');
         showNotif('✅ Login successful!');
-
         setTimeout(() => {
-          if (data.user?.role === 'admin') {
-            window.location.href = 'admin.html';
-          } else {
-            window.location.href = 'citizen.html';
-          }
-        }, 1500);
+          window.location.href = user.dashboard || 'citizen.html';
+        }, 1000);
       } catch (e) {
         document.getElementById('loginError').classList.add('show');
-        showNotif('❌ Invalid credentials', true);
-        console.error(e);
+        showNotif('❌ Invalid demo credentials', true);
       }
       btn.textContent = 'LOGIN TO DASHBOARD'; btn.disabled = false;
     }
 
-    // ===== REGISTER → SUPABASE AUTH =====
+    // ===== REGISTER → DEMO NOTICE =====
     async function handleRegister() {
-      const btn = document.getElementById('registerBtn'), email = document.getElementById('regEmail').value, pass = document.getElementById('regPassword').value, role = document.getElementById('regRole').value;
+      const btn = document.getElementById('registerBtn');
+      const email = document.getElementById('regEmail').value, pass = document.getElementById('regPassword').value, role = document.getElementById('regRole').value;
       const first = document.getElementById('regFirst').value, last = document.getElementById('regLast').value;
       if (!email || !pass || !role) { showNotif('⚠️ Fill in all required fields', true); return; }
       if (pass.length < 8) { showNotif('⚠️ Password must be 8+ characters', true); return; }
-      const selectedRole = role.toLowerCase();
-      const platformRole = selectedRole.includes('volunteer') || selectedRole.includes('medical') ? 'responder' : 'citizen';
-      btn.textContent = '⏳ CREATING...'; btn.disabled = true;
+      btn.textContent = '⏳ CHECKING...'; btn.disabled = true;
       ['registerSuccess', 'registerError'].forEach(id => document.getElementById(id).classList.remove('show'));
-      try {
-        const account = await window.RF.register({
-          email,
-          password: pass,
-          full_name: `${first} ${last}`.trim(),
-          role: platformRole
-        });
-
-        document.getElementById('registerSuccess').classList.add('show');
-        showNotif('✅ Account created! Redirecting...');
-
-        setTimeout(() => {
-          window.location.href = account.user?.role === 'admin' ? 'admin.html' : 'citizen.html';
-        }, 2000);
-      } catch (e) {
-        document.getElementById('registerError').classList.add('show');
-        showNotif('❌ Registration failed', true);
-        console.error(e);
-      }
+      await new Promise(resolve => setTimeout(resolve, 700));
       btn.textContent = 'CREATE ACCOUNT'; btn.disabled = false;
+      document.getElementById('registerError').textContent = 'Demo accounts are predefined — no new account is created. Use citizen@urban360.demo, officer@urban360.demo, worker@urban360.demo or admin@urban360.demo (password: Demo@123).';
+      document.getElementById('registerError').classList.add('show');
+      showNotif('ℹ️ Demo accounts are predefined', true);
     }
 
     // ===== MAP =====
@@ -2727,8 +2992,8 @@
       setTimeout(() => { if (map) map.invalidateSize(); }, 400);
       const ri = L.divIcon({ html: `<div style="width:17px;height:17px;background:var(--red);border-radius:50%;border:3px solid white;box-shadow:0 0 14px var(--red);"></div>`, className: '', iconAnchor: [8, 8] });
       L.marker([lat, lng], { icon: ri }).addTo(map).bindPopup('<b style="font-family:Rajdhani,sans-serif">📍 Your Location</b>');
-      [{ lat: lat + 0.02, lng: lng + 0.03, type: '🔥', l: 'Fire — Contained' }, { lat: lat - 0.03, lng: lng + 0.01, type: '🚑', l: 'Medical — Active' }, { lat: lat + 0.01, lng: lng - 0.04, type: '👮', l: 'Police — Dispatched' }].forEach(inc => {
-        const ic = L.divIcon({ html: `<div style="font-size:19px;filter:drop-shadow(0 0 5px rgba(200,16,46,0.55));">${inc.type}</div>`, className: '', iconAnchor: [9, 9] });
+      [{ lat: lat + 0.02, lng: lng + 0.03, type: '🛣️', l: 'Road Repair — In Progress' }, { lat: lat - 0.03, lng: lng + 0.01, type: '💧', l: 'Water Leakage — Assigned' }, { lat: lat + 0.01, lng: lng - 0.04, type: '💡', l: 'Streetlight — Inspection' }].forEach(inc => {
+        const ic = L.divIcon({ html: `<div style="font-size:19px;filter:drop-shadow(0 0 5px rgba(0,48,135,0.55));">${inc.type}</div>`, className: '', iconAnchor: [9, 9] });
         L.marker([inc.lat, inc.lng], { icon: ic }).addTo(map).bindPopup(`<b style="font-family:Rajdhani,sans-serif">${inc.l}</b>`);
       });
       L.circle([lat, lng], { radius: 3000, color: '#003087', weight: 1, fillColor: '#003087', fillOpacity: 0.04 }).addTo(map);
@@ -2742,9 +3007,11 @@
 
     let infraCache = new Set();
     async function loadRealWorldInfrastructure(lat, lng, map) {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 8000);
       try {
         const query = `[out:json][timeout:25];(node["amenity"="hospital"](around:10000, ${lat}, ${lng});node["amenity"="fire_station"](around:10000, ${lat}, ${lng});node["amenity"="police"](around:10000, ${lat}, ${lng});node["emergency"="ambulance_station"](around:10000, ${lat}, ${lng}););out body;`;
-        const res = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`);
+        const res = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`, { signal: controller.signal });
         const data = await res.json();
         if (data.elements) {
           data.elements.forEach(el => {
@@ -2772,6 +3039,7 @@
           });
         }
       } catch (e) { }
+      clearTimeout(timeout);
     }
     function locateUser() {
       const btn = document.querySelector('.map-locate-btn'); btn.textContent = '⏳ LOCATING...';
@@ -2784,7 +3052,75 @@
       }, () => { btn.textContent = '📡 LOCATE ME'; showNotif('⚠️ Location denied', true); });
     }
     function getLocationForReport() {
-      if (navigator.geolocation) navigator.geolocation.getCurrentPosition(p => { document.getElementById('reportLocation').value = `${p.coords.latitude.toFixed(4)}, ${p.coords.longitude.toFixed(4)}`; showNotif('📍 Location added!'); }, () => showNotif('⚠️ Location access denied', true));
+      if (!navigator.geolocation) { showNotif('⚠️ Geolocation not supported', true); return; }
+      navigator.geolocation.getCurrentPosition(p => {
+        const lat = p.coords.latitude, lng = p.coords.longitude;
+        document.getElementById('reportLocation').value = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+        const c = document.getElementById('reportCoords');
+        c.textContent = `Lat ${lat.toFixed(5)}, Lng ${lng.toFixed(5)}`;
+        c.className = 'report-coords ok';
+        showNotif('📍 Location added!');
+        if (!window.initReportMapDone) { initReportMap(); window.initReportMapDone = true; }
+        setReportMap(lat, lng);
+      }, () => {
+        const c = document.getElementById('reportCoords');
+        c.textContent = 'Location access denied — enter address manually';
+        c.className = 'report-coords err';
+        showNotif('⚠️ Location access denied', true);
+      });
+    }
+
+    // Compact map for the report location section (reuses Leaflet already loaded on the page)
+    let reportMap = null;
+    function initReportMap() {
+      if (reportMap) return;
+      const el = document.getElementById('reportMap');
+      if (!el) return;
+      reportMap = L.map('reportMap', { zoomControl: false, attributionControl: false }).setView([18.5204, 73.8567], 13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(reportMap);
+      setTimeout(() => { if (reportMap) reportMap.invalidateSize(); }, 200);
+    }
+    function setReportMap(lat, lng) {
+      if (!reportMap) return;
+      reportMap.setView([lat, lng], 15);
+      if (reportMap._rMarker) reportMap._rMarker.setLatLng([lat, lng]);
+      else {
+        reportMap._rMarker = L.marker([lat, lng]).addTo(reportMap).bindPopup('Report location');
+      }
+    }
+
+    // Local photo preview only — nothing is uploaded or claimed as saved
+    function handleReportPhoto(input) {
+      const file = input && input.files && input.files[0];
+      const img = document.getElementById('reportPhotoImg');
+      const preview = document.getElementById('reportPreview');
+      if (!file) { preview.style.display = 'none'; img.style.display = 'none'; return; }
+      if (!file.type.startsWith('image/')) { showNotif('⚠️ Please select an image file', true); input.value = ''; return; }
+      if (file.size > 5 * 1024 * 1024) { showNotif('⚠️ Image must be under 5 MB', true); input.value = ''; return; }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        img.src = e.target.result;
+        img.style.display = 'block';
+        preview.style.display = 'block';
+        showNotif('🖼️ Photo selected locally');
+      };
+      reader.readAsDataURL(file);
+    }
+    function clearReportPhoto() {
+      document.getElementById('reportPhoto').value = '';
+      document.getElementById('reportPhotoImg').style.display = 'none';
+      document.getElementById('reportPreview').style.display = 'none';
+    }
+    function resetReportForm() {
+      ['reportTitle', 'incidentType', 'incidentDesc', 'reporterName', 'reporterPhone', 'reportLocation'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+      document.getElementById('reportPhoto').value = '';
+      document.getElementById('reportPhotoImg').style.display = 'none';
+      document.getElementById('reportPreview').style.display = 'none';
+      const c = document.getElementById('reportCoords');
+      c.textContent = 'Coordinates not detected';
+      c.className = 'report-coords';
+      document.getElementById('reportSuccess').classList.remove('show');
+      document.getElementById('reportError').classList.remove('show');
     }
 
     // ===== SCROLL ANIM =====

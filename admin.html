@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Raksha Force — Command Center</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+<title>Urban 360 — Municipal Command Center</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏙️</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="assets/css/style.css">
@@ -426,10 +426,10 @@ tbody td { padding: 14px 16px; font-size: 14px; color: var(--text); vertical-ali
 <div class="auth-screen" id="authScreen">
   <div class="auth-card">
     <div class="auth-logo">
-      <div class="logo-icon">🛡️</div>
+      <div class="logo-icon">🏙️</div>
       <div>
-        <div class="auth-logo-text">Raksha Force</div>
-        <div class="auth-logo-sub">Command Center — Authorised Access Only</div>
+        <div class="auth-logo-text">Urban 360</div>
+        <div class="auth-logo-sub">Municipal Command Center — Authorised Access Only</div>
       </div>
     </div>
     <div class="auth-tabs">
@@ -446,8 +446,10 @@ tbody td { padding: 14px 16px; font-size: 14px; color: var(--text); vertical-ali
         <label class="form-label">Password</label>
         <input type="password" id="authPass" class="form-control" placeholder="••••••••">
       </div>
-      <button class="btn btn-primary w-full btn-lg mt-3" onclick="doLogin()" id="loginBtn">Sign In to Command Center</button>
+      <button class="btn btn-primary w-full btn-lg mt-3" onclick="doLogin()" id="loginBtn">Sign In to Municipal Command Center</button>
       <button class="btn btn-outline w-full btn-lg mt-2" onclick="skipAuth()" id="guestBtn">Login as Guest (Read-Only)</button>
+      <div id="loginError" class="error-msg"></div>
+      <div id="loginSuccess" class="success-msg"></div>
     </div>
 
     <div id="formRegister" style="display:none;">
@@ -478,7 +480,7 @@ tbody td { padding: 14px 16px; font-size: 14px; color: var(--text); vertical-ali
 <div class="modal-overlay" id="broadcastModal">
   <div class="modal-box">
     <div class="modal-header">
-      <div class="modal-title">📡 Broadcast Area Alert</div>
+      <div class="modal-title">📡 Broadcast Civic Notice</div>
       <button class="btn btn-ghost btn-icon" onclick="closeModal('broadcastModal')">✕</button>
     </div>
     <div class="modal-body">
@@ -505,17 +507,19 @@ tbody td { padding: 14px 16px; font-size: 14px; color: var(--text); vertical-ali
 <div class="modal-overlay" id="teamModal">
   <div class="modal-box">
     <div class="modal-header">
-      <div class="modal-title">Add Response Team</div>
+      <div class="modal-title">Add Department / Unit</div>
       <button class="btn btn-ghost btn-icon" onclick="closeModal('teamModal')">✕</button>
     </div>
     <div class="modal-body">
       <div class="form-group"><label class="form-label">Team Name</label><input type="text" id="tName" class="form-control" placeholder="Alpha Fire Unit"></div>
       <div class="form-group"><label class="form-label">Type</label>
         <select id="tType" class="form-control">
-          <option value="fire">🔥 Fire Brigade</option>
-          <option value="medical">🚑 Medical / Ambulance</option>
-          <option value="police">👮 Police</option>
-          <option value="ndrf">⛑️ NDRF</option>
+          <option value="roads">🚧 Roads &amp; Pothole Team</option>
+          <option value="water">💧 Water Supply Dept.</option>
+          <option value="waste">🗑️ Sanitation &amp; Waste</option>
+          <option value="drainage">🌊 Drainage Dept.</option>
+          <option value="electrical">💡 Electrical &amp; Lights</option>
+          <option value="parks">🌳 Parks &amp; Gardens</option>
         </select>
       </div>
       <div class="form-group"><label class="form-label">Unit Capacity</label><input type="number" id="tCap" class="form-control" value="5" min="1"></div>
@@ -535,10 +539,10 @@ tbody td { padding: 14px 16px; font-size: 14px; color: var(--text); vertical-ali
   <!-- ── Sidebar ── -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
-      <div class="logo-icon">🛡️</div>
+      <div class="logo-icon">🏙️</div>
       <div>
-        <div class="logo-text">Raksha Force</div>
-        <div class="logo-badge">COMMAND CENTER</div>
+        <div class="logo-text">Urban 360</div>
+        <div class="logo-badge">MUNICIPAL COMMAND</div>
       </div>
     </div>
     <nav class="sidebar-nav">
@@ -551,18 +555,18 @@ tbody td { padding: 14px 16px; font-size: 14px; color: var(--text); vertical-ali
         <span class="nav-badge" id="navBadge" style="display:none;">0</span>
       </div>
       <div class="nav-item" onclick="showPage('incidents')" data-page="incidents">
-        <span class="nav-icon">🚨</span> Incidents
+        <span class="nav-icon">📝</span> Complaints
       </div>
       <div class="nav-section-label">Management</div>
       <div class="nav-item" onclick="showPage('teams')" data-page="teams">
-        <span class="nav-icon">🚑</span> Teams
+        <span class="nav-icon">🏛️</span> Departments
       </div>
       <div class="nav-item" onclick="showPage('resources')" data-page="resources">
-        <span class="nav-icon">🏥</span> Resources
+        <span class="nav-icon">🏗️</span> Resources
       </div>
       <div class="nav-section-label">Communication</div>
       <div class="nav-item" onclick="showPage('alerts')" data-page="alerts">
-        <span class="nav-icon">📡</span> Area Alerts
+        <span class="nav-icon">📡</span> Civic Notices
       </div>
     </nav>
     <div class="sidebar-footer">
@@ -570,7 +574,7 @@ tbody td { padding: 14px 16px; font-size: 14px; color: var(--text); vertical-ali
         <div class="user-avatar" id="userAvatar">A</div>
         <div>
           <div class="user-name" id="userName">Aryan</div>
-          <div class="user-role">Chief Command Officer</div>
+          <div class="user-role">Municipal Admin Officer</div>
         </div>
         <button class="btn-logout" onclick="doLogout()">Sign Out</button>
       </div>
@@ -607,24 +611,24 @@ tbody td { padding: 14px 16px; font-size: 14px; color: var(--text); vertical-ali
       <!-- ═══════════ DASHBOARD PAGE ═══════════ -->
       <div class="page active" id="page-dashboard">
         <div class="page-title">Dashboard</div>
-        <div class="page-sub">Real-time overview of Raksha Force emergency operations.</div>
+        <div class="page-sub">Real-time overview of Urban 360 municipal complaint operations.</div>
 
         <!-- Stat Cards -->
         <div class="stats-grid" id="statsGrid">
           <div class="stat-card red">
             <div class="stat-top"><span class="stat-icon">🔴</span></div>
             <div class="stat-value" id="sCritical">—</div>
-            <div class="stat-label">Critical Incidents</div>
+            <div class="stat-label">Critical Complaints</div>
           </div>
           <div class="stat-card blue">
-            <div class="stat-top"><span class="stat-icon">🚨</span></div>
+            <div class="stat-top"><span class="stat-icon">📝</span></div>
             <div class="stat-value" id="sActive">—</div>
-            <div class="stat-label">Active Cases</div>
+            <div class="stat-label">Active Complaints</div>
           </div>
           <div class="stat-card warn">
             <div class="stat-top"><span class="stat-icon">⏳</span></div>
             <div class="stat-value" id="sPending">—</div>
-            <div class="stat-label">Pending Reports</div>
+            <div class="stat-label">Pending Review</div>
           </div>
           <div class="stat-card green">
             <div class="stat-top"><span class="stat-icon">✅</span></div>
@@ -632,9 +636,9 @@ tbody td { padding: 14px 16px; font-size: 14px; color: var(--text); vertical-ali
             <div class="stat-label">Resolved Today</div>
           </div>
           <div class="stat-card purple">
-            <div class="stat-top"><span class="stat-icon">🚑</span></div>
+            <div class="stat-top"><span class="stat-icon">🏛️</span></div>
             <div class="stat-value" id="sTeamsAvail">—</div>
-            <div class="stat-label">Teams Available</div>
+            <div class="stat-label">Depts. Available</div>
           </div>
         </div>
 
@@ -655,14 +659,14 @@ tbody td { padding: 14px 16px; font-size: 14px; color: var(--text); vertical-ali
             <div class="card">
               <div class="card-header"><div class="card-title">⚡ Quick Actions</div></div>
               <div class="card-body" style="display:flex;flex-direction:column;gap:8px;">
-                <button class="btn btn-danger w-full" style="justify-content:center;" onclick="openModal('broadcastModal')">📡 Broadcast Emergency Alert</button>
+                <button class="btn btn-danger w-full" style="justify-content:center;" onclick="openModal('broadcastModal')">📡 Broadcast Civic Notice</button>
                 <button class="btn btn-primary w-full" style="justify-content:center;" onclick="showPage('command')">🗺️ Open Command Center</button>
-                <button class="btn btn-outline w-full" style="justify-content:center;" onclick="openModal('teamModal')">+ Add Response Team</button>
-                <button class="btn btn-outline w-full" style="justify-content:center;" onclick="showPage('incidents')">📋 View All Incidents</button>
+                <button class="btn btn-outline w-full" style="justify-content:center;" onclick="openModal('teamModal')">+ Add Department</button>
+                <button class="btn btn-outline w-full" style="justify-content:center;" onclick="showPage('incidents')">📋 View All Complaints</button>
               </div>
             </div>
             <div class="card">
-              <div class="card-header"><div class="card-title">🆘 Recent SOS</div></div>
+              <div class="card-header"><div class="card-title">📢 Recent Urgent Complaints</div></div>
               <div id="sosFeed" style="max-height:160px;overflow-y:auto;"></div>
             </div>
           </div>
@@ -672,7 +676,7 @@ tbody td { padding: 14px 16px; font-size: 14px; color: var(--text); vertical-ali
         <div class="grid-2">
           <div class="card">
             <div class="card-header">
-              <div class="card-title">🔔 Active Area Alerts</div>
+              <div class="card-title">📢 Active Civic Notices</div>
               <div class="card-actions">
                 <button class="btn btn-outline btn-sm" onclick="openModal('broadcastModal')">+ New</button>
               </div>
@@ -680,7 +684,7 @@ tbody td { padding: 14px 16px; font-size: 14px; color: var(--text); vertical-ali
             <div id="dashAlerts" style="max-height:220px;overflow-y:auto;"></div>
           </div>
           <div class="card">
-            <div class="card-header"><div class="card-title">📊 Incidents by Type</div></div>
+            <div class="card-header"><div class="card-title">📊 Complaints by Category</div></div>
             <div class="card-body">
               <div class="bar-chart" id="typeChart">
                 <div style="color:var(--text-3);font-size:12px;">Loading...</div>
@@ -720,12 +724,12 @@ tbody td { padding: 14px 16px; font-size: 14px; color: var(--text); vertical-ali
             <!-- Incident list -->
             <div class="cmd-list-area">
               <div class="cmd-list-header">
-                <span style="font-size:12px;font-weight:600;color:var(--text-2);">ACTIVE INCIDENTS</span>
+                <span style="font-size:12px;font-weight:600;color:var(--text-2);">ACTIVE COMPLAINTS</span>
                 <select class="filter-select" id="cmdFilter" onchange="loadCmdList()">
                   <option value="">All Status</option>
                   <option value="pending">Pending</option>
                   <option value="assigned">Assigned</option>
-                  <option value="on_the_way">On The Way</option>
+                  <option value="on_the_way">Work Started</option>
                 </select>
                 <div class="filter-spacer"></div>
                 <span class="result-count" id="cmdCount">—</span>
@@ -753,23 +757,23 @@ tbody td { padding: 14px 16px; font-size: 14px; color: var(--text); vertical-ali
 
       <!-- ═══════════ INCIDENTS PAGE ═══════════ -->
       <div class="page" id="page-incidents">
-        <div class="page-title">Incident Reports</div>
-        <div class="page-sub">All emergency reports with filtering, priority management and assignment.</div>
+        <div class="page-title">Complaint Reports</div>
+        <div class="page-sub">All civic complaints with filtering, priority management and department assignment.</div>
         <div class="card">
           <div class="filters-bar">
             <input type="text" id="incSearch" class="search-input" placeholder="🔍 Search incidents..." oninput="filterIncidents()">
             <select class="filter-select" id="incTypeFilter" onchange="loadFullIncidents()">
-              <option value="">All Types</option>
-              <option value="fire">🔥 Fire</option>
-              <option value="medical">🚑 Medical</option>
-              <option value="police">👮 Police</option>
-              <option value="ambulance">🏥 Ambulance</option>
-              <option value="fire_brigade">🚒 Fire Brigade</option>
-              <option value="accident">🚗 Accident</option>
-              <option value="flood">🌊 Flood</option>
-              <option value="women">🛡️ Women Safety</option>
-              <option value="missing">🔍 Missing</option>
-              <option value="other">⚠️ Other</option>
+              <option value="">All Categories</option>
+              <option value="roads">🚧 Roads &amp; Potholes</option>
+              <option value="waste">🗑️ Garbage &amp; Waste</option>
+              <option value="water">💧 Water Supply</option>
+              <option value="drainage">🌊 Drainage</option>
+              <option value="streetlights">💡 Street Lights</option>
+              <option value="sanitation">🧹 Sanitation</option>
+              <option value="parks">🌳 Parks</option>
+              <option value="infrastructure">🏗️ Infrastructure</option>
+              <option value="traffic_signs">🚦 Traffic Signs</option>
+              <option value="encroachment">🚫 Encroachment</option>
             </select>
             <select class="filter-select" id="incStatusFilter" onchange="loadFullIncidents()">
               <option value="">All Status</option>
@@ -811,10 +815,10 @@ tbody td { padding: 14px 16px; font-size: 14px; color: var(--text); vertical-ali
 
       <!-- ═══════════ TEAMS PAGE ═══════════ -->
       <div class="page" id="page-teams">
-        <div class="page-title">Response Teams</div>
-        <div class="page-sub">Manage all field response units and their deployment status.</div>
+        <div class="page-title">Municipal Departments</div>
+        <div class="page-sub">Manage all civic field units and their deployment status.</div>
         <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
-          <button class="btn btn-primary" onclick="openModal('teamModal')">+ Add Team</button>
+          <button class="btn btn-primary" onclick="openModal('teamModal')">+ Add Department</button>
         </div>
         <div id="teamsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;"></div>
       </div>
@@ -822,16 +826,16 @@ tbody td { padding: 14px 16px; font-size: 14px; color: var(--text); vertical-ali
       <!-- ═══════════ RESOURCES PAGE ═══════════ -->
       <div class="page" id="page-resources">
         <div class="page-title">Resource Management</div>
-        <div class="page-sub">Track hospital bed availability, emergency shelters and equipment depots.</div>
+        <div class="page-sub">Track civic infrastructure, maintenance depots and municipal facilities.</div>
         <div id="resourcesGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;"></div>
       </div>
 
       <!-- ═══════════ ALERTS PAGE ═══════════ -->
       <div class="page" id="page-alerts">
-        <div class="page-title">Area Alerts</div>
-        <div class="page-sub">Broadcast emergency alerts and advisories to citizens in affected areas.</div>
+        <div class="page-title">Civic Notices</div>
+        <div class="page-sub">Broadcast municipal notices, maintenance alerts and advisories to citizens in affected areas.</div>
         <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
-          <button class="btn btn-danger" onclick="openModal('broadcastModal')">📡 New Broadcast</button>
+          <button class="btn btn-danger" onclick="openModal('broadcastModal')">📡 New Notice</button>
         </div>
         <div class="card">
           <div id="alertsTable">
@@ -843,7 +847,7 @@ tbody td { padding: 14px 16px; font-size: 14px; color: var(--text); vertical-ali
       <!-- ═══════════ ANALYTICS PAGE ═══════════ -->
       <div class="page" id="page-analytics">
         <div class="page-title">Analytics</div>
-        <div class="page-sub">Incident trends, response performance and team efficiency metrics.</div>
+        <div class="page-sub">Complaint trends, resolution performance and department efficiency metrics.</div>
         <div class="stats-grid" id="analyticsStats"></div>
         <div class="grid-2" style="margin-bottom:16px;">
           <div class="card">
@@ -874,16 +878,18 @@ tbody td { padding: 14px 16px; font-size: 14px; color: var(--text); vertical-ali
 <script src="assets/js/utils.js"></script>
 <script src="assets/js/gps.js"></script>
 <script src="assets/js/supabase-client.js"></script>
+<script src="assets/js/mock-auth.js"></script>
 <script>
 /* ============================================================
    CONSTANTS
    ============================================================ */
 const ICONS = {
-  fire:'🔥', medical:'🚑', police:'👮', ambulance:'🏥',
-  fire_brigade:'🚒', accident:'🚗', flood:'🌊', women:'🛡️',
-  child:'👶', missing:'🔍', other:'⚠️',
+  roads:'🚧', waste:'🗑️', water:'💧', drainage:'🌊',
+  streetlights:'💡', sanitation:'🧹', parks:'🌳',
+  infrastructure:'🏗️', traffic_signs:'🚦', encroachment:'🚫',
+  other:'⚠️',
 };
-const TEAM_ICONS = { fire:'🚒', medical:'🚑', police:'🚓', ndrf:'⛑️' };
+const TEAM_ICONS = { roads:'🚧', water:'💧', waste:'🗑️', drainage:'🌊', electrical:'💡', parks:'🌳' };
 const P_COLORS = { 1:'#EF4444', 2:'#F97316', 3:'#F59E0B', 4:'#10B981' };
 const BASE = [19.1200, 72.8500]; // Western Mumbai center
 
@@ -925,28 +931,18 @@ function setDBStatus(ok) {
 
 async function checkSession() {
   try {
-    const { data: { session } } = await _sb.auth.getSession();
-    if (session?.user) {
-      currentUser = session.user;
-      // Check role
-      try {
-        const { data: profile } = await _sb.from('profiles').select('role').eq('id', currentUser.id).single();
-        if (profile && profile.role === 'admin') {
-          bootApp();
-          return;
-        } else {
-          toast('Access denied. Admin role required.', 'error');
-          setTimeout(() => window.location.href = 'citizen.html', 2000);
-          return;
-        }
-      } catch (profileErr) {
-        console.warn('Profile check failed, showing auth screen:', profileErr);
-        // Fall through to show auth screen
+    if (window.MockAuth.isAuthenticated()) {
+      currentUser = window.MockAuth.getCurrentUser();
+      if (currentUser.role === 'citizen') {
+        toast('Citizen accounts open the Citizen Portal.', 'warn');
+        setTimeout(() => { window.location.href = 'citizen.html'; }, 1000);
+        return;
       }
+      bootApp();
+      return;
     }
   } catch (sessionErr) {
     console.warn('Session check failed:', sessionErr);
-    // Fall through to show auth screen
   }
 
   // If no session or errors, check for guest mode in URL
@@ -966,19 +962,24 @@ async function doLogin() {
   if (!email || !pass) { toast('Please fill in all fields.', 'warn'); return; }
   btn.disabled = true; btn.textContent = 'Signing in…';
   try {
-    const data = await window.RF.login(email, pass);
-    currentUser = data.user;
+    const user = await window.MockAuth.login(email, pass);
+    currentUser = user;
   } catch (error) {
     btn.disabled = false; btn.textContent = 'Sign In to Command Center';
-    toast(error.message, 'error');
+    toast(error.message || 'Invalid demo credentials.', 'error');
     return;
   }
-  btn.disabled = false; btn.textContent = 'Sign In to Command Center';
-  if (currentUser?.role === 'admin') {
+  try {
+    toast('Authentication successful — welcome, ' + currentUser.name + '.', 'success');
+    await new Promise(resolve => setTimeout(resolve, 500));
+    if (currentUser.role === 'citizen') {
+      window.location.href = 'citizen.html';
+      return;
+    }
     bootApp();
-  } else {
-    toast('Access denied. Admin role required.', 'error');
-    setTimeout(() => window.location.href = 'citizen.html', 2000);
+  } catch (postErr) {
+    console.error('Post-login error:', postErr);
+    btn.disabled = false; btn.textContent = 'Sign In to Command Center';
   }
 }
 
@@ -990,29 +991,17 @@ async function doRegister() {
   const last  = document.getElementById('regLast').value.trim();
   if (!email || !pass) { toast('Email and password required.', 'warn'); return; }
   if (pass.length < 8)  { toast('Password must be at least 8 characters.', 'warn'); return; }
-  btn.disabled = true; btn.textContent = 'Creating account…';
-  try {
-    const data = await window.RF.register({
-      email,
-      password: pass,
-      full_name: `${first} ${last}`.trim(),
-      role: 'admin',
-    });
-    currentUser = data.user;
-  } catch (error) {
-    btn.disabled = false; btn.textContent = 'Create Admin Account';
-    toast(error.message, 'error');
-    return;
-  }
+  btn.disabled = true; btn.textContent = 'Checking…';
+  await new Promise(resolve => setTimeout(resolve, 600));
   btn.disabled = false; btn.textContent = 'Create Admin Account';
-  toast('Account created! Check your email to verify.', 'success');
-  bootApp();
+  toast('Demo accounts are predefined — no new account is created. Use admin@urban360.demo (password: Demo@123) to sign in.', 'info');
 }
 
 function skipAuth() { bootApp(); }
 
 async function doLogout() {
-  await window.RF.logout();
+  await window.MockAuth.logout();
+  currentUser = null;
   if (realtimeSub) _sb.removeChannel(realtimeSub);
   if (sosSub)      _sb.removeChannel(sosSub);
   if (gpsManager)  gpsManager.stop();
@@ -1034,9 +1023,16 @@ function bootApp() {
   document.getElementById('shell').style.display = 'flex';
 
   // set user info
-  const name = currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'Admin';
+  const name = currentUser?.name || currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'Admin';
   document.getElementById('userName').textContent = name;
   document.getElementById('userAvatar').textContent = name[0].toUpperCase();
+  const roleEl = document.querySelector('.user-role');
+  if (roleEl) roleEl.textContent = {
+    citizen: 'Citizen Portal User',
+    officer: 'Municipal Officer',
+    field_worker: 'Field Operations Worker',
+    administrator: 'Municipal Administrator',
+  }[currentUser.role] || 'Municipal Admin Officer';
 
   // init GPS
   initAdminGPS();
@@ -1147,15 +1143,22 @@ async function loadCmdMapData() {
   teamLayer.clearLayers();
   resourceLayer.clearLayers();
 
-  const [incRes, teamRes, resRes] = await Promise.all([
-    _sb.from('incident_reports').select('*').neq('status','resolved').limit(80),
+  let incidents = [];
+  try {
+    incidents = await window.RF.listIncidentsAPI({ limit: 80 });
+  } catch (_) {
+    const res = await _sb.from('incident_reports').select('*').neq('status','resolved').limit(80);
+    incidents = res.data || [];
+  }
+
+  const [teamRes, resRes] = await Promise.all([
     _sb.from('teams').select('*'),
     _sb.from('resources').select('*'),
   ]);
 
   // Incidents
-  if (layers.incidents && incRes.data) {
-    incRes.data.forEach(inc => {
+  if (layers.incidents && incidents && incidents.length) {
+    incidents.filter(i => i.status !== 'resolved').forEach(inc => {
       if (!inc.latitude || !inc.longitude) return;
       const color = P_COLORS[inc.priority] || P_COLORS[3];
       const icon = L.divIcon({
@@ -1273,14 +1276,21 @@ function updateHUD(incs, teams) {
    ============================================================ */
 async function loadCmdList() {
   const filter = document.getElementById('cmdFilter').value;
-  let q = _sb.from('incident_reports').select('*')
-    .neq('status','resolved').order('priority').order('created_at',{ascending:false}).limit(40);
-  if (filter) q = q.eq('status', filter);
-  const { data } = await q;
+  let data = [];
+  try {
+    data = await window.RF.listIncidentsAPI({ status: filter || '', limit: 40 });
+  } catch (apiErr) {
+    let q = _sb.from('incident_reports').select('*')
+      .neq('status','resolved').order('priority').order('created_at',{ascending:false}).limit(40);
+    if (filter) q = q.eq('status', filter);
+    const res = await q;
+    data = res.data || [];
+  }
+  const incs = Array.isArray(data) ? data : (data?.incidents || []);
   const el = document.getElementById('cmdList');
-  document.getElementById('cmdCount').textContent = `${data?.length||0} incidents`;
-  if (!data?.length) { el.innerHTML = '<div class="empty-state" style="padding:30px;"><div class="empty-icon">✅</div><div class="empty-text">No active incidents</div></div>'; return; }
-  el.innerHTML = data.map(d => `
+  document.getElementById('cmdCount').textContent = `${incs.length} incidents`;
+  if (!incs.length) { el.innerHTML = '<div class="empty-state" style="padding:30px;"><div class="empty-icon">✅</div><div class="empty-text">No active incidents</div></div>'; return; }
+  el.innerHTML = incs.map(d => `
     <div class="inc-row p${d.priority||3}-row ${d.id===selectedIncId?'active':''}" onclick="selectIncident('${d.id}')">
       <div class="p-dot p${d.priority||3}" style="flex-shrink:0;"></div>
       <span class="inc-icon">${ICONS[d.emergency_type]||'⚠️'}</span>
@@ -1303,9 +1313,14 @@ async function selectIncident(id) {
   // refresh list to show selection
   if (document.getElementById('page-command').classList.contains('active')) loadCmdList();
 
-  const { data: inc, error } = await _sb.from('incident_reports').select('*').eq('id',id).single();
-  if (error || !inc) return;
-
+  let inc = null;
+  try {
+    inc = await window.RF.getIncidentAPI(id);
+  } catch (apiErr) {
+    const { data } = await _sb.from('incident_reports').select('*').eq('id',id).single();
+    inc = data;
+  }
+  if (!inc) return;
   document.getElementById('dpTitle').textContent = `${ICONS[inc.emergency_type]||'⚠️'} ${(inc.emergency_type||'').replace(/_/g,' ')}`;
 
   // get teams
@@ -1363,6 +1378,17 @@ async function selectIncident(id) {
       <div style="font-size:12px;color:var(--text-2);line-height:1.6;padding:10px;background:var(--surface2);border-radius:6px;">${inc.description||'No description provided.'}</div>
     </div>
 
+    <!-- Incident Photo -->
+    <div class="dp-section">
+      <div class="dp-section-label">Incident Photo</div>
+      ${inc.image_url ? `
+      <div style="text-align:center;margin-top:8px;">
+        <img src="${inc.image_url}" alt="Incident photo" id="incidentPhotoImg" style="max-width:100%;max-height:300px;border:1px solid var(--border);border-radius:6px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.3);" onclick="openImageModal('${inc.image_url}')">
+        <div style="font-size:10px;color:var(--text-3);margin-top:4px;">Click to view larger</div>
+      </div>` : `
+      <div style="text-align:center;margin-top:8px;padding:20px;background:var(--surface2);border:1px dashed var(--border);border-radius:6px;color:var(--text-3);font-size:12px;">No photo attached</div>`}
+    </div>
+
     <!-- AI Analysis -->
     <div class="dp-section">
       <div class="dp-section-label">AI Recommendation</div>
@@ -1406,19 +1432,20 @@ async function selectIncident(id) {
 
 function getAIRecommendation(type, priority) {
   const map = {
-    fire: 'Deploy fire brigade immediately. Medical standby recommended. Evacuate 200m radius.',
-    medical: 'Dispatch ambulance. Pre-alert nearest hospital emergency ward.',
-    police: 'Assign patrol unit. Crime unit standby if violent incident.',
-    ambulance: 'Nearest ambulance dispatch. Hospital bed pre-allocation advised.',
-    fire_brigade: 'Fire suppression team required. Utility shutdown may be needed.',
-    flood: 'NDRF activation. Rescue boats + high-ground evacuation.',
-    women: 'Women safety unit + police dispatch. Shelter coordination.',
-    accident: 'Traffic control + ambulance. Route diversion recommended.',
-    missing: 'Patrol expansion + surveillance activation.',
-    other: 'Dispatch nearest available unit. Assess on arrival.',
+    roads: 'Assign Roads & Pothole team. Mark area with safety cones before repair. Estimated resolution: 3–5 working days.',
+    waste: 'Dispatch Sanitation & Waste team. Schedule bulk pickup if required. Log into SWM tracking.',
+    water: 'Alert Water Supply Dept. Check for main-line leak or supply disruption. Escalate if affecting >50 households.',
+    drainage: 'Deploy Drainage team. Issue overflow advisory if flooding risk detected. Storm drain inspection required.',
+    streetlights: 'Assign Electrical & Lights unit. Night safety alert if arterial road affected. Repair within 48 hours.',
+    sanitation: 'Coordinate with Sanitation dept. Public health advisory if hazardous waste involved.',
+    parks: 'Parks & Gardens team to inspect. Safety barrier if structural damage. Schedule maintenance.',
+    infrastructure: 'Structural assessment required. Cordon area if public safety risk. Engineering team dispatch.',
+    traffic_signs: 'Traffic Management unit. Deploy temporary signage. Escalate to Traffic Police if urgent.',
+    encroachment: 'Legal notice issuance. Survey team + enforcement unit dispatch. Document with photographs.',
+    other: 'Assess complaint and route to appropriate department on arrival.',
   };
-  const pNote = priority === 1 ? ' ⚠️ **CRITICAL** — all available units recommended.' : '';
-  return (map[type] || 'Assess and assign appropriate unit.') + pNote;
+  const pNote = priority === 1 ? ' ⚠️ **CRITICAL** — immediate departmental escalation recommended.' : '';
+  return (map[type] || 'Assess and assign appropriate civic department.') + pNote;
 }
 
 async function doAssign(incidentId) {
@@ -1426,31 +1453,63 @@ async function doAssign(incidentId) {
   const eta    = parseInt(document.getElementById('dpETA')?.value) || 10;
   if (!teamId) { toast('Select a team first.', 'warn'); return; }
 
-  await _sb.from('assignments').delete().eq('incident_id', incidentId);
-  await _sb.from('assignments').insert([{ incident_id: incidentId, team_id: teamId, eta_minutes: eta }]);
-  await _sb.from('incident_reports').update({ status:'assigned', assigned_team_id: teamId, updated_at: new Date().toISOString() }).eq('id', incidentId);
-
-  const { data: team } = await _sb.from('teams').select('current_load').eq('id',teamId).single();
-  await _sb.from('teams').update({ status:'busy', current_load:(team?.current_load||0)+1 }).eq('id',teamId);
-
-  toast('Team assigned successfully!', 'success');
-  selectIncident(incidentId);
-  refreshAll();
+  // Try backend API first (requires real Supabase JWT)
+  try {
+    await window.RF.updateIncidentStatusAPI(incidentId, { status: 'assigned', assigned_team_id: teamId });
+    await _sb.from('assignments').delete().eq('incident_id', incidentId);
+    await _sb.from('assignments').insert([{ incident_id: incidentId, team_id: teamId, eta_minutes: eta }]);
+    const { data: team } = await _sb.from('teams').select('current_load').eq('id', teamId).single();
+    await _sb.from('teams').update({ status: 'busy', current_load: (team?.current_load || 0) + 1 }).eq('id', teamId);
+    toast('Team assigned successfully!', 'success');
+    selectIncident(incidentId);
+    refreshAll();
+    return;
+  } catch (apiErr) {
+    // Fall back to direct Supabase writes (demo-safe)
+    try {
+      await _sb.from('assignments').delete().eq('incident_id', incidentId);
+      await _sb.from('assignments').insert([{ incident_id: incidentId, team_id: teamId, eta_minutes: eta }]);
+      await _sb.from('incident_reports').update({ status: 'assigned', assigned_team_id: teamId, updated_at: new Date().toISOString() }).eq('id', incidentId);
+      const { data: team } = await _sb.from('teams').select('current_load').eq('id', teamId).single();
+      await _sb.from('teams').update({ status: 'busy', current_load: (team?.current_load || 0) + 1 }).eq('id', teamId);
+      toast('Team assigned successfully!', 'success');
+      selectIncident(incidentId);
+      refreshAll();
+      return;
+    } catch (dbErr) {
+      toast(`Failed to assign team: ${dbErr.message}`, 'error');
+    }
+  }
 }
 
 async function doUpdateStatus(incidentId, status) {
-  await _sb.from('incident_reports').update({ status, updated_at: new Date().toISOString() }).eq('id', incidentId);
-  if (status === 'resolved') {
-    const { data: inc } = await _sb.from('incident_reports').select('assigned_team_id').eq('id',incidentId).single();
-    if (inc?.assigned_team_id) {
-      const { data: t } = await _sb.from('teams').select('current_load').eq('id',inc.assigned_team_id).single();
-      const load = Math.max(0,(t?.current_load||1)-1);
-      await _sb.from('teams').update({ status: load===0?'available':'busy', current_load:load }).eq('id',inc.assigned_team_id);
+  // Try backend API first (requires real Supabase JWT — demo/mock login gets 401)
+  try {
+    await window.RF.updateIncidentStatusAPI(incidentId, { status });
+    toast(`Status updated to "${status}"`, 'success');
+    selectIncident(incidentId);
+    refreshAll();
+    return;
+  } catch (apiErr) {
+    // Fall back to direct Supabase write (demo-safe, works with anon key)
+    try {
+      await _sb.from('incident_reports').update({ status, updated_at: new Date().toISOString() }).eq('id', incidentId);
+      if (status === 'resolved') {
+        const { data: inc } = await _sb.from('incident_reports').select('assigned_team_id').eq('id', incidentId).single();
+        if (inc?.assigned_team_id) {
+          const { data: t } = await _sb.from('teams').select('current_load').eq('id', inc.assigned_team_id).single();
+          const load = Math.max(0, (t?.current_load || 1) - 1);
+          await _sb.from('teams').update({ status: load === 0 ? 'available' : 'busy', current_load: load }).eq('id', inc.assigned_team_id);
+        }
+      }
+      toast(`Status updated to "${status}"`, 'success');
+      selectIncident(incidentId);
+      refreshAll();
+      return;
+    } catch (dbErr) {
+      toast(`Failed to update status: ${dbErr.message}`, 'error');
     }
   }
-  toast(`Status updated to "${status}"`, 'success');
-  selectIncident(incidentId);
-  refreshAll();
 }
 
 async function doCmdChat(incidentId) {
@@ -1475,12 +1534,18 @@ async function loadFullIncidents() {
   const type     = document.getElementById('incTypeFilter').value;
   const status   = document.getElementById('incStatusFilter').value;
   const priority = document.getElementById('incPriorityFilter').value;
-  let q = _sb.from('incident_reports').select('*').order('priority').order('created_at',{ascending:false}).limit(100);
-  if (type)     q = q.eq('emergency_type', type);
-  if (status)   q = q.eq('status', status);
-  if (priority) q = q.eq('priority', parseInt(priority));
-  const { data } = await q;
-  allIncidents = data || [];
+  let data = [];
+  try {
+    data = await window.RF.listIncidentsAPI({ type, status, priority, limit: 100 });
+  } catch (apiErr) {
+    let q = _sb.from('incident_reports').select('*').order('priority').order('created_at',{ascending:false}).limit(100);
+    if (type)     q = q.eq('emergency_type', type);
+    if (status)   q = q.eq('status', status);
+    if (priority) q = q.eq('priority', parseInt(priority));
+    const res = await q;
+    data = res.data || [];
+  }
+  allIncidents = Array.isArray(data) ? data : (data?.incidents || []);
   renderIncidentTable(allIncidents);
 }
 
@@ -1488,6 +1553,7 @@ function filterIncidents() {
   const q = document.getElementById('incSearch').value.toLowerCase();
   const filtered = allIncidents.filter(d =>
     (d.emergency_type||'').includes(q) ||
+    (d.title||'').toLowerCase().includes(q) ||
     (d.description||'').toLowerCase().includes(q) ||
     (d.location||'').toLowerCase().includes(q) ||
     (d.reporter_name||'').toLowerCase().includes(q)
@@ -1496,14 +1562,18 @@ function filterIncidents() {
 }
 
 function renderIncidentTable(data) {
-  document.getElementById('incCount').textContent = `${data.length} records`;
+  const incs = Array.isArray(data) ? data : (data?.incidents || []);
+  document.getElementById('incCount').textContent = `${incs.length} records`;
   const tbody = document.getElementById('incTableBody');
-  if (!data.length) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-3);">No incidents found</td></tr>'; return; }
-  tbody.innerHTML = data.map(d => `
+  if (!incs.length) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-3);">No incidents found</td></tr>'; return; }
+  tbody.innerHTML = incs.map(d => `
     <tr onclick="showPage('command');selectIncident('${d.id}');" ${d.id===selectedIncId?'class="selected"':''}>
       <td><span class="p-dot p${d.priority||3}"></span> P${d.priority||3}</td>
       <td>${ICONS[d.emergency_type]||'⚠️'} ${(d.emergency_type||'').replace(/_/g,' ')}</td>
-      <td class="td-ellipsis">${d.description||'—'}</td>
+      <td class="td-ellipsis">
+        ${d.image_url ? `<img src="${d.image_url}" alt="thumb" style="width:26px;height:26px;object-fit:cover;border-radius:4px;vertical-align:middle;margin-right:8px;cursor:pointer;border:1px solid var(--border);" onclick="event.stopPropagation();openImageModal('${d.image_url}')">` : ''}
+        ${d.title ? `<strong>${d.title}:</strong> ` : ''}${d.description||'—'}
+      </td>
       <td class="td-ellipsis">${d.location||'—'}</td>
       <td>${d.reporter_name||'Anonymous'}</td>
       <td><span class="badge badge-${d.status}">${d.status?.replace(/_/g,' ')}</span></td>
@@ -1666,19 +1736,36 @@ async function submitBroadcast() {
    DASHBOARD HELPERS
    ============================================================ */
 async function loadDashStats() {
+  // Try backend API first (requires real Supabase JWT)
+  try {
+    const data = await window.RF.listIncidentsAPI({ limit: 500 });
+    const incs = data || [];
+    const { data: teamRes } = await _sb.from('teams').select('status');
+    const teams = teamRes || [];
+    document.getElementById('sCritical').textContent    = incs.filter(i=>i.priority===1&&i.status!=='resolved').length;
+    document.getElementById('sActive').textContent      = incs.filter(i=>['assigned','on_the_way'].includes(i.status)).length;
+    document.getElementById('sPending').textContent     = incs.filter(i=>i.status==='pending').length;
+    document.getElementById('sResolved').textContent    = incs.filter(i=>i.status==='resolved').length;
+    document.getElementById('sTeamsAvail').textContent  = teams.filter(t=>t.status==='available').length;
+    const pendingCount = incs.filter(i=>i.status==='pending').length;
+    const badge = document.getElementById('navBadge');
+    badge.style.display = pendingCount > 0 ? '' : 'none';
+    badge.textContent = pendingCount;
+    return;
+  } catch (apiErr) {
+    // Fall back to direct Supabase read (demo-safe)
+  }
   const [incRes, teamRes] = await Promise.all([
     _sb.from('incident_reports').select('status,priority').limit(500),
     _sb.from('teams').select('status'),
   ]);
   const incs  = incRes.data  || [];
   const teams = teamRes.data || [];
-
   document.getElementById('sCritical').textContent    = incs.filter(i=>i.priority===1&&i.status!=='resolved').length;
   document.getElementById('sActive').textContent      = incs.filter(i=>['assigned','on_the_way'].includes(i.status)).length;
   document.getElementById('sPending').textContent     = incs.filter(i=>i.status==='pending').length;
   document.getElementById('sResolved').textContent    = incs.filter(i=>i.status==='resolved').length;
   document.getElementById('sTeamsAvail').textContent  = teams.filter(t=>t.status==='available').length;
-
   const pendingCount = incs.filter(i=>i.status==='pending').length;
   const badge = document.getElementById('navBadge');
   badge.style.display = pendingCount > 0 ? '' : 'none';
@@ -1686,10 +1773,17 @@ async function loadDashStats() {
 }
 
 async function loadTypeChart() {
-  const { data } = await _sb.from('incident_reports').select('emergency_type').limit(500);
-  if (!data) return;
+  let data = [];
+  try {
+    data = await window.RF.listIncidentsAPI({ limit: 500 });
+  } catch (_) {
+    const res = await _sb.from('incident_reports').select('emergency_type').limit(500);
+    data = res.data || [];
+  }
+  const incs = Array.isArray(data) ? data : (data?.incidents || []);
+  if (!incs.length) return;
   const counts = {};
-  data.forEach(d => { counts[d.emergency_type] = (counts[d.emergency_type]||0)+1; });
+  incs.forEach(d => { if (d.emergency_type) counts[d.emergency_type] = (counts[d.emergency_type]||0)+1; });
   const max = Math.max(...Object.values(counts), 1);
   const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,8);
   const html = sorted.map(([type,count])=>`
@@ -1733,16 +1827,23 @@ async function loadSOSFeed() {
 async function loadAnalytics() {
   const container = document.getElementById('analyticsStats');
   if (!container) return; // Removed from UI
-  const { data } = await _sb.from('incident_reports').select('*').limit(500);
+  let data = [];
+  try {
+    data = await window.RF.listIncidentsAPI({ limit: 500 });
+  } catch (_) {
+    const res = await _sb.from('incident_reports').select('*').limit(500);
+    data = res.data || [];
+  }
+  const incs = Array.isArray(data) ? data : (data?.incidents || []);
   const { data: teams } = await _sb.from('teams').select('status');
-  if (!data) return;
+  if (!incs.length) return;
 
   // stats cards
   document.getElementById('analyticsStats').innerHTML = `
-    <div class="stat-card blue"><div class="stat-top"><span class="stat-icon">📊</span></div><div class="stat-value">${data.length}</div><div class="stat-label">Total Incidents</div></div>
-    <div class="stat-card green"><div class="stat-top"><span class="stat-icon">✅</span></div><div class="stat-value">${data.filter(d=>d.status==='resolved').length}</div><div class="stat-label">Resolved</div></div>
-    <div class="stat-card warn"><div class="stat-top"><span class="stat-icon">⏳</span></div><div class="stat-value">${data.filter(d=>d.status==='pending').length}</div><div class="stat-label">Pending</div></div>
-    <div class="stat-card red"><div class="stat-top"><span class="stat-icon">🔴</span></div><div class="stat-value">${data.filter(d=>d.priority===1).length}</div><div class="stat-label">Critical (P1)</div></div>`;
+    <div class="stat-card blue"><div class="stat-top"><span class="stat-icon">📊</span></div><div class="stat-value">${incs.length}</div><div class="stat-label">Total Incidents</div></div>
+    <div class="stat-card green"><div class="stat-top"><span class="stat-icon">✅</span></div><div class="stat-value">${incs.filter(d=>d.status==='resolved').length}</div><div class="stat-label">Resolved</div></div>
+    <div class="stat-card warn"><div class="stat-top"><span class="stat-icon">⏳</span></div><div class="stat-value">${incs.filter(d=>d.status==='pending').length}</div><div class="stat-label">Pending</div></div>
+    <div class="stat-card red"><div class="stat-top"><span class="stat-icon">🔴</span></div><div class="stat-value">${incs.filter(d=>d.priority===1).length}</div><div class="stat-label">Critical (P1)</div></div>`;
 
   // type chart
   const typeCounts = {}; data.forEach(d=>{ typeCounts[d.emergency_type]=(typeCounts[d.emergency_type]||0)+1; });
@@ -1874,8 +1975,34 @@ function timeAgo(ts) {
   if (s < 60) return 'just now';
   if (s < 3600) return `${Math.floor(s/60)}m ago`;
   if (s < 86400) return `${Math.floor(s/3600)}h ago`;
-  return `${Math.floor(s/86400)}d ago`;
-}
+return `${Math.floor(s/86400)}d ago`;
+    }
+
+// Image preview modal
+    function openImageModal(url) {
+      let modal = document.getElementById('imagePreviewModal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'imagePreviewModal';
+        modal.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;cursor:zoom-out;padding:20px;box-sizing:border-box;';
+        modal.innerHTML = `
+          <button onclick="closeImageModal()" style="position:absolute;top:20px;right:30px;z-index:10001;background:rgba(255,255,255,0.2);border:none;color:white;width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+          <img id="imagePreviewImg" src="" style="max-width:90vw;max-height:90vh;object-fit:contain;border-radius:4px;box-shadow:0 0 30px rgba(0,0,0,0.5);cursor:zoom-in;">
+          <div style="position:absolute;bottom:30px;left:0;right:0;text-align:center;color:rgba(255,255,255,0.7);font-size:12px;">Click to close</div>
+        `;
+        document.body.appendChild(modal);
+      }
+      document.getElementById('imagePreviewImg').src = url;
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+    function closeImageModal() {
+      const modal = document.getElementById('imagePreviewModal');
+      if (modal) { modal.style.display = 'none'; document.body.style.overflow = ''; }
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeImageModal();
+    });
 </script>
 </body>
 </html>

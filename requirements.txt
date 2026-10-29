@@ -23,3 +23,4 @@ pydantic-settings==2.7.0
 
 # ASGI server (for local development only)
 uvicorn[standard]==0.32.1
+python-multipart>=0.0.9

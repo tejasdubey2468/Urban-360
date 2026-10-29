@@ -55,7 +55,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
 from api.utils.auth import require_auth, JWT_SECRET, JWT_AUDIENCE
-from api.utils.db import db_error_response, get_client
+from api.utils.db import db_error_response, get_client, SUPABASE_URL, SUPABASE_SERVICE_KEY
+from supabase import create_client
 from api.utils.logger import get_logger
 from api.utils.rate_limit import RateLimiter
 
@@ -75,11 +76,11 @@ log = get_logger("auth")
 login_limiter    = RateLimiter(max_calls=10, window_seconds=60)   # 10 attempts/min
 register_limiter = RateLimiter(max_calls=5,  window_seconds=3600) # 5 registrations/hr
 
-VALID_ROLES = {"citizen", "responder", "admin"}
+VALID_ROLES = {"citizen", "responder", "admin", "officer", "worker"}
 
 # Allowed roles that can be self-assigned at registration
-# (admin requires out-of-band approval in production)
-SELF_ASSIGNABLE_ROLES = {"citizen", "responder"}
+# (admin and officer require out-of-band approval in production)
+SELF_ASSIGNABLE_ROLES = {"citizen", "responder", "worker"}
 
 
 # ── Schemas ────────────────────────────────────────────────────
@@ -244,10 +245,10 @@ async def login(request: Request):
     except Exception as e:
         raise HTTPException(status_code=422, detail=str(e))
 
-    sb = get_client()
-    # Real authentication via Supabase
+    # Dedicated client for sign_in to avoid mutating the service-role client session
+    auth_client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
     try:
-        result = sb.auth.sign_in_with_password({
+        result = auth_client.auth.sign_in_with_password({
             "email":    payload.email,
             "password": payload.password,
         })
@@ -257,6 +258,8 @@ async def login(request: Request):
 
     session = result.session
     user    = result.user
+
+    sb = get_client()
 
     # Fetch profile for role info
     profile = {}

@@ -40,7 +40,9 @@ class AuthUser:
 
     def is_admin(self)     -> bool: return self.role == "admin"
     def is_citizen(self)   -> bool: return self.role in ("citizen", "")
-    def is_responder(self) -> bool: return self.role == "responder"
+    def is_responder(self) -> bool: return self.role in ("responder", "worker")
+    def is_officer(self)   -> bool: return self.role in ("officer", "admin")
+    def is_worker(self)    -> bool: return self.role in ("worker", "responder")
 
 
 # ── Core verification ──────────────────────────────────────────

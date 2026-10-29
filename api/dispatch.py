@@ -66,17 +66,29 @@ log = get_logger("dispatch")
 # ── Type mapping (emergency_type → preferred team.type) ────────
 
 EMERGENCY_TO_TEAM_TYPE = {
-    "fire":         ["fire",    "ndrf"],
-    "medical":      ["medical", "fire"],
-    "ambulance":    ["medical"],
-    "fire_brigade": ["fire"],
-    "accident":     ["medical", "fire", "police"],
-    "flood":        ["ndrf",    "fire"],
-    "police":       ["police"],
-    "women":        ["police"],
-    "child":        ["police",  "medical"],
-    "missing":      ["police"],
-    "other":        ["police",  "medical", "fire", "ndrf"],
+    # Civic categories (Urban 360)
+    "roads":          ["ndrf",    "fire",    "police"],
+    "waste":          ["ndrf",    "medical"],
+    "water":          ["ndrf",    "fire"],
+    "drainage":       ["ndrf",    "fire"],
+    "streetlights":   ["fire",    "police"],
+    "sanitation":     ["medical", "ndrf"],
+    "parks":          ["ndrf",    "police"],
+    "infrastructure": ["ndrf",    "fire"],
+    "traffic_signs":  ["police"],
+    "encroachment":   ["police"],
+    # Legacy emergency categories
+    "fire":           ["fire",    "ndrf"],
+    "medical":        ["medical", "fire"],
+    "ambulance":      ["medical"],
+    "fire_brigade":   ["fire"],
+    "accident":       ["medical", "fire",    "police"],
+    "flood":          ["ndrf",    "fire"],
+    "police":         ["police"],
+    "women":          ["police"],
+    "child":          ["police",  "medical"],
+    "missing":        ["police"],
+    "other":          ["police",  "medical", "fire", "ndrf"],
 }
 
 

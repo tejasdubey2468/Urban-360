@@ -3,8 +3,8 @@
  * Uses Supabase for auth/session/realtime and backend APIs for writes.
  */
 (function () {
-  const URL = "https://xjjalkcmevxqkjqcbfge.supabase.co";
-  const KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqamFsa2NtZXZ4cWtqcWNiZmdlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcwMDQyMzUsImV4cCI6MjA5MjU4MDIzNX0.sHjUiGNntUyNC9IUE9hPvBFT1YMDYcIPWV0JBax65sE";
+  const URL = "https://zjkaoyvztgzdwofgqjjh.supabase.co";
+  const KEY = "sb_publishable_QMDzSanJPFXdn-j_r73uww_EbI0rIAo";
   const API_BASE = window.RAKSHA_API_BASE || "";
 
   let _client = null;
@@ -117,10 +117,51 @@
     signOut: () => sb().auth.signOut(),
     getSession: () => sb().auth.getSession(),
 
-    // Backend-backed writes
-    createIncident: (data) => api("/api/incidents", { method: "POST", json: data, auth: true }),
+    // Backend-backed writes (optional_auth on backend — works without JWT for demo)
+    createIncident: (data) => api("/api/incidents", { method: "POST", json: data }),
     createSOS: (data) => api("/api/sos", { method: "POST", json: data, auth: true }),
     registerVolunteer: (data) => api("/api/volunteers", { method: "POST", json: data }),
+
+    // Image upload via FastAPI backend to Supabase Storage (incident-images bucket)
+    uploadImage: async (file) => {
+      if (!file) throw new Error('No file selected.');
+      if (typeof file === 'string' && (file.startsWith('http://') || file.startsWith('https://'))) {
+        return file;
+      }
+      const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+      const ALLOWED = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+
+      if (file.size && file.size > MAX_SIZE) {
+        throw new Error('Image must be under 5 MB.');
+      }
+      if (file.type && !ALLOWED.includes(file.type.toLowerCase())) {
+        throw new Error('Only JPG, PNG, WebP images are allowed.');
+      }
+
+      const baseUrl = (API_BASE || "").replace(/\/$/, "");
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch(`${baseUrl}/api/incidents/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      let payload = null;
+      try {
+        payload = await response.json();
+      } catch (_) {}
+
+      if (!response.ok) {
+        throw new Error(payload?.detail || payload?.error || `Image upload failed (${response.status})`);
+      }
+
+      if (!payload?.url) {
+        throw new Error('Server did not return a valid image URL.');
+      }
+
+      return payload.url;
+    },
     saveGPS: ({ lat, lng, context, accuracy }) =>
       api("/api/gps", {
         method: "POST",
@@ -144,7 +185,27 @@
         },
       }),
 
-    // Reads and realtime stay on Supabase for speed.
+    // Backend-backed incident reads & status updates.
+    // Handles both real JWT and demo users, always returning array of incident records.
+    listIncidentsAPI: async (filters = {}) => {
+      const params = new URLSearchParams();
+      if (filters.status) params.append("status", filters.status);
+      if (filters.type) params.append("type", filters.type);
+      if (filters.priority) params.append("priority", filters.priority);
+      if (filters.userId) params.append("userId", filters.userId);
+      if (filters.reporterName) params.append("reporter_name", filters.reporterName);
+      if (filters.limit) params.append("limit", filters.limit);
+      if (filters.my) params.append("my", filters.my);
+      const res = await api(`/api/incidents?${params.toString()}`, { method: "GET", auth: true });
+      if (Array.isArray(res)) return res;
+      if (Array.isArray(res?.incidents)) return res.incidents;
+      return [];
+    },
+    getIncidentAPI: (id) => api(`/api/incidents/${id}`, { method: "GET", auth: true }),
+    updateIncidentStatusAPI: (id, patch) =>
+      api(`/api/incidents/${id}`, { method: "PATCH", json: patch, auth: true }),
+
+    // Reads and realtime stay on Supabase for speed (demo-safe, no JWT required).
     fetchIncidents: (filters = {}) => {
       let q = sb().from("incident_reports").select("*").order("priority").order("created_at", { ascending: false }).limit(filters.limit || 50);
       if (filters.status) q = q.eq("status", filters.status);

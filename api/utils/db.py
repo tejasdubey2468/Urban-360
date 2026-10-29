@@ -61,6 +61,12 @@ def get_client() -> Client:
 
     if _client is None:
         _client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+    else:
+        # Enforce service-role authorization so user session sign-ins never degrade backend permissions
+        try:
+            _client.postgrest.auth(SUPABASE_SERVICE_KEY)
+        except Exception:
+            pass
 
     return _client
 

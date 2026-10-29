@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RAKSHA-FORCE — Citizen Dashboard</title>
+    <title>Urban 360 — Citizen Portal</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap"
         rel="stylesheet">
@@ -1094,8 +1094,8 @@
     <!-- AUTH SCREEN -->
     <div class="auth-screen" id="authScreen">
         <div class="auth-box">
-            <div class="auth-logo">RAKSHA-FORCE</div>
-            <div class="auth-sub">CITIZEN PORTAL — SECURE ACCESS</div>
+            <div class="auth-logo">URBAN 360</div>
+            <div class="auth-sub">CITIZEN PORTAL — CIVIC COMPLAINT SYSTEM</div>
             <div class="auth-tabs">
                 <div class="auth-tab active" onclick="switchAuthTab('login')">LOGIN</div>
                 <div class="auth-tab" onclick="switchAuthTab('register')">REGISTER</div>
@@ -1109,6 +1109,8 @@
                         class="form-input" id="loginPassword" placeholder="••••••••"></div>
                 <button class="btn btn-blue btn-full" onclick="doLogin()" id="loginBtn"
                     style="margin-top:8px;">LOGIN</button>
+                <div id="loginError" class="error-msg"></div>
+                <div id="loginSuccess" class="success-msg"></div>
                 <div style="margin-top:12px;text-align:center;"><button class="btn btn-outline btn-sm"
                         onclick="skipAuth()" style="clip-path:none;font-size:9px;">CONTINUE AS GUEST</button></div>
             </div>
@@ -1131,8 +1133,8 @@
                         onclick="skipAuth()" style="clip-path:none;font-size:9px;">CONTINUE AS GUEST</button></div>
             </div>
             <div style="margin-top:16px;text-align:center;"><a href="admin.html"
-                    style="font-family:'Orbitron',monospace;font-size:8px;letter-spacing:2px;color:var(--muted);">ADMIN
-                    / COMMAND CENTER →</a></div>
+                    style="font-family:'Orbitron',monospace;font-size:8px;letter-spacing:2px;color:var(--muted);">MUNICIPAL
+                    COMMAND CENTER →</a></div>
         </div>
     </div>
 
@@ -1142,9 +1144,9 @@
     <!-- TOPBAR -->
     <div class="topbar">
         <div style="display:flex;align-items:center;gap:16px;">
-            <div class="topbar-logo">RAKSHA<span>-FORCE</span></div>
+            <div class="topbar-logo">URBAN<span> 360</span></div>
             <span style="font-family:'Orbitron',monospace;font-size:8px;letter-spacing:2px;color:var(--amber);">CITIZEN
-                DASHBOARD</span>
+                PORTAL</span>
         </div>
         <div class="topbar-right">
             <select id="langSwitch" onchange="switchLanguage(this.value)"
@@ -1173,24 +1175,24 @@
 
         <!-- SIDEBAR -->
         <div class="sidebar">
-            <button class="sidebar-sos" onclick="openSOSModal()">🆘 EMERGENCY SOS</button>
+            <button class="sidebar-sos" onclick="openSOSModal()">🚨 URGENT COMPLAINT</button>
             <div class="sidebar-section">
                 <div class="sidebar-label">Main</div>
                 <div class="nav-item active" onclick="showPage('dashboard')"><span class="icon">🏠</span>Overview</div>
-                <div class="nav-item" onclick="showPage('report')"><span class="icon">🚨</span>Report Incident</div>
-                <div class="nav-item" onclick="showPage('myreports')"><span class="icon">📋</span>My Reports<span
+                <div class="nav-item" onclick="showPage('report')"><span class="icon">📝</span>File Complaint</div>
+                <div class="nav-item" onclick="showPage('myreports')"><span class="icon">📋</span>My Complaints<span
                         class="nav-badge" id="pendingCount">0</span></div>
-                <div class="nav-item" onclick="showPage('track')"><span class="icon">📍</span>Track Help</div>
+                <div class="nav-item" onclick="showPage('track')"><span class="icon">📍</span>Track Status</div>
             </div>
             <div class="sidebar-section">
                 <div class="sidebar-label" data-tr="Info">Info</div>
-                <div class="nav-item" onclick="showPage('alerts')"><span class="icon">🔔</span>Area Alerts<span
+                <div class="nav-item" onclick="showPage('alerts')"><span class="icon">🔔</span>Civic Notices<span
                         class="nav-badge" id="alertCount">0</span></div>
-                <div class="nav-item" onclick="showPage('helplines')"><span class="icon">📞</span>Helplines</div>
+                <div class="nav-item" onclick="showPage('helplines')"><span class="icon">📞</span>Municipal Contacts</div>
             </div>
             <div
                 style="margin-top:auto;padding:16px;font-family:'Orbitron',monospace;font-size:7px;letter-spacing:2px;color:var(--muted);border-top:1px solid var(--border);">
-                <div>RAKSHA-FORCE v2.0</div>
+                <div>URBAN 360 v2.0</div>
                 <div style="margin-top:4px;">CITIZEN PORTAL</div>
             </div>
         </div>
@@ -1202,19 +1204,19 @@
             <div class="page active" id="page-dashboard">
                 <div class="page-header">
                     <div class="page-title">OVERVIEW</div>
-                    <div class="page-sub">Welcome back. Here's your emergency response status.</div>
+                    <div class="page-sub">Welcome back. Here's your civic complaint dashboard.</div>
                 </div>
 
                 <!-- stat row -->
                 <div class="grid-4" style="margin-bottom:20px;" id="statRow">
                     <div class="stat-box"><span class="stat-num" id="statTotal">0</span>
-                        <div class="stat-lbl">My Reports</div>
+                        <div class="stat-lbl">My Complaints</div>
                     </div>
                     <div class="stat-box"><span class="stat-num" id="statPending" style="color:var(--amber);">0</span>
                         <div class="stat-lbl">Pending</div>
                     </div>
                     <div class="stat-box"><span class="stat-num" id="statActive" style="color:var(--orange);">0</span>
-                        <div class="stat-lbl">Active</div>
+                        <div class="stat-lbl">In Progress</div>
                     </div>
                     <div class="stat-box"><span class="stat-num" id="statResolved" style="color:var(--green);">0</span>
                         <div class="stat-lbl">Resolved</div>
@@ -1223,7 +1225,7 @@
 
                 <!-- area alerts -->
                 <div class="card" style="margin-bottom:16px;" id="areaAlertsCard">
-                    <div class="card-title">⚠️ Active Area Alerts</div>
+                    <div class="card-title">📢 Active Civic Notices</div>
                     <div id="dashAlerts">
                         <div style="color:var(--muted);font-size:12px;">Loading...</div>
                     </div>
@@ -1233,29 +1235,26 @@
                 <div class="grid-2">
                     <div class="card">
                         <div class="card-title">🚀 Quick Actions</div>
-                        <button class="btn btn-red btn-full" onclick="showPage('report')" style="margin-bottom:10px;">🚨
-                            REPORT EMERGENCY</button>
+                        <button class="btn btn-red btn-full" onclick="showPage('report')" style="margin-bottom:10px;">📝
+                            FILE A COMPLAINT</button>
                         <button class="btn btn-blue btn-full" onclick="showPage('track')" style="margin-bottom:10px;">📍
-                            TRACK MY REPORT</button>
+                            TRACK MY COMPLAINT</button>
                         <button class="btn btn-outline btn-full" onclick="showPage('myreports')">📋 VIEW ALL MY
-                            REPORTS</button>
+                            COMPLAINTS</button>
                         <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
                             <div
                                 style="font-family:'Orbitron',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:10px;">
-                                EMERGENCY HELPLINES</div>
+                                MUNICIPAL HELPLINES</div>
                             <div style="display:flex;flex-wrap:wrap;gap:6px;">
-                                <a href="tel:100"
-                                    style="background:rgba(200,16,46,0.1);border:1px solid rgba(200,16,46,0.3);padding:5px 10px;font-size:11px;color:var(--red);font-weight:700;">Police
-                                    100</a>
-                                <a href="tel:101"
-                                    style="background:rgba(200,16,46,0.1);border:1px solid rgba(200,16,46,0.3);padding:5px 10px;font-size:11px;color:var(--red);font-weight:700;">Fire
-                                    101</a>
-                                <a href="tel:108"
-                                    style="background:rgba(200,16,46,0.1);border:1px solid rgba(200,16,46,0.3);padding:5px 10px;font-size:11px;color:var(--red);font-weight:700;">Ambulance
-                                    108</a>
-                                <a href="tel:112"
-                                    style="background:rgba(0,48,135,0.12);border:1px solid rgba(0,48,135,0.3);padding:5px 10px;font-size:11px;color:var(--lb);font-weight:700;">Emergency
-                                    112</a>
+                                <a href="tel:1800110001"
+                                    style="background:rgba(200,16,46,0.1);border:1px solid rgba(200,16,46,0.3);padding:5px 10px;font-size:11px;color:var(--red);font-weight:700;">BMC
+                                    1800-110-001</a>
+                                <a href="tel:1916"
+                                    style="background:rgba(200,16,46,0.1);border:1px solid rgba(200,16,46,0.3);padding:5px 10px;font-size:11px;color:var(--red);font-weight:700;">Water
+                                    1916</a>
+                                <a href="tel:19122"
+                                    style="background:rgba(0,48,135,0.12);border:1px solid rgba(0,48,135,0.3);padding:5px 10px;font-size:11px;color:var(--lb);font-weight:700;">Roads
+                                    19122</a>
                             </div>
                         </div>
                     </div>
@@ -1265,42 +1264,41 @@
             <!-- REPORT PAGE -->
             <div class="page" id="page-report">
                 <div class="page-header">
-                    <div class="page-title">REPORT INCIDENT</div>
-                    <div class="page-sub">Fill in the details. Your report is dispatched immediately.</div>
+                    <div class="page-title">FILE A COMPLAINT</div>
+                    <div class="page-sub">Submit your civic complaint. It will be routed to the right department immediately.</div>
                 </div>
                 <div class="grid-2">
                     <div>
                         <div class="card" style="margin-bottom:16px;">
-                            <div class="card-title">📋 Incident Details</div>
+                            <div class="card-title">📋 Complaint Details</div>
                             <div class="form-group">
-                                <label class="form-label">Emergency Type *</label>
+                                <label class="form-label">Complaint Category *</label>
                                 <select class="form-input" id="incType">
-                                    <option value="">Select type...</option>
-                                    <option value="fire">🔥 Fire Emergency</option>
-                                    <option value="medical">🚑 Medical Emergency</option>
-                                    <option value="police">👮 Police / Crime</option>
-                                    <option value="ambulance">🏥 Ambulance Required</option>
-                                    <option value="fire_brigade">🚒 Fire Brigade Required</option>
-                                    <option value="accident">🚗 Road Accident</option>
-                                    <option value="flood">🌊 Flood / Water Emergency</option>
-                                    <option value="women">🛡️ Women Safety</option>
-                                    <option value="child">👶 Child in Danger</option>
-                                    <option value="missing">🔍 Missing Person</option>
-                                    <option value="other">⚠️ Other Emergency</option>
+                                    <option value="">Select category...</option>
+                                    <option value="roads">🚧 Roads &amp; Potholes</option>
+                                    <option value="waste">🗑️ Garbage &amp; Waste</option>
+                                    <option value="water">💧 Water Supply</option>
+                                    <option value="drainage">🌊 Drainage &amp; Sewage</option>
+                                    <option value="streetlights">💡 Street Lights</option>
+                                    <option value="sanitation">🧹 Sanitation</option>
+                                    <option value="parks">🌳 Parks &amp; Open Spaces</option>
+                                    <option value="infrastructure">🏗️ Public Infrastructure</option>
+                                    <option value="traffic_signs">🚦 Traffic Signs</option>
+                                    <option value="encroachment">🚫 Encroachment</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Complaint Description *</label>
                                 <textarea class="form-input" id="incDesc"
-                                    placeholder="Describe what happened, how many people are involved, any injuries or casualties..."></textarea>
+                                    placeholder="Describe the issue, how long it has persisted, any impact on daily life..."></textarea>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Severity Assessment</label>
+                                <label class="form-label">Priority Level</label>
                                 <select class="form-input" id="incSeverity">
-                                    <option value="1">🔴 Critical — Life threatening, immediate help needed</option>
-                                    <option value="2">🟠 High — Serious, urgent response required</option>
-                                    <option value="3" selected>🟡 Medium — Significant but stable</option>
-                                    <option value="4">🟢 Low — Minor, non-urgent</option>
+                                    <option value="1">🔴 Critical — Immediate public hazard</option>
+                                    <option value="2">🟠 High — Urgent civic disruption</option>
+                                    <option value="3" selected>🟡 Medium — Significant but manageable</option>
+                                    <option value="4">🟢 Low — Minor inconvenience</option>
                                 </select>
                             </div>
                             <div class="grid-2" style="gap:10px;">
@@ -1312,7 +1310,7 @@
                             </div>
                         </div>
 
-                        <div class="card">
+                        <div class="card" style="margin-bottom:16px;">
                             <div class="card-title">📸 Photo Evidence (optional)</div>
                             <div class="upload-zone" id="uploadZone">
                                 <input type="file" accept="image/*" id="photoInput" onchange="handlePhoto(this)">
@@ -1338,8 +1336,8 @@
                         </div>
 
                         <div class="card">
-                            <button class="btn btn-red btn-full" onclick="submitIncident()" id="submitBtn">🚨 SUBMIT
-                                EMERGENCY REPORT</button>
+                            <button class="btn btn-red btn-full" onclick="submitIncident()" id="submitBtn">📤 SUBMIT
+                                COMPLAINT</button>
                             <div id="submitMsg" style="display:none;margin-top:10px;"></div>
                         </div>
                     </div>
@@ -1349,8 +1347,8 @@
             <!-- MY REPORTS PAGE -->
             <div class="page" id="page-myreports">
                 <div class="page-header">
-                    <div class="page-title">MY REPORTS</div>
-                    <div class="page-sub">All your submitted incidents and their current status.</div>
+                    <div class="page-title">MY COMPLAINTS</div>
+                    <div class="page-sub">All your submitted civic complaints and their current resolution status.</div>
                 </div>
                 <div style="margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap;">
                     <select class="form-input" id="filterStatus" onchange="loadMyReports()" style="width:160px;">
@@ -1370,32 +1368,32 @@
             <!-- TRACK PAGE -->
             <div class="page" id="page-track">
                 <div class="page-header">
-                    <div class="page-title">TRACK HELP</div>
-                    <div class="page-sub">Real-time status of your emergency reports.</div>
+                    <div class="page-title">TRACK STATUS</div>
+                    <div class="page-sub">Real-time resolution status of your civic complaints.</div>
                 </div>
                 <div style="margin-bottom:16px;">
-                    <div class="form-group"><label class="form-label">Select Incident to Track</label>
+                    <div class="form-group"><label class="form-label">Select Complaint to Track</label>
                         <select class="form-input" id="trackSelect" onchange="loadTrack()">
-                            <option value="">Select an incident...</option>
+                            <option value="">Select a complaint...</option>
                         </select>
                     </div>
                 </div>
                 <div id="trackContent" style="display:none;">
                     <div class="grid-2" style="margin-bottom:16px;">
                         <div class="card">
-                            <div class="card-title">🔄 Response Progress</div>
+                            <div class="card-title">🔄 Resolution Progress</div>
                             <div class="progress-track" id="progressTrack">
                                 <div class="pt-step" id="pt1">
                                     <div class="pt-circle">📝</div>
-                                    <div class="pt-label">REPORTED</div>
+                                    <div class="pt-label">FILED</div>
                                 </div>
                                 <div class="pt-step" id="pt2">
-                                    <div class="pt-circle">✅</div>
+                                    <div class="pt-circle">🏛️</div>
                                     <div class="pt-label">ASSIGNED</div>
                                 </div>
                                 <div class="pt-step" id="pt3">
-                                    <div class="pt-circle">🚗</div>
-                                    <div class="pt-label">ON WAY</div>
+                                    <div class="pt-circle">🔧</div>
+                                    <div class="pt-label">WORK STARTED</div>
                                 </div>
                                 <div class="pt-step" id="pt4">
                                     <div class="pt-circle">✓</div>
@@ -1407,7 +1405,7 @@
                                 style="margin-top:12px;padding:12px;background:rgba(0,48,135,0.08);border:1px solid var(--border);display:none;">
                                 <div
                                     style="font-family:'Orbitron',monospace;font-size:9px;letter-spacing:2px;color:var(--blue);margin-bottom:6px;">
-                                    ASSIGNED TEAM</div>
+                                    ASSIGNED DEPARTMENT</div>
                                 <div id="teamDetails" style="font-size:13px;"></div>
                             </div>
                         </div>
@@ -1417,7 +1415,7 @@
                         </div>
                     </div>
                     <div class="card">
-                        <div class="card-title">💬 Incident Chat</div>
+                        <div class="card-title">💬 Complaint Chat</div>
                         <div class="chat-box" id="chatBox"></div>
                         <div style="display:flex;gap:8px;">
                             <input type="text" class="form-input" id="chatInput" placeholder="Type a message..."
@@ -1433,8 +1431,8 @@
             <!-- ALERTS PAGE -->
             <div class="page" id="page-alerts">
                 <div class="page-header">
-                    <div class="page-title">AREA ALERTS</div>
-                    <div class="page-sub">Live emergency warnings and advisories for your region.</div>
+                    <div class="page-title">CIVIC NOTICES</div>
+                    <div class="page-sub">Live municipal advisories, maintenance alerts, and civic notices for your area.</div>
                 </div>
                 <div id="alertsList">
                     <div style="color:var(--muted);">Loading alerts...</div>
@@ -1444,62 +1442,54 @@
             <!-- HELPLINES PAGE -->
             <div class="page" id="page-helplines">
                 <div class="page-header">
-                    <div class="page-title">HELPLINES</div>
-                    <div class="page-sub">Official emergency contact numbers. Tap to call on mobile.</div>
+                    <div class="page-title">MUNICIPAL CONTACTS</div>
+                    <div class="page-sub">Official municipal helplines and department contacts. Tap to call on mobile.</div>
                 </div>
                 <div class="grid-2">
                     <div>
                         <div class="card" style="margin-bottom:16px;">
-                            <div class="card-title">🚨 Emergency Numbers</div>
+                            <div class="card-title">🏛️ Municipal Helplines</div>
                             <div style="display:flex;flex-direction:column;gap:10px;">
-                                <a href="tel:112"
+                                <a href="tel:1800110001"
                                     style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:rgba(200,16,46,0.08);border:1px solid rgba(200,16,46,0.2);"><span
-                                        style="font-weight:700;">All Emergency (National)</span><span
-                                        style="font-family:'Orbitron',monospace;font-size:18px;color:var(--red);font-weight:900;">112</span></a>
-                                <a href="tel:100"
-                                    style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:var(--card2);border:1px solid var(--border);"><span>Police</span><span
-                                        style="font-family:'Orbitron',monospace;font-size:16px;color:var(--lb);">100</span></a>
-                                <a href="tel:101"
-                                    style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:var(--card2);border:1px solid var(--border);"><span>Fire
-                                        Brigade</span><span
-                                        style="font-family:'Orbitron',monospace;font-size:16px;color:var(--orange);">101</span></a>
-                                <a href="tel:108"
-                                    style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:var(--card2);border:1px solid var(--border);"><span>Ambulance</span><span
-                                        style="font-family:'Orbitron',monospace;font-size:16px;color:var(--green);">108</span></a>
-                                <a href="tel:1070"
-                                    style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:var(--card2);border:1px solid var(--border);"><span>NDRF
-                                        Disaster</span><span
-                                        style="font-family:'Orbitron',monospace;font-size:16px;color:var(--amber);">1070</span></a>
-                                <a href="tel:1091"
-                                    style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:var(--card2);border:1px solid var(--border);"><span>Women
-                                        Safety</span><span
-                                        style="font-family:'Orbitron',monospace;font-size:16px;color:var(--lb);">1091</span></a>
-                                <a href="tel:1098"
-                                    style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:var(--card2);border:1px solid var(--border);"><span>Child
-                                        Helpline</span><span
-                                        style="font-family:'Orbitron',monospace;font-size:16px;color:var(--amber);">1098</span></a>
+                                        style="font-weight:700;">BMC Helpline (24×7)</span><span
+                                        style="font-family:'Orbitron',monospace;font-size:16px;color:var(--red);font-weight:900;">1800-110-001</span></a>
+                                <a href="tel:1916"
+                                    style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:var(--card2);border:1px solid var(--border);"><span>💧 Water Supply</span><span
+                                        style="font-family:'Orbitron',monospace;font-size:16px;color:var(--lb);">1916</span></a>
+                                <a href="tel:19122"
+                                    style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:var(--card2);border:1px solid var(--border);"><span>🚧 Roads &amp;
+                                        Potholes</span><span
+                                        style="font-family:'Orbitron',monospace;font-size:16px;color:var(--orange);">19122</span></a>
+                                <a href="tel:1800221292"
+                                    style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:var(--card2);border:1px solid var(--border);"><span>🗑️ Garbage &amp; Waste</span><span
+                                        style="font-family:'Orbitron',monospace;font-size:16px;color:var(--green);">1800-22-1292</span></a>
+                                <a href="tel:18001023"
+                                    style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:var(--card2);border:1px solid var(--border);"><span>💡 Street
+                                        Lights</span><span
+                                        style="font-family:'Orbitron',monospace;font-size:16px;color:var(--amber);">1800-10-23</span></a>
+                                <a href="tel:112"
+                                    style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:var(--card2);border:1px solid var(--border);"><span>🚨 Emergency
+                                        Services</span><span
+                                        style="font-family:'Orbitron',monospace;font-size:16px;color:var(--lb);">112</span></a>
                             </div>
                         </div>
                     </div>
                     <div>
                         <div class="card">
-                            <div class="card-title">💡 Safety Tips</div>
+                            <div class="card-title">💡 Citizen Tips</div>
                             <div
                                 style="display:flex;flex-direction:column;gap:12px;font-size:13px;line-height:1.6;color:var(--muted);">
-                                <div style="padding:12px;background:var(--card2);border-left:3px solid var(--blue);">🔥
-                                    <strong style="color:var(--text);">Fire:</strong> Evacuate immediately. Don't use
-                                    elevators. Call 101.
+                                <div style="padding:12px;background:var(--card2);border-left:3px solid var(--blue);">📸
+                                    <strong style="color:var(--text);">Photo Evidence:</strong> Attach a clear photo of the issue to speed up resolution.
                                 </div>
-                                <div style="padding:12px;background:var(--card2);border-left:3px solid var(--green);">🚑
-                                    <strong style="color:var(--text);">Medical:</strong> Keep the person calm and warm.
-                                    Don't move if spine injury suspected.
+                                <div style="padding:12px;background:var(--card2);border-left:3px solid var(--green);">📍
+                                    <strong style="color:var(--text);">Pin Location:</strong> Use GPS to drop a precise pin so field teams can find the spot easily.
                                 </div>
                                 <div style="padding:12px;background:var(--card2);border-left:3px solid var(--orange);">
-                                    🌊 <strong style="color:var(--text);">Flood:</strong> Move to high ground
-                                    immediately. Avoid wading through water.</div>
-                                <div style="padding:12px;background:var(--card2);border-left:3px solid var(--amber);">⚡
-                                    <strong style="color:var(--text);">Earthquake:</strong> Drop, Cover, Hold on. Stay
-                                    away from windows.
+                                    🔔 <strong style="color:var(--text);">Stay Notified:</strong> Enable notifications to get real-time updates on your complaint status.</div>
+                                <div style="padding:12px;background:var(--card2);border-left:3px solid var(--amber);">✍️
+                                    <strong style="color:var(--text);">Detailed Description:</strong> More detail means faster routing to the right department.
                                 </div>
                             </div>
                         </div>
@@ -1514,20 +1504,19 @@
     <div class="modal-overlay" id="sosModal">
         <div class="modal">
             <button class="modal-close" onclick="closeModal('sosModal')">✕</button>
-            <div class="modal-title">🚨 SOS EMERGENCY</div>
-            <p style="color:var(--muted);font-size:13px;margin-bottom:20px;">Immediately alert emergency services with
-                your location. This is saved to the national database.</p>
-            <div class="form-group"><label class="form-label" data-tr="Emergency Type">Emergency Type</label>
+            <div class="modal-title">🚨 URGENT COMPLAINT</div>
+            <p style="color:var(--muted);font-size:13px;margin-bottom:20px;">File an urgent civic complaint. It will be immediately escalated to the relevant municipal department.</p>
+            <div class="form-group"><label class="form-label" data-tr="Complaint Category">Complaint Category</label>
                 <select class="form-input" id="sosType">
-                    <option value="fire">🔥 Fire / आग</option>
-                    <option value="medical">🚑 Medical / चिकित्सा</option>
-                    <option value="police">👮 Police / पुलिस</option>
-                    <option value="flood">🌊 Flood / बाढ़</option>
-                    <option value="accident">🚗 Accident / दुर्घटना</option>
-                    <option value="women_safety">🛡️ Women Safety / महिला सुरक्षा</option>
-                    <option value="child">👶 Child Emergency / बाल आपातकाल</option>
-                    <option value="missing">🔍 Missing Person / लापता व्यक्ति</option>
-                    <option value="other">⚠️ Other Emergency / अन्य आपातकाल</option>
+                    <option value="roads">🚧 Roads &amp; Potholes</option>
+                    <option value="water">💧 Water Supply / पानी</option>
+                    <option value="waste">🗑️ Garbage / कचरा</option>
+                    <option value="drainage">🌊 Drainage / नाला</option>
+                    <option value="streetlights">💡 Street Lights / लाइट</option>
+                    <option value="sanitation">🧹 Sanitation / स्वच्छता</option>
+                    <option value="infrastructure">🏗️ Infrastructure / बुनियादी ढांचा</option>
+                    <option value="encroachment">🚫 Encroachment / अतिक्रमण</option>
+                    <option value="other">⚠️ Other / अन्य</option>
                 </select>
             </div>
             <div class="form-group">
@@ -1539,7 +1528,7 @@
                     Description</label><textarea class="form-input" id="sosDesc" rows="2"
                     placeholder="What is happening?"></textarea></div>
             <div style="display:flex;gap:10px;margin-top:4px;">
-                <button class="btn btn-red" style="flex:1;" onclick="triggerSOS()" id="sosBtn">🆘 SEND SOS NOW</button>
+                <button class="btn btn-red" style="flex:1;" onclick="triggerSOS()" id="sosBtn">📤 FILE URGENT COMPLAINT</button>
                 <button class="btn btn-outline" onclick="closeModal('sosModal')">CANCEL</button>
             </div>
             <div id="sosResult" style="display:none;margin-top:12px;"></div>
@@ -1558,6 +1547,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/utils.js"></script>
     <script src="assets/js/supabase-client.js"></script>
+    <script src="assets/js/mock-auth.js"></script>
     <script>
         // ============================================================
         // CONFIG
@@ -1571,10 +1561,10 @@
         // ============================================================
         window.addEventListener('load', async () => {
             sb = window.RF.client();
-            try {
-                await sb.from('incident_reports').select('id').limit(1);
-                setDB(true);
-            } catch (e) { setDB(false); }
+            // Do not block session restore on Supabase: check DB status in background.
+            sb.from('incident_reports').select('id').limit(1)
+                .then(() => setDB(true))
+                .catch(() => setDB(false));
 
             // check session
             await checkSession();
@@ -1600,44 +1590,40 @@
 
         async function doLogin() {
             const btn = document.getElementById('loginBtn');
-            const email = document.getElementById('loginEmail').value;
+            const email = document.getElementById('loginEmail').value.trim();
             const pass = document.getElementById('loginPassword').value;
-            if (!email || !pass) { toast('Fill in all fields', 'ERR'); return; }
-            btn.textContent = 'LOGGING IN...'; btn.disabled = true;
+            const errEl = document.getElementById('loginError');
+            const sucEl = document.getElementById('loginSuccess');
+            errEl.classList.remove('show'); sucEl.classList.remove('show');
+            if (!email || !pass) { errEl.textContent = 'Please enter both email and password.'; errEl.classList.add('show'); return; }
+            btn.textContent = 'AUTHENTICATING...'; btn.disabled = true;
             try {
-                const data = await window.RF.login(email, pass);
-                currentUser = data.user;
+                const user = await window.MockAuth.login(email, pass);
+                currentUser = user;
             } catch (error) {
-                toast('Login failed: ' + error.message, 'ERR');
                 btn.textContent = 'LOGIN'; btn.disabled = false;
+                errEl.textContent = error.message || 'Invalid demo credentials.';
+                errEl.classList.add('show');
                 return;
             }
-            onLoggedIn();
+            try {
+                sucEl.textContent = 'Authentication successful — welcome, ' + currentUser.name + '.';
+                sucEl.classList.add('show');
+                await new Promise(resolve => setTimeout(resolve, 500));
+                if (currentUser.role === 'citizen') { onLoggedIn(); }
+                else { window.location.href = currentUser.dashboard || 'admin.html'; }
+            } catch (postErr) {
+                console.error('Post-login error:', postErr);
+                btn.textContent = 'LOGIN'; btn.disabled = false;
+            }
         }
 
         async function doRegister() {
             const btn = document.getElementById('registerBtn');
-            const name = document.getElementById('regName').value;
-            const email = document.getElementById('regEmail').value;
-            const pass = document.getElementById('regPassword').value;
-            if (!email || !pass || !name) { toast('Fill in all fields', 'ERR'); return; }
-            if (pass.length < 8) { toast('Password must be 8+ chars', 'ERR'); return; }
-            btn.textContent = 'CREATING...'; btn.disabled = true;
-            try {
-                const data = await window.RF.register({
-                    email,
-                    password: pass,
-                    full_name: name,
-                    phone: document.getElementById('regPhone').value,
-                    role: 'citizen'
-                });
-                currentUser = data.user;
-            } catch (error) {
-                toast('Registration failed: ' + error.message, 'ERR');
-                btn.textContent = 'CREATE ACCOUNT'; btn.disabled = false;
-                return;
-            }
-            onLoggedIn();
+            btn.textContent = 'CHECKING...'; btn.disabled = true;
+            await new Promise(resolve => setTimeout(resolve, 600));
+            btn.textContent = 'CREATE ACCOUNT'; btn.disabled = false;
+            toast('Demo accounts are predefined — no new account is created. Use citizen@urban360.demo, officer@urban360.demo, worker@urban360.demo or admin@urban360.demo (password: Demo@123).', 'ERR');
         }
 
         function skipAuth() {
@@ -1647,30 +1633,33 @@
         }
 
         async function checkSession() {
-            const { data: { session } } = await sb.auth.getSession();
-            if (session?.user) {
-                currentUser = session.user;
-                onLoggedIn();
-            } else {
-                const urlParams = new URLSearchParams(window.location.search);
-                if (urlParams.get('guest') === 'true') {
-                    skipAuth();
-                } else {
-                    // Show auth screen instead of redirecting immediately if we want to allow guest login on this page
-                    document.getElementById('authScreen').style.display = 'flex';
+            if (window.MockAuth.isAuthenticated()) {
+                currentUser = window.MockAuth.getCurrentUser();
+                if (currentUser.role !== 'citizen') {
+                    window.location.href = currentUser.dashboard || 'admin.html';
+                    return;
                 }
+                onLoggedIn();
+                return;
+            }
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('guest') === 'true') {
+                skipAuth();
+            } else {
+                // Show auth screen instead of redirecting immediately if we want to allow guest login on this page
+                document.getElementById('authScreen').style.display = 'flex';
             }
         }
 
         async function doLogout() {
-            await window.RF.logout();
+            await window.MockAuth.logout();
             currentUser = null;
             window.location.href = 'index.html';
         }
 
         function onLoggedIn() {
             document.getElementById('authScreen').style.display = 'none';
-            const name = currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'User';
+            const name = currentUser?.name || currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'User';
             document.getElementById('userName').textContent = name;
             document.getElementById('userAvatar').textContent = name[0].toUpperCase();
             initDashboard();
@@ -1800,8 +1789,10 @@
         // ============================================================
         // PHOTO
         // ============================================================
+        let selectedPhotoFile = null;
         function handlePhoto(input) {
             const file = input.files[0]; if (!file) return;
+            selectedPhotoFile = file;
             const reader = new FileReader();
             reader.onload = e => {
                 photoBase64 = e.target.result;
@@ -1870,46 +1861,70 @@
 
             const btn = document.getElementById('submitBtn');
             btn.textContent = '⏳ SUBMITTING...'; btn.disabled = true;
+            document.getElementById('submitMsg').style.display = 'none';
 
             let lat = userLat, lng = userLng;
             try {
                 const p = await new Promise((r, j) => navigator.geolocation.getCurrentPosition(r, j, { timeout: 4000 }));
                 lat = p.coords.latitude; lng = p.coords.longitude;
             } catch (e) { }
-            // Fallback coordinates if user denies permission or timeout
             if (!lat || !lng) { lat = 18.5204; lng = 73.8567; }
 
             const payload = {
                 emergency_type: type,
+                title: desc.length > 50 ? desc.substr(0, 50) : desc,
                 description: desc,
-                reporter_name: document.getElementById('incName').value || null,
+                reporter_name: document.getElementById('incName').value.trim() || (currentUser?.name || 'Citizen User'),
                 phone: document.getElementById('incPhone').value || null,
-                location: document.getElementById('incLocation').value || null,
+                location: document.getElementById('incLocation').value || 'Pune Municipal Area',
                 latitude: lat, longitude: lng,
-                priority: parseInt(document.getElementById('incSeverity').value),
+                priority: parseInt(document.getElementById('incSeverity').value) || 3,
                 status: 'pending',
-                user_id: currentUser?.id || null,
+                user_id: currentUser?.id || '09dca2fc-d7cb-45bc-9a5c-988e4178d8eb',
                 image_url: null
             };
 
-            btn.textContent = '🚨 SUBMIT EMERGENCY REPORT'; btn.disabled = false;
+            // Upload image if selected
+            let imageUrl = null;
+            if (selectedPhotoFile) {
+                btn.textContent = '⏳ UPLOADING PHOTO...';
+                try {
+                    imageUrl = await window.RF.uploadImage(selectedPhotoFile);
+                    payload.image_url = imageUrl;
+                } catch (uploadErr) {
+                    btn.textContent = '📤 SUBMIT COMPLAINT'; btn.disabled = false;
+                    document.getElementById('submitMsg').style.display = 'block';
+                    document.getElementById('submitMsg').innerHTML = `<div class="alert-box danger">❌ Image upload failed: ${uploadErr.message}</div>`;
+                    return;
+                }
+            }
+
             let created;
             try {
                 created = await window.RF.createIncident(payload);
             } catch (error) {
+                btn.textContent = '📤 SUBMIT COMPLAINT'; btn.disabled = false;
                 document.getElementById('submitMsg').style.display = 'block';
                 document.getElementById('submitMsg').innerHTML = `<div class="alert-box danger">❌ Failed: ${error.message}</div>`;
                 return;
             }
+
             const ref = 'RF-' + created.incident_id.substr(0, 8).toUpperCase();
+            btn.textContent = '📤 SUBMIT COMPLAINT'; btn.disabled = false;
             document.getElementById('submitMsg').style.display = 'block';
-            document.getElementById('submitMsg').innerHTML = `<div class="alert-box success">✅ Report submitted! Reference: <strong>${ref}</strong><br>Emergency services notified. Help is being dispatched.</div>`;
+            document.getElementById('submitMsg').innerHTML = `<div class="alert-box success">✅ Report submitted! Reference: <strong>${ref}</strong><br>Complaint saved to municipal database. Emergency services notified.</div>`;
             toast(`✅ Report ${ref} submitted!`, 'OK');
-            // reset form
             ['incType', 'incDesc', 'incName', 'incPhone', 'incLocation'].forEach(id => document.getElementById(id).value = '');
-            photoBase64 = null; document.getElementById('photoPreview').style.display = 'none';
+            selectedPhotoFile = null;
+            photoBase64 = null;
+            const pInput = document.getElementById('incPhoto');
+            if (pInput) pInput.value = '';
+            document.getElementById('photoPreview').style.display = 'none';
             document.getElementById('aiAnalysis').textContent = 'Select incident type to see AI analysis...';
             loadDashboardStats();
+            loadMyReports();
+            loadNearby();
+            populateTrackDropdown();
             await autoAssignTeam(created.incident_id, type, lat, lng);
         }
 
@@ -1944,35 +1959,42 @@
         // DASHBOARD STATS
         // ============================================================
         async function loadDashboardStats() {
-            const uid = currentUser?.id;
-            let q = sb.from('incident_reports').select('status');
-            if (uid) q = q.eq('user_id', uid);
-            const { data } = await q;
-            if (!data) return;
-            document.getElementById('statTotal').textContent = data.length;
-            document.getElementById('statPending').textContent = data.filter(d => d.status === 'pending').length;
-            document.getElementById('statActive').textContent = data.filter(d => ['assigned', 'on_the_way'].includes(d.status)).length;
-            document.getElementById('statResolved').textContent = data.filter(d => d.status === 'resolved').length;
-            document.getElementById('pendingCount').textContent = data.filter(d => d.status === 'pending').length;
+            try {
+                const data = await window.RF.listIncidentsAPI({ limit: 500 });
+                const incs = data || [];
+                document.getElementById('statTotal').textContent = incs.length;
+                document.getElementById('statPending').textContent = incs.filter(d => d.status === 'pending').length;
+                document.getElementById('statActive').textContent = incs.filter(d => ['assigned', 'on_the_way'].includes(d.status)).length;
+                document.getElementById('statResolved').textContent = incs.filter(d => d.status === 'resolved').length;
+                document.getElementById('pendingCount').textContent = incs.filter(d => d.status === 'pending').length;
+            } catch (e) {
+                console.error('Dashboard stats failed:', e);
+            }
         }
 
         // ============================================================
         async function loadNearbyFeed() {
             const feed = document.getElementById('nearbyFeed');
             if (!feed) return;
-            const { data } = await sb.from('incident_reports').select('emergency_type,location,status,created_at,priority').order('created_at', { ascending: false }).limit(8);
-            if (!data || data.length === 0) { feed.innerHTML = '<div style="color:var(--muted);font-size:12px;">No recent incidents.</div>'; return; }
-            const icons = { fire: '🔥', medical: '🚑', police: '👮', ambulance: '🏥', fire_brigade: '🚒', accident: '🚗', flood: '🌊', women: '🛡️', child: '👶', missing: '🔍', other: '⚠️' };
-            feed.innerHTML = data.map(d => {
-                const mins = Math.round((Date.now() - new Date(d.created_at)) / 60000);
-                const ago = mins < 1 ? 'Just now' : mins < 60 ? `${mins}m ago` : `${Math.floor(mins / 60)}h ago`;
-                return `<div style="display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+            try {
+                const data = await window.RF.listIncidentsAPI({ limit: 8 });
+                const incs = data || [];
+                if (!incs.length) { feed.innerHTML = '<div style="color:var(--muted);font-size:12px;">No recent incidents.</div>'; return; }
+                const icons = { fire: '🔥', medical: '🚑', police: '👮', ambulance: '🏥', fire_brigade: '🚒', accident: '🚗', flood: '🌊', women: '🛡️', child: '👶', missing: '🔍', other: '⚠️' };
+                feed.innerHTML = incs.map(d => {
+                    const mins = Math.round((Date.now() - new Date(d.created_at)) / 60000);
+                    const ago = mins < 1 ? 'Just now' : mins < 60 ? `${mins}m ago` : `${Math.floor(mins / 60)}h ago`;
+                    return `<div style="display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
       <span style="font-size:18px;">${icons[d.emergency_type] || '⚠️'}</span>
       <div><div style="font-size:13px;font-weight:600;">${(d.emergency_type || 'incident').replace('_', ' ').toUpperCase()}</div>
       <div style="font-size:10px;color:var(--muted);">${d.location || 'Unknown location'} • ${ago}</div></div>
       <span class="badge badge-${d.status}" style="margin-left:auto;white-space:nowrap;">${d.status}</span>
     </div>`;
-            }).join('');
+                }).join('');
+            } catch (e) {
+                console.error('Nearby feed failed:', e);
+                feed.innerHTML = '<div style="color:var(--muted);font-size:12px;">Unable to load feed.</div>';
+            }
         }
 
         // ============================================================
@@ -2014,38 +2036,71 @@
         // MY REPORTS
         // ============================================================
         async function loadMyReports() {
-            const uid = currentUser?.id;
             const statusFilter = document.getElementById('filterStatus').value;
-            let q = sb.from('incident_reports').select('*').order('created_at', { ascending: false }).limit(20);
-            if (uid) q = q.eq('user_id', uid);
-            if (statusFilter) q = q.eq('status', statusFilter);
-            const { data } = await q;
-            const el = document.getElementById('myReportsList');
-            if (!data || data.length === 0) { el.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:20px 0;">No reports found.</div>'; return; }
-            const icons = { fire: '🔥', medical: '🚑', police: '👮', ambulance: '🏥', fire_brigade: '🚒', accident: '🚗', flood: '🌊', women: '🛡️', child: '👶', missing: '🔍', other: '⚠️' };
-            el.innerHTML = data.map(d => `
+            try {
+                const data = await window.RF.listIncidentsAPI({ limit: 100 });
+                const allIncs = data || [];
+                const currentUid = currentUser?.id || '09dca2fc-d7cb-45bc-9a5c-988e4178d8eb';
+                const currentName = (currentUser?.name || '').toLowerCase();
+
+                let incs = allIncs.filter(d => {
+                    const matchUid = d.user_id && d.user_id === currentUid;
+                    const matchName = currentName && d.reporter_name && d.reporter_name.toLowerCase() === currentName;
+                    return matchUid || matchName;
+                });
+
+                if (statusFilter) {
+                    incs = incs.filter(d => d.status === statusFilter);
+                }
+
+                const el = document.getElementById('myReportsList');
+                if (!incs.length) {
+                    el.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:20px 0;">No complaints found. Submit a new civic complaint above.</div>';
+                    return;
+                }
+                const icons = {
+                    roads: '🚧', waste: '🗑️', water: '💧', drainage: '🌊',
+                    streetlights: '💡', sanitation: '🧹', parks: '🌳',
+                    infrastructure: '🏗️', traffic_signs: '🚦', encroachment: '🚫',
+                    fire: '🔥', medical: '🚑', police: '👮', ambulance: '🏥',
+                    fire_brigade: '🚒', accident: '🚗', flood: '🌊', women: '🛡️',
+                    child: '👶', missing: '🔍', other: '⚠️'
+                };
+                el.innerHTML = incs.map(d => `
     <div class="incident-card priority-${d.priority || 3}" onclick="openIncidentModal('${d.id}')">
       <div class="ic-header">
         <div class="ic-type">${icons[d.emergency_type] || '⚠️'} ${(d.emergency_type || '').replace('_', ' ').toUpperCase()}</div>
         <span class="badge badge-${d.status}">${d.status?.replace('_', ' ')}</span>
       </div>
+      <div style="font-weight:600;font-size:14px;margin-bottom:4px;color:var(--text);">${d.title || d.description?.substr(0, 50) || 'Civic Complaint'}</div>
       <div class="ic-desc">${d.description?.substr(0, 120)}${d.description?.length > 120 ? '...' : ''}</div>
+      ${d.image_url ? `
+      <div style="margin:8px 0;display:flex;align-items:center;gap:10px;">
+        <img src="${d.image_url}" alt="Complaint Photo" style="width:52px;height:52px;object-fit:cover;border-radius:4px;border:1px solid var(--border);" onerror="this.style.display='none'">
+        <span style="font-size:11px;color:var(--muted);">📷 Incident photo attached</span>
+      </div>` : ''}
       <div class="ic-meta">📍 ${d.location || 'Location not specified'} &nbsp;|&nbsp; ${new Date(d.created_at).toLocaleString()} &nbsp;|&nbsp; Ref: RF-${d.id.substr(0, 8).toUpperCase()}</div>
     </div>`).join('');
+            } catch (e) {
+                console.error('My reports failed:', e);
+                document.getElementById('myReportsList').innerHTML = '<div style="color:var(--muted);font-size:13px;padding:20px 0;">Unable to load reports.</div>';
+            }
         }
 
         // ============================================================
         // TRACK
         // ============================================================
         async function populateTrackDropdown() {
-            const uid = currentUser?.id;
-            let q = sb.from('incident_reports').select('id,emergency_type,status,created_at').order('created_at', { ascending: false }).limit(10);
-            if (uid) q = q.eq('user_id', uid);
-            const { data } = await q;
-            const sel = document.getElementById('trackSelect');
-            const icons = { fire: '🔥', medical: '🚑', police: '👮', ambulance: '🏥', fire_brigade: '🚒', accident: '🚗', flood: '🌊', women: '🛡️', child: '👶', missing: '🔍', other: '⚠️' };
-            if (data && data.length > 0) {
-                sel.innerHTML = '<option value="">Select an incident...</option>' + data.map(d => `<option value="${d.id}">${icons[d.emergency_type] || '⚠️'} ${(d.emergency_type || '').replace('_', ' ').toUpperCase()} — ${d.status} — ${new Date(d.created_at).toLocaleDateString()}</option>`).join('');
+            try {
+                const data = await window.RF.listIncidentsAPI({ limit: 10 });
+                const incs = data || [];
+                const sel = document.getElementById('trackSelect');
+                const icons = { fire: '🔥', medical: '🚑', police: '👮', ambulance: '🏥', fire_brigade: '🚒', accident: '🚗', flood: '🌊', women: '🛡️', child: '👶', missing: '🔍', other: '⚠️' };
+                if (incs.length > 0) {
+                    sel.innerHTML = '<option value="">Select an incident...</option>' + incs.map(d => `<option value="${d.id}">${icons[d.emergency_type] || '⚠️'} ${(d.emergency_type || '').replace('_', ' ').toUpperCase()} — ${d.status} — ${new Date(d.created_at).toLocaleDateString()}</option>`).join('');
+                }
+            } catch (e) {
+                console.error('Track dropdown failed:', e);
             }
         }
 
@@ -2056,7 +2111,13 @@
             document.getElementById('trackContent').style.display = 'block';
             document.getElementById('trackEmpty').style.display = 'none';
 
-            const { data: inc } = await sb.from('incident_reports').select('*').eq('id', id).single();
+            let inc;
+            try {
+                inc = await window.RF.getIncidentAPI(id);
+            } catch (e) {
+                console.error('Track load failed:', e);
+                return;
+            }
             if (!inc) return;
 
             // progress steps
@@ -2126,7 +2187,7 @@
             const msg = input.value.trim();
             if (!msg || !currentIncidentId) return;
             input.value = '';
-            const name = currentUser?.user_metadata?.full_name || 'Citizen';
+            const name = currentUser?.name || currentUser?.user_metadata?.full_name || 'Citizen';
             const { error } = await sb.from('incident_messages').insert([{ incident_id: currentIncidentId, sender_name: name, sender_role: 'citizen', message: msg }]);
             if (!error) loadChat(currentIncidentId);
         }
@@ -2135,9 +2196,19 @@
         // INCIDENT DETAIL MODAL
         // ============================================================
         async function openIncidentModal(id) {
-            const { data: inc } = await sb.from('incident_reports').select('*').eq('id', id).single();
+            let inc;
+            try {
+                inc = await window.RF.getIncidentAPI(id);
+            } catch (e) {
+                console.error('Incident modal load failed:', e);
+                return;
+            }
             if (!inc) return;
             const icons = { fire: '🔥', medical: '🚑', police: '👮', ambulance: '🏥', fire_brigade: '🚒', accident: '🚗', flood: '🌊', women: '🛡️', child: '👶', missing: '🔍', other: '⚠️' };
+            const imageHtml = inc.image_url ? `
+    <div style="margin-top:12px;border:1px solid var(--border);border-radius:4px;overflow:hidden;background:var(--dark);">
+      <img src="${inc.image_url}" alt="Incident photo" style="width:100%;height:auto;display:block;" onerror="this.parentElement.innerHTML='<div style=padding:20px;color:var(--muted);text-align:center;>Image not available</div>'">
+    </div>` : '';
             document.getElementById('incidentModalContent').innerHTML = `
     <div class="modal-title">${icons[inc.emergency_type] || '⚠️'} ${(inc.emergency_type || '').replace('_', ' ').toUpperCase()}</div>
     <span class="badge badge-${inc.status}" style="margin-bottom:16px;display:inline-flex;">${inc.status?.replace('_', ' ')}</span>
@@ -2148,6 +2219,7 @@
       <div style="font-size:11px;color:var(--muted);">Location<div style="color:var(--text);">${inc.location || 'Not specified'}</div></div>
     </div>
     <div style="padding:12px;background:var(--card2);border:1px solid var(--border);border-left:3px solid var(--blue);font-size:13px;line-height:1.5;margin-bottom:14px;">${inc.description}</div>
+    ${imageHtml}
     <button class="btn btn-blue btn-sm" onclick="closeModal('incidentModal');showPage('track');document.getElementById('trackSelect').value='${id}';loadTrack();">📍 TRACK THIS INCIDENT</button>
   `;
             document.getElementById('incidentModal').classList.add('active');
