@@ -1068,21 +1068,19 @@ function bootApp() {
     }[currentUser.role] || 'Municipal Admin Officer';
   } catch (e) { console.warn('User info display failed:', e); }
 
-  // init GPS (non-fatal)
-  try { initAdminGPS(); } catch (e) { console.warn('GPS init failed:', e); }
-
-  // load initial data (non-fatal)
-  try { refreshAll(); } catch (e) { console.warn('Initial data load failed:', e); }
-
-  // real-time subscriptions (non-fatal)
-  try {
-    realtimeSub = _sb.channel('admin-incidents')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'incident_reports' }, () => refreshAll())
-      .subscribe();
-    sosSub = _sb.channel('admin-sos')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'sos_alerts' }, () => loadSOSFeed())
-      .subscribe();
-  } catch (e) { console.warn('Realtime subscription failed:', e); }
+  // Defer all data loading so shell appears immediately
+  setTimeout(() => {
+    try { initAdminGPS(); } catch (e) { console.warn('GPS init failed:', e); }
+    try { refreshAll(); } catch (e) { console.warn('Initial data load failed:', e); }
+    try {
+      realtimeSub = _sb.channel('admin-incidents')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'incident_reports' }, () => refreshAll())
+        .subscribe();
+      sosSub = _sb.channel('admin-sos')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'sos_alerts' }, () => loadSOSFeed())
+        .subscribe();
+    } catch (e) { console.warn('Realtime subscription failed:', e); }
+  }, 100);
 
   // auto refresh
   setInterval(refreshAll, 20000);
