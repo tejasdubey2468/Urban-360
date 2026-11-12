@@ -10,6 +10,17 @@
     href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@500;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
+  <script>
+    (function () {
+      try {
+        const savedTheme = localStorage.getItem('urban360_theme');
+        if (savedTheme === 'light') {
+          document.documentElement.classList.add('light-theme');
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (e) { }
+    })();
+  </script>
   <style>
     body {
       padding-top: 103px;
@@ -2051,39 +2062,6 @@
         padding-top: 95px;
       }
     }
-      nav {
-        padding: 0 18px;
-      }
-
-      .nav-links {
-        display: none;
-      }
-
-      section {
-        padding: 52px 18px;
-      }
-
-      .report-grid,
-      .about-grid,
-      .auth-grid,
-      .footer-grid {
-        grid-template-columns: 1fr;
-      }
-      .report-grid-2 { grid-template-columns: 1fr; }
-      .report-sections { display:flex; flex-direction:column; gap:10px; }
-      .report-section-divider { display:block; }
-      .report-map { height: 150px; }
-      .report-note { padding: 20px 18px 16px; }
-
-      .gov-strip {
-        padding: 5px 18px;
-        font-size: 8px;
-      }
-
-      body {
-        padding-top: 95px;
-      }
-    }
 
     .leaflet-tile {
       filter: brightness(0.62) saturate(0.35) hue-rotate(190deg) !important;
@@ -2092,6 +2070,516 @@
     .leaflet-container {
       background: var(--dark) !important;
       font-family: 'Rajdhani', sans-serif !important;
+    }
+
+    /* ========================================================
+       THEME SWITCHER (LIGHT & DARK MODE)
+       ======================================================== */
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .theme-switch-container {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(0, 48, 135, 0.22);
+      border: 1px solid var(--border2);
+      border-radius: 24px;
+      padding: 3px;
+      gap: 3px;
+      position: relative;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35);
+    }
+
+    .theme-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: transparent;
+      border: none;
+      border-radius: 18px;
+      padding: 5px 11px;
+      font-family: 'Orbitron', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+      line-height: 1;
+    }
+
+    .theme-toggle-btn .theme-icon {
+      font-size: 12px;
+      display: inline-block;
+      transition: transform 0.25s ease;
+    }
+
+    .theme-toggle-btn:hover {
+      color: var(--text);
+    }
+
+    .theme-toggle-btn:hover .theme-icon {
+      transform: scale(1.18);
+    }
+
+    /* Dark Mode Active (Default) */
+    .theme-toggle-btn.active#themeBtnDark {
+      background: var(--blue);
+      color: #FFFFFF !important;
+      box-shadow: 0 0 14px rgba(0, 48, 135, 0.7);
+    }
+
+    /* Light Mode Active */
+    .theme-toggle-btn.active#themeBtnLight {
+      background: linear-gradient(135deg, #F59E0B, #D97706);
+      color: #0F172A !important;
+      box-shadow: 0 0 14px rgba(245, 158, 11, 0.55);
+    }
+
+    @media (max-width: 600px) {
+      .theme-toggle-btn .theme-text {
+        display: none;
+      }
+      .theme-toggle-btn {
+        padding: 5px 8px;
+      }
+    }
+
+    /* ========================================================
+       LIGHT MODE COMPREHENSIVE THEME OVERRIDES
+       ======================================================== */
+    body.light-theme {
+      --black: #F8FAFC;
+      --dark: #EDF2F7;
+      --card: #FFFFFF;
+      --card2: #F1F5F9;
+      --border: rgba(200, 16, 46, 0.22);
+      --border2: rgba(0, 48, 135, 0.16);
+      --text: #0F172A;
+      --muted: #475569;
+      --lightblue: #0044B3;
+      --lb: #0044B3;
+      --glow: 0 0 16px rgba(200, 16, 46, 0.16);
+      --glow-blue: 0 0 14px rgba(0, 48, 135, 0.18);
+      background: #F8FAFC !important;
+      color: #0F172A !important;
+    }
+
+    body.light-theme::before {
+      opacity: 0.12;
+    }
+
+    body.light-theme .bg-grid {
+      background-image: linear-gradient(rgba(0, 48, 135, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 48, 135, 0.05) 1px, transparent 1px);
+    }
+
+    body.light-theme .bg-wm {
+      opacity: 0.035;
+      color: var(--blue);
+    }
+
+    /* Theme Switcher in Light Mode */
+    body.light-theme .theme-switch-container {
+      background: rgba(0, 48, 135, 0.08);
+      border-color: rgba(0, 48, 135, 0.2);
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+    }
+
+    body.light-theme .theme-toggle-btn {
+      color: #64748B;
+    }
+
+    body.light-theme .theme-toggle-btn:hover {
+      color: #0F172A;
+    }
+
+    body.light-theme .theme-toggle-btn.active#themeBtnLight {
+      background: #F59E0B;
+      color: #0F172A !important;
+      box-shadow: 0 2px 10px rgba(245, 158, 11, 0.4);
+    }
+
+    body.light-theme .theme-toggle-btn.active#themeBtnDark {
+      background: #1E293B;
+      color: #FFFFFF !important;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.25);
+    }
+
+    /* Nav in Light Mode */
+    body.light-theme nav {
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0, 48, 135, 0.16);
+      box-shadow: 0 4px 20px rgba(0, 48, 135, 0.06);
+    }
+
+    body.light-theme .logo-text {
+      text-shadow: 0 0 12px rgba(200, 16, 46, 0.25);
+    }
+
+    body.light-theme .logo-sub {
+      color: #64748B;
+    }
+
+    body.light-theme .nav-links a {
+      color: #475569;
+    }
+
+    body.light-theme .nav-links a:hover {
+      color: #003087;
+    }
+
+    /* Hero in Light Mode */
+    body.light-theme .hero {
+      background: #F8FAFC;
+    }
+
+    body.light-theme .hero-title .line1 {
+      color: #0F172A;
+      text-shadow: 0 4px 25px rgba(0, 48, 135, 0.08);
+    }
+
+    body.light-theme .hero-sub {
+      color: #475569;
+    }
+
+    body.light-theme .hero-badge {
+      background: rgba(0, 48, 135, 0.06);
+      border-color: rgba(0, 48, 135, 0.22);
+      color: #003087;
+      font-weight: 700;
+    }
+
+    body.light-theme .tag {
+      background: #FFFFFF;
+      border: 1px solid rgba(0, 48, 135, 0.2);
+      color: #334155;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+    }
+
+    body.light-theme .tag:hover {
+      background: rgba(0, 48, 135, 0.08);
+      border-color: #003087;
+      color: #003087;
+    }
+
+    body.light-theme .portal-container {
+      background: rgba(255, 255, 255, 0.94);
+      border: 2px solid rgba(212, 160, 23, 0.4);
+      box-shadow: 0 12px 36px rgba(0, 48, 135, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    body.light-theme .portal-container::before {
+      color: #B45309;
+      font-weight: 700;
+      opacity: 0.9;
+    }
+
+    body.light-theme .btn-portal-citizen {
+      background: linear-gradient(135deg, #003087, #0050E0);
+      box-shadow: 0 8px 24px rgba(0, 48, 135, 0.35);
+    }
+
+    body.light-theme .btn-portal-admin {
+      background: linear-gradient(135deg, #1E293B, #0F172A);
+      color: #FBBF24;
+      border: 2px solid #F59E0B;
+      box-shadow: 0 8px 24px rgba(245, 158, 11, 0.25);
+    }
+
+    /* Headings & Text */
+    body.light-theme .section-title {
+      color: #0F172A;
+    }
+
+    body.light-theme .section-desc {
+      color: #475569;
+    }
+
+    body.light-theme .section-label {
+      color: #003087;
+      font-weight: 700;
+    }
+
+    /* Services Grid & Cards */
+    body.light-theme .services-grid {
+      background: rgba(0, 48, 135, 0.12);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.04);
+    }
+
+    body.light-theme .service-card {
+      background: #FFFFFF;
+      box-shadow: 0 2px 10px rgba(0, 48, 135, 0.04);
+    }
+
+    body.light-theme .service-card:hover {
+      background: #FFFFFF;
+      box-shadow: 0 12px 28px rgba(0, 48, 135, 0.12);
+    }
+
+    body.light-theme .service-title {
+      color: #0F172A;
+    }
+
+    body.light-theme .service-desc {
+      color: #475569;
+    }
+
+    body.light-theme .service-number {
+      color: rgba(0, 48, 135, 0.16);
+    }
+
+    body.light-theme .service-hotline {
+      color: #D97706;
+    }
+
+    /* Stats */
+    body.light-theme .stats-section {
+      background: #EDF2F7;
+      border-color: rgba(0, 48, 135, 0.15);
+    }
+
+    body.light-theme .stat-item {
+      border-color: rgba(0, 48, 135, 0.12);
+    }
+
+    body.light-theme .stat-label {
+      color: #475569;
+      font-weight: 700;
+    }
+
+    body.light-theme .stat-number {
+      text-shadow: 0 0 18px rgba(200, 16, 46, 0.2);
+    }
+
+    /* Quick Action SOS */
+    body.light-theme .sos-caption {
+      color: #475569;
+      font-weight: 700;
+    }
+
+    body.light-theme .sos-ring {
+      border-color: rgba(200, 16, 46, 0.25);
+    }
+
+    /* Map HUD & Leaflet */
+    body.light-theme .map-hud {
+      background: rgba(255, 255, 255, 0.95);
+      border-color: rgba(0, 48, 135, 0.22);
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.08);
+    }
+
+    body.light-theme .map-hud-title {
+      color: #003087;
+      font-weight: 700;
+    }
+
+    body.light-theme .map-hud-loc {
+      color: #0F172A;
+    }
+
+    body.light-theme .map-overlay {
+      display: none !important;
+    }
+
+    body.light-theme .leaflet-tile {
+      filter: none !important;
+    }
+
+    body.light-theme .leaflet-container {
+      background: #E2E8F0 !important;
+    }
+
+    /* Incident Feed */
+    body.light-theme .feed-item {
+      border-color: rgba(0, 48, 135, 0.1);
+    }
+
+    body.light-theme .feed-item:hover {
+      background: rgba(0, 48, 135, 0.05);
+    }
+
+    body.light-theme .feed-title {
+      color: #0F172A;
+    }
+
+    body.light-theme .feed-meta {
+      color: #475569;
+    }
+
+    /* Volunteers */
+    body.light-theme .volunteer-grid {
+      background: rgba(0, 48, 135, 0.12);
+    }
+
+    body.light-theme .volunteer-card {
+      background: #FFFFFF;
+    }
+
+    body.light-theme .volunteer-card:hover {
+      background: rgba(0, 48, 135, 0.04);
+    }
+
+    body.light-theme .vol-name {
+      color: #0F172A;
+    }
+
+    body.light-theme .vol-role {
+      color: #003087;
+      font-weight: 700;
+    }
+
+    body.light-theme .vol-loc {
+      color: #64748B;
+    }
+
+    body.light-theme .vol-avatar {
+      background: rgba(0, 48, 135, 0.06);
+      border-color: rgba(0, 48, 135, 0.18);
+    }
+
+    /* About Section */
+    body.light-theme .hex-item {
+      background: #FFFFFF;
+      border-color: rgba(0, 48, 135, 0.2);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    }
+
+    body.light-theme .hex-item:hover {
+      background: rgba(0, 48, 135, 0.08);
+    }
+
+    body.light-theme .hex0 {
+      background: rgba(200, 16, 46, 0.08);
+    }
+
+    body.light-theme .progress-bar {
+      background: rgba(0, 48, 135, 0.12);
+    }
+
+    /* Auth Panels & Inputs */
+    body.light-theme .auth-grid {
+      background: rgba(0, 48, 135, 0.15);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    }
+
+    body.light-theme .auth-panel {
+      background: #FFFFFF;
+    }
+
+    body.light-theme .auth-panel:nth-child(2) {
+      background: #F8FAFC !important;
+    }
+
+    body.light-theme .auth-title {
+      color: #0F172A;
+    }
+
+    body.light-theme .auth-sub {
+      color: #475569;
+    }
+
+    body.light-theme .form-label {
+      color: #003087;
+      font-weight: 700;
+    }
+
+    body.light-theme .form-input {
+      background: #F8FAFC;
+      border: 1px solid rgba(0, 48, 135, 0.22);
+      color: #0F172A;
+    }
+
+    body.light-theme .form-input:focus {
+      background: #FFFFFF;
+      border-color: #003087;
+      box-shadow: 0 0 0 3px rgba(0, 48, 135, 0.12);
+    }
+
+    body.light-theme .form-input::placeholder {
+      color: #94A3B8;
+    }
+
+    body.light-theme select.form-input option {
+      background: #FFFFFF;
+      color: #0F172A;
+    }
+
+    body.light-theme .btn-secondary {
+      color: #1E293B;
+      border: 1px solid rgba(0, 48, 135, 0.25);
+      background: #FFFFFF;
+    }
+
+    body.light-theme .btn-secondary:hover {
+      background: #F1F5F9;
+      border-color: #003087;
+    }
+
+    /* Modals */
+    body.light-theme .modal-overlay {
+      background: rgba(15, 23, 42, 0.65);
+    }
+
+    body.light-theme .modal {
+      background: #FFFFFF;
+      border-color: rgba(0, 48, 135, 0.2);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.22);
+    }
+
+    body.light-theme .modal-body {
+      color: #475569;
+    }
+
+    body.light-theme .modal-close {
+      color: #64748B;
+    }
+
+    body.light-theme .modal-close:hover {
+      color: var(--red);
+    }
+
+    /* Alerts & Notifications */
+    body.light-theme .alert-banner {
+      background: rgba(224, 123, 0, 0.1);
+      border-color: rgba(224, 123, 0, 0.35);
+      color: #0F172A;
+    }
+
+    body.light-theme .alert-text {
+      color: #334155;
+    }
+
+    body.light-theme .alert-text strong {
+      color: #B45309;
+    }
+
+    body.light-theme .notification {
+      background: #FFFFFF;
+      box-shadow: 0 8px 30px rgba(0, 48, 135, 0.15);
+    }
+
+    body.light-theme .notification-msg {
+      color: #334155;
+    }
+
+    /* Loading Screen */
+    body.light-theme .loading-screen {
+      background: #F8FAFC;
+    }
+
+    body.light-theme .loading-bar {
+      background: rgba(0, 48, 135, 0.1);
+    }
+
+    body.light-theme .loading-text {
+      color: #475569;
     }
   </style>
 </head>
@@ -2139,17 +2627,30 @@
         <span class="logo-sub">CONNECTING PEOPLE WITH URBAN SERVICES</span>
       </div>
     </a>
-    <ul class="nav-links">
-      <li><a href="#services">Services</a></li>
-      <li><a href="#map">Civic Map</a></li>
-      <li><a href="#report">Report Issue</a></li>
-      <li><a href="#volunteers">Community</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#login">Login</a></li>
-      <li><a href="citizen.html" style="color:var(--lb)!important;">👤 CITIZEN PORTAL</a></li>
-      <li><a href="admin.html" style="color:var(--amber)!important;">🎛️ OPERATIONS HQ</a></li>
-      <li><a href="#" class="nav-sos" onclick="openSOSModal();return false;">📢 REPORT</a></li>
-    </ul>
+    <div class="nav-right">
+      <!-- THEME SWITCHER -->
+      <div class="theme-switch-container" id="themeSwitcher" role="group" aria-label="Theme mode switcher">
+        <button type="button" class="theme-toggle-btn" id="themeBtnLight" onclick="setTheme('light')" aria-pressed="false" title="Switch to Light Mode">
+          <span class="theme-icon">☀️</span>
+          <span class="theme-text">LIGHT</span>
+        </button>
+        <button type="button" class="theme-toggle-btn active" id="themeBtnDark" onclick="setTheme('dark')" aria-pressed="true" title="Switch to Dark Mode">
+          <span class="theme-icon">🌙</span>
+          <span class="theme-text">DARK</span>
+        </button>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#map">Civic Map</a></li>
+        <li><a href="#report">Report Issue</a></li>
+        <li><a href="#volunteers">Community</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#login">Login</a></li>
+        <li><a href="citizen.html" style="color:var(--lb)!important;">👤 CITIZEN PORTAL</a></li>
+        <li><a href="admin.html" style="color:var(--amber)!important;">🎛️ OPERATIONS HQ</a></li>
+        <li><a href="#" class="nav-sos" onclick="openSOSModal();return false;">📢 REPORT</a></li>
+      </ul>
+    </div>
   </nav>
 
   <!-- HERO -->
@@ -2717,6 +3218,51 @@
   <script src="assets/js/mock-auth.js"></script>
 
   <script>
+    // ===== THEME SWITCHER (LIGHT & DARK MODE) =====
+    function setTheme(mode) {
+      const isLight = (mode === 'light');
+      if (isLight) {
+        document.documentElement.classList.add('light-theme');
+        if (document.body) document.body.classList.add('light-theme');
+        document.documentElement.setAttribute('data-theme', 'light');
+      } else {
+        document.documentElement.classList.remove('light-theme');
+        if (document.body) document.body.classList.remove('light-theme');
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+
+      try {
+        localStorage.setItem('urban360_theme', isLight ? 'light' : 'dark');
+      } catch (e) { }
+
+      const btnLight = document.getElementById('themeBtnLight');
+      const btnDark = document.getElementById('themeBtnDark');
+      if (btnLight && btnDark) {
+        btnLight.classList.toggle('active', isLight);
+        btnLight.setAttribute('aria-pressed', isLight ? 'true' : 'false');
+        btnDark.classList.toggle('active', !isLight);
+        btnDark.setAttribute('aria-pressed', !isLight ? 'true' : 'false');
+      }
+
+      if (typeof map !== 'undefined' && map) {
+        setTimeout(() => map.invalidateSize(), 150);
+      }
+      if (typeof reportMap !== 'undefined' && reportMap) {
+        setTimeout(() => reportMap.invalidateSize(), 150);
+      }
+    }
+
+    function initTheme() {
+      let saved = 'dark';
+      try {
+        saved = localStorage.getItem('urban360_theme') || 'dark';
+      } catch (e) { }
+      setTheme(saved);
+    }
+
+    // Apply saved theme immediately
+    initTheme();
+
     // ===== SUPABASE =====
     let sb;
 
@@ -2739,6 +3285,7 @@
 
     // ===== BOOT =====
     window.addEventListener('load', () => {
+      initTheme();
       // Do not block page reveal on Supabase: initialize DB status in background.
       initSB();
 

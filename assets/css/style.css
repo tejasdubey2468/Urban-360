@@ -6,6 +6,7 @@
   --amber: #D4A017;
   --blue: #003087;
   --lightblue: #6B9FE0;
+  --lb: #6B9FE0;
   --black: #080C10;
   --dark: #0D1117;
   --card: #111820;
@@ -17,6 +18,23 @@
   --green: #00CC66;
   --glow: 0 0 28px rgba(200, 16, 46, 0.35);
   --glow-blue: 0 0 18px rgba(0, 48, 135, 0.45);
+}
+
+:root[data-theme="light"],
+html.light-theme,
+body.light-theme {
+  --black: #F8FAFC;
+  --dark: #EDF2F7;
+  --card: #FFFFFF;
+  --card2: #F1F5F9;
+  --border: rgba(200, 16, 46, 0.22);
+  --border2: rgba(0, 48, 135, 0.16);
+  --text: #0F172A;
+  --muted: #475569;
+  --lightblue: #0044B3;
+  --lb: #0044B3;
+  --glow: 0 0 16px rgba(200, 16, 46, 0.16);
+  --glow-blue: 0 0 14px rgba(0, 48, 135, 0.18);
 }
 
 * {
