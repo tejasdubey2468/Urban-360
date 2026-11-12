@@ -931,16 +931,22 @@ function setDBStatus(ok) {
 }
 
 async function checkSession() {
+  // Always show auth screen first; hide only after successful session check
+  const authScreen = document.getElementById('authScreen');
+  if (authScreen) authScreen.style.display = 'flex';
+
   try {
-    if (window.MockAuth.isAuthenticated()) {
+    if (window.MockAuth && window.MockAuth.isAuthenticated()) {
       currentUser = window.MockAuth.getCurrentUser();
-      if (currentUser.role === 'citizen') {
+      if (currentUser && currentUser.role === 'citizen') {
         toast('Citizen accounts open the Citizen Portal.', 'warn');
         setTimeout(() => { window.location.href = 'citizen.html'; }, 1000);
         return;
       }
-      bootApp();
-      return;
+      if (currentUser) {
+        bootApp();
+        return;
+      }
     }
   } catch (sessionErr) {
     console.warn('Session check failed:', sessionErr);
@@ -950,26 +956,43 @@ async function checkSession() {
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('guest') === 'true') {
     skipAuth();
-  } else {
-    // Show auth screen
-    document.getElementById('authScreen').style.display = 'flex';
   }
+  // authScreen stays visible (set above)
 }
 
 async function doLogin() {
   const btn = document.getElementById('loginBtn');
-  const email = document.getElementById('authEmail').value.trim();
-  const pass  = document.getElementById('authPass').value;
-  if (!email || !pass) { toast('Please fill in all fields.', 'warn'); return; }
+  const emailEl = document.getElementById('authEmail');
+  const passEl  = document.getElementById('authPass');
+  const errorEl = document.getElementById('loginError');
+  const email = emailEl ? emailEl.value.trim() : '';
+  const pass  = passEl  ? passEl.value : '';
+
+  // Clear previous errors
+  if (errorEl) { errorEl.textContent = ''; errorEl.classList.remove('show'); }
+
+  if (!email || !pass) {
+    if (errorEl) { errorEl.textContent = 'Please fill in all fields.'; errorEl.classList.add('show'); }
+    return;
+  }
+
+  if (!window.MockAuth) {
+    if (errorEl) { errorEl.textContent = 'Auth module not loaded. Refresh the page.'; errorEl.classList.add('show'); }
+    return;
+  }
+
   btn.disabled = true; btn.textContent = 'Signing in…';
   try {
     const user = await window.MockAuth.login(email, pass);
     currentUser = user;
   } catch (error) {
     btn.disabled = false; btn.textContent = 'Sign In to Command Center';
-    toast(error.message || 'Invalid demo credentials.', 'error');
+    if (errorEl) { errorEl.textContent = error.message || 'Invalid demo credentials.'; errorEl.classList.add('show'); }
+    const authScreen = document.getElementById('authScreen');
+    if (authScreen) authScreen.style.display = 'flex';
     return;
   }
+
   try {
     toast('Authentication successful — welcome, ' + currentUser.name + '.', 'success');
     await new Promise(resolve => setTimeout(resolve, 500));
@@ -981,6 +1004,9 @@ async function doLogin() {
   } catch (postErr) {
     console.error('Post-login error:', postErr);
     btn.disabled = false; btn.textContent = 'Sign In to Command Center';
+    if (errorEl) { errorEl.textContent = 'Login OK but dashboard failed. Refresh page.'; errorEl.classList.add('show'); }
+    const authScreen = document.getElementById('authScreen');
+    if (authScreen) authScreen.style.display = 'flex';
   }
 }
 
