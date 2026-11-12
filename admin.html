@@ -939,7 +939,6 @@ async function checkSession() {
     if (window.MockAuth && window.MockAuth.isAuthenticated()) {
       currentUser = window.MockAuth.getCurrentUser();
       if (currentUser && currentUser.role === 'citizen') {
-        toast('Citizen accounts open the Citizen Portal.', 'warn');
         setTimeout(() => { window.location.href = 'citizen.html'; }, 1000);
         return;
       }
@@ -994,7 +993,7 @@ async function doLogin() {
   }
 
   try {
-    toast('Authentication successful — welcome, ' + currentUser.name + '.', 'success');
+    if (errorEl) { errorEl.textContent = 'Authentication successful — welcome, ' + currentUser.name + '.'; errorEl.classList.add('show'); errorEl.style.color = 'var(--green)'; }
     await new Promise(resolve => setTimeout(resolve, 500));
     if (currentUser.role === 'citizen') {
       window.location.href = 'citizen.html';
