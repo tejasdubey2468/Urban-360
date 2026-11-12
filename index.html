@@ -2595,6 +2595,12 @@
     </div>
     <div class="loading-text">Connecting to Municipal Network...</div>
   </div>
+  <script>
+    setTimeout(function () {
+      var ls = document.getElementById('loadingScreen');
+      if (ls) ls.classList.add('hidden');
+    }, 600);
+  </script>
 
   <!-- CURSOR -->
   <div class="cursor" id="cursor"></div>
@@ -3218,6 +3224,10 @@
   <script src="assets/js/mock-auth.js"></script>
 
   <script>
+    // Global map references (declared with var to avoid TDZ reference errors)
+    var map = null;
+    var reportMap = null;
+
     // ===== THEME SWITCHER (LIGHT & DARK MODE) =====
     function setTheme(mode) {
       const isLight = (mode === 'light');
@@ -3244,12 +3254,14 @@
         btnDark.setAttribute('aria-pressed', !isLight ? 'true' : 'false');
       }
 
-      if (typeof map !== 'undefined' && map) {
-        setTimeout(() => map.invalidateSize(), 150);
-      }
-      if (typeof reportMap !== 'undefined' && reportMap) {
-        setTimeout(() => reportMap.invalidateSize(), 150);
-      }
+      try {
+        if (map && typeof map.invalidateSize === 'function') {
+          setTimeout(() => map.invalidateSize(), 150);
+        }
+        if (reportMap && typeof reportMap.invalidateSize === 'function') {
+          setTimeout(() => reportMap.invalidateSize(), 150);
+        }
+      } catch (_) { }
     }
 
     function initTheme() {
@@ -3531,7 +3543,6 @@
     }
 
     // ===== MAP =====
-    let map;
     function initMap(lat, lng) {
       if (map) map.remove();
       map = L.map('leaflet-map', { zoomControl: false, attributionControl: false }).setView([lat, lng], 12);
@@ -3618,7 +3629,6 @@
     }
 
     // Compact map for the report location section (reuses Leaflet already loaded on the page)
-    let reportMap = null;
     function initReportMap() {
       if (reportMap) return;
       const el = document.getElementById('reportMap');
