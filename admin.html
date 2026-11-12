@@ -2039,6 +2039,14 @@ function closeImageModal() {
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeImageModal();
 });
+
+// Global error handler to catch any remaining issues
+window.addEventListener('error', e => {
+  console.error('Global error:', e.error || e.message);
+});
+window.addEventListener('unhandledrejection', e => {
+  console.error('Unhandled rejection:', e.reason);
+});
 }
 </script>
 </body>
