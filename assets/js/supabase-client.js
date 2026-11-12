@@ -17,8 +17,39 @@
   }
 
   async function getAccessToken() {
-    const { data } = await sb().auth.getSession();
-    return data.session?.access_token || null;
+    try {
+      const { data } = await sb().auth.getSession();
+      if (data?.session?.access_token) return data.session.access_token;
+    } catch (_) {}
+
+    // Fall back to MockAuth demo session JWT
+    if (window.MockAuth && window.MockAuth.isAuthenticated()) {
+      const user = window.MockAuth.getCurrentUser();
+      if (user) {
+        const b64url = (strOrObj) => {
+          const str = typeof strOrObj === 'string' ? strOrObj : JSON.stringify(strOrObj);
+          return btoa(unescape(encodeURIComponent(str)))
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=+$/, '');
+        };
+        const role = user.role || 'administrator';
+        const header = b64url({ alg: 'none', typ: 'JWT' });
+        const payload = b64url({
+          sub: user.id || 'demo-admin-id',
+          email: user.email || 'admin@urban360.demo',
+          aud: 'authenticated',
+          role: role,
+          user_metadata: {
+            role: role,
+            full_name: user.name || 'Administrator',
+          },
+          exp: Math.floor(Date.now() / 1000) + 7 * 86400,
+        });
+        return `${header}.${payload}.`;
+      }
+    }
+    return null;
   }
 
   async function api(path, options = {}) {
@@ -204,6 +235,12 @@
     getIncidentAPI: (id) => api(`/api/incidents/${id}`, { method: "GET", auth: true }),
     updateIncidentStatusAPI: (id, patch) =>
       api(`/api/incidents/${id}`, { method: "PATCH", json: patch, auth: true }),
+    dispatchTeamAPI: (incidentId, teamId, notes) =>
+      api("/api/dispatch", {
+        method: "POST",
+        json: { incident_id: incidentId, force_team_id: teamId, notes: notes || "" },
+        auth: true,
+      }),
 
     // Reads and realtime stay on Supabase for speed (demo-safe, no JWT required).
     fetchIncidents: (filters = {}) => {

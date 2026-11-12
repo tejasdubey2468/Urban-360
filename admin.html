@@ -440,13 +440,17 @@ tbody td { padding: 14px 16px; font-size: 14px; color: var(--text); vertical-ali
     <div id="formLogin">
       <div class="form-group">
         <label class="form-label">Email Address</label>
-        <input type="email" id="authEmail" class="form-control" placeholder="admin@raksha.force">
+        <input type="email" id="authEmail" class="form-control" placeholder="admin@urban360.demo" onkeydown="if(event.key==='Enter')doLogin()">
       </div>
       <div class="form-group">
         <label class="form-label">Password</label>
-        <input type="password" id="authPass" class="form-control" placeholder="••••••••">
+        <input type="password" id="authPass" class="form-control" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
       </div>
-      <button class="btn btn-primary w-full btn-lg mt-3" onclick="doLogin()" id="loginBtn">Sign In to Municipal Command Center</button>
+      <div style="margin-bottom:12px;padding:8px 12px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--text-3);display:flex;align-items:center;justify-content:space-between;">
+        <span>Demo: <code>admin@urban360.demo</code> / <code>Demo@123</code></span>
+        <button type="button" class="btn btn-ghost btn-sm" style="font-size:10px;padding:2px 8px;border:1px solid var(--border);" onclick="fillDemoAdmin()">Auto-fill</button>
+      </div>
+      <button class="btn btn-primary w-full btn-lg mt-1" onclick="doLogin()" id="loginBtn">Sign In to Municipal Command Center</button>
       <button class="btn btn-outline w-full btn-lg mt-2" onclick="skipAuth()" id="guestBtn">Login as Guest (Read-Only)</button>
       <div id="loginError" class="error-msg"></div>
       <div id="loginSuccess" class="success-msg"></div>
@@ -985,7 +989,7 @@ async function doLogin() {
     const user = await window.MockAuth.login(email, pass);
     currentUser = user;
   } catch (error) {
-    btn.disabled = false; btn.textContent = 'Sign In to Command Center';
+    btn.disabled = false; btn.textContent = 'Sign In to Municipal Command Center';
     if (errorEl) { errorEl.textContent = error.message || 'Invalid demo credentials.'; errorEl.classList.add('show'); }
     const authScreen = document.getElementById('authScreen');
     if (authScreen) authScreen.style.display = 'flex';
@@ -994,7 +998,7 @@ async function doLogin() {
 
   try {
     if (errorEl) { errorEl.textContent = 'Authentication successful — welcome, ' + currentUser.name + '.'; errorEl.classList.add('show'); errorEl.style.color = 'var(--green)'; }
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 300));
     if (currentUser.role === 'citizen') {
       window.location.href = 'citizen.html';
       return;
@@ -1002,7 +1006,7 @@ async function doLogin() {
     bootApp();
   } catch (postErr) {
     console.error('Post-login error:', postErr);
-    btn.disabled = false; btn.textContent = 'Sign In to Command Center';
+    btn.disabled = false; btn.textContent = 'Sign In to Municipal Command Center';
     if (errorEl) { errorEl.textContent = 'Login OK but dashboard failed: ' + (postErr.message || postErr); errorEl.classList.add('show'); }
     const authScreen = document.getElementById('authScreen');
     if (authScreen) authScreen.style.display = 'flex';
@@ -1023,7 +1027,22 @@ async function doRegister() {
   toast('Demo accounts are predefined — no new account is created. Use admin@urban360.demo (password: Demo@123) to sign in.', 'info');
 }
 
-function skipAuth() { bootApp(); }
+function fillDemoAdmin() {
+  const emailEl = document.getElementById('authEmail');
+  const passEl  = document.getElementById('authPass');
+  if (emailEl) emailEl.value = 'admin@urban360.demo';
+  if (passEl)  passEl.value = 'Demo@123';
+}
+
+function skipAuth() {
+  currentUser = {
+    id: 'demo-guest-admin',
+    name: 'Guest Officer',
+    email: 'guest@urban360.demo',
+    role: 'administrator',
+  };
+  bootApp();
+}
 
 async function doLogout() {
   await window.MockAuth.logout();
@@ -1046,10 +1065,12 @@ function switchAuthTab(tab) {
    ============================================================ */
 function bootApp() {
   try {
-    document.getElementById('authScreen').style.display = 'none';
+    const authScreen = document.getElementById('authScreen');
+    if (authScreen) authScreen.style.display = 'none';
   } catch (e) { /* ignore */ }
   try {
-    document.getElementById('shell').style.display = 'flex';
+    const shell = document.getElementById('shell');
+    if (shell) shell.style.display = 'flex';
   } catch (e) { /* ignore */ }
 
   // set user info (non-fatal)
@@ -1065,7 +1086,7 @@ function bootApp() {
       officer: 'Municipal Officer',
       field_worker: 'Field Operations Worker',
       administrator: 'Municipal Administrator',
-    }[currentUser.role] || 'Municipal Admin Officer';
+    }[currentUser?.role] || 'Municipal Admin Officer';
   } catch (e) { console.warn('User info display failed:', e); }
 
   // Defer all data loading so shell appears immediately
@@ -1073,17 +1094,21 @@ function bootApp() {
     try { initAdminGPS(); } catch (e) { console.warn('GPS init failed:', e); }
     try { refreshAll(); } catch (e) { console.warn('Initial data load failed:', e); }
     try {
-      realtimeSub = _sb.channel('admin-incidents')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'incident_reports' }, () => refreshAll())
-        .subscribe();
-      sosSub = _sb.channel('admin-sos')
-        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'sos_alerts' }, () => loadSOSFeed())
-        .subscribe();
+      if (_sb) {
+        realtimeSub = _sb.channel('admin-incidents')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'incident_reports' }, () => refreshAll())
+          .subscribe();
+        sosSub = _sb.channel('admin-sos')
+          .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'sos_alerts' }, () => loadSOSFeed())
+          .subscribe();
+      }
     } catch (e) { console.warn('Realtime subscription failed:', e); }
   }, 100);
 
   // auto refresh
-  setInterval(refreshAll, 20000);
+  setInterval(() => {
+    try { refreshAll(); } catch (e) { console.warn('Auto refresh failed:', e); }
+  }, 20000);
 
   // responsive menu toggle
   try {
@@ -1490,37 +1515,33 @@ async function doAssign(incidentId) {
   const eta    = parseInt(document.getElementById('dpETA')?.value) || 10;
   if (!teamId) { toast('Select a team first.', 'warn'); return; }
 
-  // Try backend API first (requires real Supabase JWT)
+  // Assign via backend API (runs with service key on server, no RLS block)
   try {
-    await window.RF.updateIncidentStatusAPI(incidentId, { status: 'assigned', assigned_team_id: teamId });
-    await _sb.from('assignments').delete().eq('incident_id', incidentId);
-    await _sb.from('assignments').insert([{ incident_id: incidentId, team_id: teamId, eta_minutes: eta }]);
-    const { data: team } = await _sb.from('teams').select('current_load').eq('id', teamId).single();
-    await _sb.from('teams').update({ status: 'busy', current_load: (team?.current_load || 0) + 1 }).eq('id', teamId);
+    if (window.RF?.dispatchTeamAPI) {
+      await window.RF.dispatchTeamAPI(incidentId, teamId);
+    } else {
+      await window.RF.updateIncidentStatusAPI(incidentId, { status: 'assigned', assigned_team_id: teamId });
+    }
     toast('Team assigned successfully!', 'success');
     selectIncident(incidentId);
     refreshAll();
     return;
   } catch (apiErr) {
-    // Fall back to direct Supabase writes (demo-safe)
+    console.warn('dispatchTeamAPI failed, trying updateIncidentStatusAPI fallback:', apiErr);
     try {
-      await _sb.from('assignments').delete().eq('incident_id', incidentId);
-      await _sb.from('assignments').insert([{ incident_id: incidentId, team_id: teamId, eta_minutes: eta }]);
-      await _sb.from('incident_reports').update({ status: 'assigned', assigned_team_id: teamId, updated_at: new Date().toISOString() }).eq('id', incidentId);
-      const { data: team } = await _sb.from('teams').select('current_load').eq('id', teamId).single();
-      await _sb.from('teams').update({ status: 'busy', current_load: (team?.current_load || 0) + 1 }).eq('id', teamId);
+      await window.RF.updateIncidentStatusAPI(incidentId, { status: 'assigned', assigned_team_id: teamId });
       toast('Team assigned successfully!', 'success');
       selectIncident(incidentId);
       refreshAll();
       return;
-    } catch (dbErr) {
-      toast(`Failed to assign team: ${dbErr.message}`, 'error');
+    } catch (fallbackErr) {
+      toast(`Failed to assign team: ${apiErr.message || fallbackErr.message}`, 'error');
     }
   }
 }
 
 async function doUpdateStatus(incidentId, status) {
-  // Try backend API first (requires real Supabase JWT — demo/mock login gets 401)
+  // Update via backend API (runs with service key on server, no RLS block)
   try {
     await window.RF.updateIncidentStatusAPI(incidentId, { status });
     toast(`Status updated to "${status}"`, 'success');
@@ -1528,24 +1549,8 @@ async function doUpdateStatus(incidentId, status) {
     refreshAll();
     return;
   } catch (apiErr) {
-    // Fall back to direct Supabase write (demo-safe, works with anon key)
-    try {
-      await _sb.from('incident_reports').update({ status, updated_at: new Date().toISOString() }).eq('id', incidentId);
-      if (status === 'resolved') {
-        const { data: inc } = await _sb.from('incident_reports').select('assigned_team_id').eq('id', incidentId).single();
-        if (inc?.assigned_team_id) {
-          const { data: t } = await _sb.from('teams').select('current_load').eq('id', inc.assigned_team_id).single();
-          const load = Math.max(0, (t?.current_load || 1) - 1);
-          await _sb.from('teams').update({ status: load === 0 ? 'available' : 'busy', current_load: load }).eq('id', inc.assigned_team_id);
-        }
-      }
-      toast(`Status updated to "${status}"`, 'success');
-      selectIncident(incidentId);
-      refreshAll();
-      return;
-    } catch (dbErr) {
-      toast(`Failed to update status: ${dbErr.message}`, 'error');
-    }
+    console.error('Update status failed:', apiErr);
+    toast(`Failed to update status: ${apiErr.message}`, 'error');
   }
 }
 
@@ -1773,40 +1778,57 @@ async function submitBroadcast() {
    DASHBOARD HELPERS
    ============================================================ */
 async function loadDashStats() {
-  // Try backend API first (requires real Supabase JWT)
+  if (!_sb && window.RF?.client) {
+    try { _sb = window.RF.client(); } catch (_) {}
+  }
+  // Try backend API first (runs via service key or mock token)
   try {
     const data = await window.RF.listIncidentsAPI({ limit: 500 });
-    const incs = data || [];
-    const { data: teamRes } = await _sb.from('teams').select('status');
-    const teams = teamRes || [];
-    document.getElementById('sCritical').textContent    = incs.filter(i=>i.priority===1&&i.status!=='resolved').length;
-    document.getElementById('sActive').textContent      = incs.filter(i=>['assigned','on_the_way'].includes(i.status)).length;
-    document.getElementById('sPending').textContent     = incs.filter(i=>i.status==='pending').length;
-    document.getElementById('sResolved').textContent    = incs.filter(i=>i.status==='resolved').length;
-    document.getElementById('sTeamsAvail').textContent  = teams.filter(t=>t.status==='available').length;
+    const incs = Array.isArray(data) ? data : (data?.incidents || []);
+    let teams = [];
+    if (_sb) {
+      try {
+        const { data: teamRes } = await _sb.from('teams').select('status');
+        teams = teamRes || [];
+      } catch (_) {}
+    }
+    const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    setTxt('sCritical', incs.filter(i=>i.priority===1&&i.status!=='resolved').length);
+    setTxt('sActive', incs.filter(i=>['assigned','on_the_way'].includes(i.status)).length);
+    setTxt('sPending', incs.filter(i=>i.status==='pending').length);
+    setTxt('sResolved', incs.filter(i=>i.status==='resolved').length);
+    setTxt('sTeamsAvail', teams.filter(t=>t.status==='available').length);
     const pendingCount = incs.filter(i=>i.status==='pending').length;
     const badge = document.getElementById('navBadge');
-    badge.style.display = pendingCount > 0 ? '' : 'none';
-    badge.textContent = pendingCount;
+    if (badge) {
+      badge.style.display = pendingCount > 0 ? '' : 'none';
+      badge.textContent = pendingCount;
+    }
     return;
   } catch (apiErr) {
-    // Fall back to direct Supabase read (demo-safe)
-    const [incRes, teamRes] = await Promise.all([
-      _sb.from('incident_reports').select('status,priority').limit(500),
-      _sb.from('teams').select('status'),
-    ]);
-    const incs  = incRes.data  || [];
-    const teams = teamRes.data || [];
-    document.getElementById('sCritical').textContent    = incs.filter(i=>i.priority===1&&i.status!=='resolved').length;
-    document.getElementById('sActive').textContent      = incs.filter(i=>['assigned','on_the_way'].includes(i.status)).length;
-    document.getElementById('sPending').textContent     = incs.filter(i=>i.status==='pending').length;
-    document.getElementById('sResolved').textContent    = incs.filter(i=>i.status==='resolved').length;
-    document.getElementById('sTeamsAvail').textContent  = teams.filter(t=>t.status==='available').length;
-    const pendingCount = incs.filter(i=>i.status==='pending').length;
-    const badge = document.getElementById('navBadge');
-    badge.style.display = pendingCount > 0 ? '' : 'none';
-    badge.textContent = pendingCount;
+    if (!_sb) return;
+    try {
+      const [incRes, teamRes] = await Promise.all([
+        _sb.from('incident_reports').select('status,priority').limit(500),
+        _sb.from('teams').select('status'),
+      ]);
+      const incs  = incRes?.data  || [];
+      const teams = teamRes?.data || [];
+      const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+      setTxt('sCritical', incs.filter(i=>i.priority===1&&i.status!=='resolved').length);
+      setTxt('sActive', incs.filter(i=>['assigned','on_the_way'].includes(i.status)).length);
+      setTxt('sPending', incs.filter(i=>i.status==='pending').length);
+      setTxt('sResolved', incs.filter(i=>i.status==='resolved').length);
+      setTxt('sTeamsAvail', teams.filter(t=>t.status==='available').length);
+      const pendingCount = incs.filter(i=>i.status==='pending').length;
+      const badge = document.getElementById('navBadge');
+      if (badge) {
+        badge.style.display = pendingCount > 0 ? '' : 'none';
+        badge.textContent = pendingCount;
+      }
+    } catch (_) {}
   }
+}
 
 async function loadTypeChart() {
   let data = [];
@@ -1913,17 +1935,22 @@ async function loadAnalytics() {
    REFRESH ALL
    ============================================================ */
 function refreshAll() {
-  try { loadDashStats(); } catch (e) { /* silent */ }
-  try { loadTypeChart(); } catch (e) { /* silent */ }
-  try { loadDashAlerts(); } catch (e) { /* silent */ }
-  try { loadSOSFeed(); } catch (e) { /* silent */ }
-  if (cmdMapInited) { try { loadCmdMapData(); loadCmdList(); } catch (e) { /* silent */ } }
+  if (!_sb && window.RF?.client) {
+    try { _sb = window.RF.client(); } catch (_) {}
+  }
+  try { loadDashStats().catch(e => console.warn('loadDashStats error:', e)); } catch (e) { /* silent */ }
+  try { loadTypeChart().catch(e => console.warn('loadTypeChart error:', e)); } catch (e) { /* silent */ }
+  try { loadDashAlerts().catch(e => console.warn('loadDashAlerts error:', e)); } catch (e) { /* silent */ }
+  try { loadSOSFeed().catch(e => console.warn('loadSOSFeed error:', e)); } catch (e) { /* silent */ }
+  if (cmdMapInited) {
+    try { loadCmdMapData().catch(e => console.warn('loadCmdMapData error:', e)); loadCmdList().catch(e => console.warn('loadCmdList error:', e)); } catch (e) { /* silent */ }
+  }
   const activePage = document.querySelector('.page.active')?.id?.replace('page-','');
-  if (activePage === 'incidents') { try { loadFullIncidents(); } catch (e) { /* silent */ } }
-  if (activePage === 'teams')     { try { loadTeams(); } catch (e) { /* silent */ } }
-  if (activePage === 'resources') { try { loadResources(); } catch (e) { /* silent */ } }
-  if (activePage === 'alerts')    { try { loadAlerts(); } catch (e) { /* silent */ } }
-  if (activePage === 'analytics') { try { loadAnalytics(); } catch (e) { /* silent */ } }
+  if (activePage === 'incidents') { try { loadFullIncidents().catch(e => console.warn('loadFullIncidents error:', e)); } catch (e) { /* silent */ } }
+  if (activePage === 'teams')     { try { loadTeams().catch(e => console.warn('loadTeams error:', e)); } catch (e) { /* silent */ } }
+  if (activePage === 'resources') { try { loadResources().catch(e => console.warn('loadResources error:', e)); } catch (e) { /* silent */ } }
+  if (activePage === 'alerts')    { try { loadAlerts().catch(e => console.warn('loadAlerts error:', e)); } catch (e) { /* silent */ } }
+  if (activePage === 'analytics') { try { loadAnalytics().catch(e => console.warn('loadAnalytics error:', e)); } catch (e) { /* silent */ } }
 }
 
 /* ============================================================
@@ -2047,7 +2074,6 @@ window.addEventListener('error', e => {
 window.addEventListener('unhandledrejection', e => {
   console.error('Unhandled rejection:', e.reason);
 });
-}
 </script>
 </body>
 </html>

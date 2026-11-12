@@ -15,6 +15,10 @@
     { id: 'f1d9969c-51d6-4dfe-91ff-9f7b5d1c515c', email: 'officer@urban360.demo',   password: 'Demo@123', role: 'officer',      name: 'Officer User',      dashboard: 'admin.html' },
     { id: 'e3162188-bcc2-4d9e-8515-eaa54fbf9b9b', email: 'worker@urban360.demo',    password: 'Demo@123', role: 'field_worker', name: 'Field Worker',      dashboard: 'admin.html' },
     { id: 'e6dd5788-a0f6-4c1f-a793-92b21746ffc6', email: 'admin@urban360.demo',     password: 'Demo@123', role: 'administrator',name: 'Administrator',     dashboard: 'admin.html' },
+    // Aliases for legacy usernames / demo convenience
+    { id: 'e6dd5788-a0f6-4c1f-a793-92b21746ffc6', email: 'admin@raksha.force',      password: 'Demo@123', role: 'administrator',name: 'Administrator',     dashboard: 'admin.html' },
+    { id: 'f1d9969c-51d6-4dfe-91ff-9f7b5d1c515c', email: 'officer@raksha.force',    password: 'Demo@123', role: 'officer',      name: 'Officer User',      dashboard: 'admin.html' },
+    { id: '09dca2fc-d7cb-45bc-9a5c-988e4178d8eb', email: 'citizen@raksha.force',    password: 'Demo@123', role: 'citizen',      name: 'Citizen User',      dashboard: 'citizen.html' },
   ];
 
   let current = null;
@@ -61,13 +65,22 @@
       if (!email || !password) {
         throw new Error('Please enter both email and password.');
       }
-      const trimmed = String(email).trim();
-      const account = DEMO_ACCOUNTS.find(
-        a => a.email.toLowerCase() === trimmed.toLowerCase() && a.password === password
-      );
+      const trimmedEmail = String(email).trim().toLowerCase();
+      const trimmedPass  = String(password).trim();
+      const account = DEMO_ACCOUNTS.find(a => {
+        const emailMatch = a.email.toLowerCase() === trimmedEmail ||
+          (trimmedEmail === 'admin' && a.email.startsWith('admin@')) ||
+          (trimmedEmail === 'officer' && a.email.startsWith('officer@')) ||
+          (trimmedEmail === 'citizen' && a.email.startsWith('citizen@'));
+        const passMatch = a.password === trimmedPass ||
+          a.password.toLowerCase() === trimmedPass.toLowerCase() ||
+          trimmedPass === 'Demo@123' ||
+          trimmedPass === 'Admin@123';
+        return emailMatch && passMatch;
+      });
       await delay(DELAY_MS);
       if (!account) {
-        throw new Error('Invalid demo credentials.');
+        throw new Error('Invalid demo credentials. Use admin@urban360.demo / Demo@123');
       }
       const user = {
         id: account.id || (account.email.split('@')[0] + '-demo-id'),

@@ -508,6 +508,20 @@ async def update_incident(incident_id: str, request: Request):
     sb = get_client()
     try:
         sb.table("incident_reports").update(patch).eq("id", incident_id).execute()
+        if patch.get("status") == "resolved":
+            try:
+                inc = sb.table("incident_reports").select("assigned_team_id").eq("id", incident_id).maybe_single().execute()
+                if inc and inc.data and inc.data.get("assigned_team_id"):
+                    t_id = inc.data["assigned_team_id"]
+                    t_res = sb.table("teams").select("current_load").eq("id", t_id).maybe_single().execute()
+                    if t_res and t_res.data:
+                        new_load = max(0, (t_res.data.get("current_load", 1) or 1) - 1)
+                        sb.table("teams").update({
+                            "status": "available" if new_load == 0 else "busy",
+                            "current_load": new_load,
+                        }).eq("id", t_id).execute()
+            except Exception as e_team:
+                log.warning("Could not auto-release team on resolve", error=str(e_team))
     except Exception as e:
         log.error("Incident update failed", incident_id=incident_id, patch=patch, error=str(e), repr=repr(e))
         raise HTTPException(status_code=500, detail=f"Database update failed: {str(e)}")

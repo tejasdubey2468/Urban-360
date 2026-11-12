@@ -34,15 +34,15 @@ class AuthUser:
     def __init__(self, payload: dict):
         self.user_id: str         = payload.get("sub", "")
         self.email:   str         = payload.get("email", "")
-        self.role:    str         = payload.get("user_metadata", {}).get("role", "citizen")
+        self.role:    str         = (payload.get("user_metadata", {}) or {}).get("role") or payload.get("role", "citizen")
         self.exp:     int         = payload.get("exp", 0)
         self._raw:    dict        = payload
 
-    def is_admin(self)     -> bool: return self.role == "admin"
+    def is_admin(self)     -> bool: return self.role in ("admin", "administrator")
     def is_citizen(self)   -> bool: return self.role in ("citizen", "")
-    def is_responder(self) -> bool: return self.role in ("responder", "worker")
-    def is_officer(self)   -> bool: return self.role in ("officer", "admin")
-    def is_worker(self)    -> bool: return self.role in ("worker", "responder")
+    def is_responder(self) -> bool: return self.role in ("responder", "worker", "field_worker")
+    def is_officer(self)   -> bool: return self.role in ("officer", "admin", "administrator")
+    def is_worker(self)    -> bool: return self.role in ("worker", "responder", "field_worker")
 
 
 # ── Core verification ──────────────────────────────────────────
@@ -149,12 +149,17 @@ def require_role(user: AuthUser, *allowed_roles: str) -> AuthUser:
 
     Raises:
         HTTPException 403: If user's role is not in allowed_roles
-
-    Example:
-        user = require_auth(request)
-        require_role(user, "admin")
     """
-    if user.role not in allowed_roles:
+    normalized_allowed = set(allowed_roles)
+    if "admin" in normalized_allowed:
+        normalized_allowed.update({"administrator", "officer"})
+    if "officer" in normalized_allowed:
+        normalized_allowed.update({"admin", "administrator"})
+    if "worker" in normalized_allowed:
+        normalized_allowed.update({"field_worker", "responder"})
+
+    user_role = (user.role or "").lower()
+    if user_role not in normalized_allowed:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail=f"Access denied. Required role(s): {', '.join(allowed_roles)}. "
