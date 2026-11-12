@@ -1004,7 +1004,7 @@ async function doLogin() {
   } catch (postErr) {
     console.error('Post-login error:', postErr);
     btn.disabled = false; btn.textContent = 'Sign In to Command Center';
-    if (errorEl) { errorEl.textContent = 'Login OK but dashboard failed. Refresh page.'; errorEl.classList.add('show'); }
+    if (errorEl) { errorEl.textContent = 'Login OK but dashboard failed: ' + (postErr.message || postErr); errorEl.classList.add('show'); }
     const authScreen = document.getElementById('authScreen');
     if (authScreen) authScreen.style.display = 'flex';
   }
@@ -1046,20 +1046,28 @@ function switchAuthTab(tab) {
    BOOT
    ============================================================ */
 function bootApp() {
-  document.getElementById('authScreen').style.display = 'none';
-  document.getElementById('shell').style.display = 'flex';
+  try {
+    document.getElementById('authScreen').style.display = 'none';
+  } catch (e) { /* ignore */ }
+  try {
+    document.getElementById('shell').style.display = 'flex';
+  } catch (e) { /* ignore */ }
 
-  // set user info
-  const name = currentUser?.name || currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'Admin';
-  document.getElementById('userName').textContent = name;
-  document.getElementById('userAvatar').textContent = name[0].toUpperCase();
-  const roleEl = document.querySelector('.user-role');
-  if (roleEl) roleEl.textContent = {
-    citizen: 'Citizen Portal User',
-    officer: 'Municipal Officer',
-    field_worker: 'Field Operations Worker',
-    administrator: 'Municipal Administrator',
-  }[currentUser.role] || 'Municipal Admin Officer';
+  // set user info (non-fatal)
+  try {
+    const name = currentUser?.name || currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'Admin';
+    const userNameEl = document.getElementById('userName');
+    const userAvatarEl = document.getElementById('userAvatar');
+    const roleEl = document.querySelector('.user-role');
+    if (userNameEl) userNameEl.textContent = name;
+    if (userAvatarEl) userAvatarEl.textContent = name ? name[0].toUpperCase() : 'A';
+    if (roleEl) roleEl.textContent = {
+      citizen: 'Citizen Portal User',
+      officer: 'Municipal Officer',
+      field_worker: 'Field Operations Worker',
+      administrator: 'Municipal Administrator',
+    }[currentUser.role] || 'Municipal Admin Officer';
+  } catch (e) { console.warn('User info display failed:', e); }
 
   // init GPS (non-fatal)
   try { initAdminGPS(); } catch (e) { console.warn('GPS init failed:', e); }
@@ -1081,9 +1089,12 @@ function bootApp() {
   setInterval(refreshAll, 20000);
 
   // responsive menu toggle
-  if (window.innerWidth <= 900) {
-    document.getElementById('menuToggle').style.display = '';
-  }
+  try {
+    if (window.innerWidth <= 900) {
+      const mt = document.getElementById('menuToggle');
+      if (mt) mt.style.display = '';
+    }
+  } catch (e) { /* ignore */ }
 }
 
 /* ============================================================
