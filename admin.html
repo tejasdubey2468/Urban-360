@@ -910,7 +910,7 @@ let allIncidents = []; // cache for client-side search
    INIT
    ============================================================ */
 window.addEventListener('load', () => {
-  initSupabase();
+  try { initSupabase(); } catch (e) { console.warn('initSupabase failed:', e); }
   startClock();
   checkSession();
 });
@@ -1035,19 +1035,21 @@ function bootApp() {
     administrator: 'Municipal Administrator',
   }[currentUser.role] || 'Municipal Admin Officer';
 
-  // init GPS
-  initAdminGPS();
+  // init GPS (non-fatal)
+  try { initAdminGPS(); } catch (e) { console.warn('GPS init failed:', e); }
 
-  // load initial data
-  refreshAll();
+  // load initial data (non-fatal)
+  try { refreshAll(); } catch (e) { console.warn('Initial data load failed:', e); }
 
-  // real-time subscriptions
-  realtimeSub = _sb.channel('admin-incidents')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'incident_reports' }, () => refreshAll())
-    .subscribe();
-  sosSub = _sb.channel('admin-sos')
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'sos_alerts' }, () => loadSOSFeed())
-    .subscribe();
+  // real-time subscriptions (non-fatal)
+  try {
+    realtimeSub = _sb.channel('admin-incidents')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'incident_reports' }, () => refreshAll())
+      .subscribe();
+    sosSub = _sb.channel('admin-sos')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'sos_alerts' }, () => loadSOSFeed())
+      .subscribe();
+  } catch (e) { console.warn('Realtime subscription failed:', e); }
 
   // auto refresh
   setInterval(refreshAll, 20000);
@@ -1877,17 +1879,17 @@ async function loadAnalytics() {
    REFRESH ALL
    ============================================================ */
 function refreshAll() {
-  loadDashStats();
-  loadTypeChart();
-  loadDashAlerts();
-  loadSOSFeed();
-  if (cmdMapInited) { loadCmdMapData(); loadCmdList(); }
+  try { loadDashStats(); } catch (e) { /* silent */ }
+  try { loadTypeChart(); } catch (e) { /* silent */ }
+  try { loadDashAlerts(); } catch (e) { /* silent */ }
+  try { loadSOSFeed(); } catch (e) { /* silent */ }
+  if (cmdMapInited) { try { loadCmdMapData(); loadCmdList(); } catch (e) { /* silent */ } }
   const activePage = document.querySelector('.page.active')?.id?.replace('page-','');
-  if (activePage === 'incidents') loadFullIncidents();
-  if (activePage === 'teams')     loadTeams();
-  if (activePage === 'resources') loadResources();
-  if (activePage === 'alerts')    loadAlerts();
-  if (activePage === 'analytics') loadAnalytics();
+  if (activePage === 'incidents') { try { loadFullIncidents(); } catch (e) { /* silent */ } }
+  if (activePage === 'teams')     { try { loadTeams(); } catch (e) { /* silent */ } }
+  if (activePage === 'resources') { try { loadResources(); } catch (e) { /* silent */ } }
+  if (activePage === 'alerts')    { try { loadAlerts(); } catch (e) { /* silent */ } }
+  if (activePage === 'analytics') { try { loadAnalytics(); } catch (e) { /* silent */ } }
 }
 
 /* ============================================================
