@@ -730,6 +730,7 @@ tbody td { padding: 14px 16px; font-size: 14px; color: var(--text); vertical-ali
                   <option value="pending">Pending</option>
                   <option value="assigned">Assigned</option>
                   <option value="on_the_way">Work Started</option>
+                  <option value="resolved">Resolved</option>
                 </select>
                 <div class="filter-spacer"></div>
                 <span class="result-count" id="cmdCount">—</span>
@@ -1281,7 +1282,7 @@ async function loadCmdList() {
     data = await window.RF.listIncidentsAPI({ status: filter || '', limit: 40 });
   } catch (apiErr) {
     let q = _sb.from('incident_reports').select('*')
-      .neq('status','resolved').order('priority').order('created_at',{ascending:false}).limit(40);
+      .order('priority').order('created_at',{ascending:false}).limit(40);
     if (filter) q = q.eq('status', filter);
     const res = await q;
     data = res.data || [];
@@ -1754,23 +1755,22 @@ async function loadDashStats() {
     return;
   } catch (apiErr) {
     // Fall back to direct Supabase read (demo-safe)
+    const [incRes, teamRes] = await Promise.all([
+      _sb.from('incident_reports').select('status,priority').limit(500),
+      _sb.from('teams').select('status'),
+    ]);
+    const incs  = incRes.data  || [];
+    const teams = teamRes.data || [];
+    document.getElementById('sCritical').textContent    = incs.filter(i=>i.priority===1&&i.status!=='resolved').length;
+    document.getElementById('sActive').textContent      = incs.filter(i=>['assigned','on_the_way'].includes(i.status)).length;
+    document.getElementById('sPending').textContent     = incs.filter(i=>i.status==='pending').length;
+    document.getElementById('sResolved').textContent    = incs.filter(i=>i.status==='resolved').length;
+    document.getElementById('sTeamsAvail').textContent  = teams.filter(t=>t.status==='available').length;
+    const pendingCount = incs.filter(i=>i.status==='pending').length;
+    const badge = document.getElementById('navBadge');
+    badge.style.display = pendingCount > 0 ? '' : 'none';
+    badge.textContent = pendingCount;
   }
-  const [incRes, teamRes] = await Promise.all([
-    _sb.from('incident_reports').select('status,priority').limit(500),
-    _sb.from('teams').select('status'),
-  ]);
-  const incs  = incRes.data  || [];
-  const teams = teamRes.data || [];
-  document.getElementById('sCritical').textContent    = incs.filter(i=>i.priority===1&&i.status!=='resolved').length;
-  document.getElementById('sActive').textContent      = incs.filter(i=>['assigned','on_the_way'].includes(i.status)).length;
-  document.getElementById('sPending').textContent     = incs.filter(i=>i.status==='pending').length;
-  document.getElementById('sResolved').textContent    = incs.filter(i=>i.status==='resolved').length;
-  document.getElementById('sTeamsAvail').textContent  = teams.filter(t=>t.status==='available').length;
-  const pendingCount = incs.filter(i=>i.status==='pending').length;
-  const badge = document.getElementById('navBadge');
-  badge.style.display = pendingCount > 0 ? '' : 'none';
-  badge.textContent = pendingCount;
-}
 
 async function loadTypeChart() {
   let data = [];
@@ -1975,34 +1975,35 @@ function timeAgo(ts) {
   if (s < 60) return 'just now';
   if (s < 3600) return `${Math.floor(s/60)}m ago`;
   if (s < 86400) return `${Math.floor(s/3600)}h ago`;
-return `${Math.floor(s/86400)}d ago`;
-    }
+  return `${Math.floor(s/86400)}d ago`;
+}
 
 // Image preview modal
-    function openImageModal(url) {
-      let modal = document.getElementById('imagePreviewModal');
-      if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'imagePreviewModal';
-        modal.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;cursor:zoom-out;padding:20px;box-sizing:border-box;';
-        modal.innerHTML = `
-          <button onclick="closeImageModal()" style="position:absolute;top:20px;right:30px;z-index:10001;background:rgba(255,255,255,0.2);border:none;color:white;width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
-          <img id="imagePreviewImg" src="" style="max-width:90vw;max-height:90vh;object-fit:contain;border-radius:4px;box-shadow:0 0 30px rgba(0,0,0,0.5);cursor:zoom-in;">
-          <div style="position:absolute;bottom:30px;left:0;right:0;text-align:center;color:rgba(255,255,255,0.7);font-size:12px;">Click to close</div>
-        `;
-        document.body.appendChild(modal);
-      }
-      document.getElementById('imagePreviewImg').src = url;
-      modal.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
-    }
-    function closeImageModal() {
-      const modal = document.getElementById('imagePreviewModal');
-      if (modal) { modal.style.display = 'none'; document.body.style.overflow = ''; }
-    }
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') closeImageModal();
-    });
+function openImageModal(url) {
+  let modal = document.getElementById('imagePreviewModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'imagePreviewModal';
+    modal.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;cursor:zoom-out;padding:20px;box-sizing:border-box;';
+    modal.innerHTML = `
+      <button onclick="closeImageModal()" style="position:absolute;top:20px;right:30px;z-index:10001;background:rgba(255,255,255,0.2);border:none;color:white;width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+      <img id="imagePreviewImg" src="" style="max-width:90vw;max-height:90vh;object-fit:contain;border-radius:4px;box-shadow:0 0 30px rgba(0,0,0,0.5);cursor:zoom-in;">
+      <div style="position:absolute;bottom:30px;left:0;right:0;text-align:center;color:rgba(255,255,255,0.7);font-size:12px;">Click to close</div>
+    `;
+    document.body.appendChild(modal);
+  }
+  document.getElementById('imagePreviewImg').src = url;
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function closeImageModal() {
+  const modal = document.getElementById('imagePreviewModal');
+  if (modal) { modal.style.display = 'none'; document.body.style.overflow = ''; }
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeImageModal();
+});
+}
 </script>
 </body>
 </html>
