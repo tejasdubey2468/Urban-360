@@ -920,10 +920,12 @@ window.addEventListener('load', () => {
 });
 
 function initSupabase() {
-  _sb = window.RF.client();
-  // test connection
-  _sb.from('incident_reports').select('id',{count:'exact',head:true})
-    .then(({error}) => setDBStatus(!error))
+  try {
+    _sb = window.RF.client();
+  } catch (_) {}
+  // Test connection via backend service key API
+  window.RF.overviewAPI()
+    .then(() => setDBStatus(true))
     .catch(() => setDBStatus(false));
 }
 
@@ -1207,16 +1209,22 @@ async function loadCmdMapData() {
 
   let incidents = [];
   try {
-    incidents = await window.RF.listIncidentsAPI({ limit: 80 });
-  } catch (_) {
-    const res = await _sb.from('incident_reports').select('*').neq('status','resolved').limit(80);
-    incidents = res.data || [];
+    incidents = await window.RF.listIncidentsAPI({ limit: 80 }) || [];
+  } catch (err) {
+    console.warn('Map incidents load error:', err);
   }
 
-  const [teamRes, resRes] = await Promise.all([
-    _sb.from('teams').select('*'),
-    _sb.from('resources').select('*'),
-  ]);
+  let teams = [], resources = [];
+  try {
+    const [tData, rData] = await Promise.all([
+      window.RF.teamsAPI(),
+      window.RF.resourcesAPI(),
+    ]);
+    teams = tData || [];
+    resources = rData || [];
+  } catch (err) {
+    console.warn('Map teams/resources load error:', err);
+  }
 
   // Incidents
   if (layers.incidents && incidents && incidents.length) {
@@ -1234,8 +1242,8 @@ async function loadCmdMapData() {
   }
 
   // Teams
-  if (layers.teams && teamRes.data) {
-    teamRes.data.forEach(t => {
+  if (layers.teams && teams && teams.length) {
+    teams.forEach(t => {
       if (!t.latitude || !t.longitude) return;
       const color = t.status === 'available' ? '#10B981' : t.status === 'busy' ? '#F97316' : '#64748B';
       const icon = L.divIcon({
@@ -1244,13 +1252,13 @@ async function loadCmdMapData() {
       });
       L.marker([t.latitude, t.longitude], { icon })
         .addTo(teamLayer)
-        .bindPopup(`<b>${t.name}</b><br>${t.type.toUpperCase()} — ${t.status}`);
+        .bindPopup(`<b>${t.name}</b><br>${(t.type||'').toUpperCase()} — ${t.status}`);
     });
   }
 
   // Resources
-  if (layers.resources && resRes.data) {
-    resRes.data.forEach(r => {
+  if (layers.resources && resources && resources.length) {
+    resources.forEach(r => {
       if (!r.latitude || !r.longitude) return;
       const icon = L.divIcon({
         html: `<div style="width:24px;height:24px;background:#3B82F6;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;border:2px solid white;">${r.type==='hospital'?'🏥':r.type==='shelter'?'🏠':'📦'}</div>`,
@@ -1262,7 +1270,7 @@ async function loadCmdMapData() {
     });
   }
 
-  updateHUD(incRes.data||[], teamRes.data||[]);
+  updateHUD(incidents, teams);
   
   // Load initial infrastructure for Mumbai Western corridor
   const center = cmdMap.getCenter();
@@ -1342,11 +1350,7 @@ async function loadCmdList() {
   try {
     data = await window.RF.listIncidentsAPI({ status: filter || '', limit: 40 });
   } catch (apiErr) {
-    let q = _sb.from('incident_reports').select('*')
-      .order('priority').order('created_at',{ascending:false}).limit(40);
-    if (filter) q = q.eq('status', filter);
-    const res = await q;
-    data = res.data || [];
+    console.warn('loadCmdList API error:', apiErr);
   }
   const incs = Array.isArray(data) ? data : (data?.incidents || []);
   const el = document.getElementById('cmdList');
@@ -1379,20 +1383,23 @@ async function selectIncident(id) {
   try {
     inc = await window.RF.getIncidentAPI(id);
   } catch (apiErr) {
-    const { data } = await _sb.from('incident_reports').select('*').eq('id',id).single();
-    inc = data;
+    console.error('getIncidentAPI error:', apiErr);
   }
   if (!inc) return;
   document.getElementById('dpTitle').textContent = `${ICONS[inc.emergency_type]||'⚠️'} ${(inc.emergency_type||'').replace(/_/g,' ')}`;
 
   // get teams
-  const { data: teams } = await _sb.from('teams').select('*').eq('status','available');
-  const teamOpts = (teams||[]).map(t=>`<option value="${t.id}">${TEAM_ICONS[t.type]||'🚑'} ${t.name}</option>`).join('');
+  let teams = [];
+  try {
+    teams = await window.RF.teamsAPI();
+  } catch (_) {}
+  const availTeams = (teams || []).filter(t => t.status === 'available');
+  const teamOpts = availTeams.map(t=>`<option value="${t.id}">${TEAM_ICONS[t.type]||'🚑'} ${t.name}</option>`).join('');
 
   // get assigned team
   let assignedTeamHtml = '';
   if (inc.assigned_team_id) {
-    const { data: at } = await _sb.from('teams').select('*').eq('id',inc.assigned_team_id).single();
+    const at = (teams || []).find(t => t.id === inc.assigned_team_id) || inc.assignment?.teams;
     if (at) assignedTeamHtml = `
       <div style="display:flex;align-items:center;gap:8px;padding:8px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:7px;margin-bottom:10px;font-size:12px;">
         <span>${TEAM_ICONS[at.type]||'🚑'}</span>
@@ -1401,7 +1408,12 @@ async function selectIncident(id) {
   }
 
   // chat
-  const { data: msgs } = await _sb.from('incident_messages').select('*').eq('incident_id',id).order('created_at').limit(30);
+  let msgs = inc.messages || [];
+  if (!msgs.length) {
+    try {
+      msgs = await window.RF.messagesAPI(id);
+    } catch (_) {}
+  }
   const chatHtml = msgs?.length
     ? msgs.map(m=>`<div class="chat-bubble ${m.sender_role==='citizen'?'other':'mine'}"><div class="chat-meta">${m.sender_role?.toUpperCase()} · ${m.sender_name||'?'}</div>${m.message}</div>`).join('')
     : '<div style="text-align:center;font-size:11px;color:var(--text-3);padding:10px;">No messages yet</div>';
@@ -1560,7 +1572,11 @@ async function doCmdChat(incidentId) {
   if (!msg) return;
   input.value = '';
   const name = currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'Command';
-  await _sb.from('incident_messages').insert([{ incident_id: incidentId, sender_name: name, sender_role: 'responder', message: msg }]);
+  try {
+    await window.RF.sendMessageAPI(incidentId, { sender_name: name, sender_role: 'responder', message: msg });
+  } catch (e) {
+    console.error('Send chat message failed:', e);
+  }
   selectIncident(incidentId);
 }
 
@@ -1580,12 +1596,7 @@ async function loadFullIncidents() {
   try {
     data = await window.RF.listIncidentsAPI({ type, status, priority, limit: 100 });
   } catch (apiErr) {
-    let q = _sb.from('incident_reports').select('*').order('priority').order('created_at',{ascending:false}).limit(100);
-    if (type)     q = q.eq('emergency_type', type);
-    if (status)   q = q.eq('status', status);
-    if (priority) q = q.eq('priority', parseInt(priority));
-    const res = await q;
-    data = res.data || [];
+    console.warn('loadFullIncidents API error:', apiErr);
   }
   allIncidents = Array.isArray(data) ? data : (data?.incidents || []);
   renderIncidentTable(allIncidents);
@@ -1632,7 +1643,12 @@ function renderIncidentTable(data) {
    TEAMS
    ============================================================ */
 async function loadTeams() {
-  const { data } = await _sb.from('teams').select('*').order('name');
+  let data = [];
+  try {
+    data = await window.RF.teamsAPI();
+  } catch (err) {
+    console.warn('loadTeams error:', err);
+  }
   const grid = document.getElementById('teamsGrid');
   if (!data?.length) { grid.innerHTML='<div class="empty-state"><div class="empty-icon">🚑</div><div class="empty-text">No teams found</div><div class="empty-sub">Add a team to get started.</div></div>'; return; }
   grid.innerHTML = data.map(t => `
@@ -1642,7 +1658,7 @@ async function loadTeams() {
           <span style="font-size:22px;">${TEAM_ICONS[t.type]||'🚑'}</span>
           <div>
             <div>${t.name}</div>
-            <div style="font-size:11px;font-weight:400;color:var(--text-3);">${t.type.toUpperCase()}</div>
+            <div style="font-size:11px;font-weight:400;color:var(--text-3);">${(t.type||'').toUpperCase()}</div>
           </div>
         </div>
         <span class="badge badge-${t.status}">${t.status}</span>
@@ -1666,8 +1682,12 @@ async function loadTeams() {
 }
 
 async function setTeamStatus(id, status) {
-  await _sb.from('teams').update({ status, current_load: status==='available'?0:undefined }).eq('id', id);
-  toast(`Team status updated to "${status}"`, 'success');
+  try {
+    await window.RF.updateTeamAPI(id, { status, current_load: status==='available'?0:undefined });
+    toast(`Team status updated to "${status}"`, 'success');
+  } catch (e) {
+    toast(`Failed to update team: ${e.message}`, 'error');
+  }
   loadTeams();
 }
 
@@ -1678,26 +1698,34 @@ async function submitAddTeam() {
   const cap  = parseInt(document.getElementById('tCap').value)||5;
   if (!name) { toast('Team name is required.','warn'); return; }
   btn.disabled = true; btn.textContent = 'Adding…';
-  const { error } = await _sb.from('teams').insert([{
-    name, type, capacity: cap, status: 'available',
-    latitude:  BASE[0] + (Math.random()*0.12-0.06),
-    longitude: BASE[1] + (Math.random()*0.12-0.06),
-  }]);
+  try {
+    await window.RF.createTeamAPI({
+      name, type, capacity: cap, status: 'available',
+      latitude:  BASE[0] + (Math.random()*0.12-0.06),
+      longitude: BASE[1] + (Math.random()*0.12-0.06),
+    });
+    toast('Team added!','success');
+    closeModal('teamModal');
+    document.getElementById('tName').value = '';
+    loadTeams();
+  } catch (error) {
+    toast('Failed: ' + error.message, 'error');
+  }
   btn.disabled = false; btn.textContent = 'Add Team';
-  if (error) { toast('Failed: '+error.message,'error'); return; }
-  toast('Team added!','success');
-  closeModal('teamModal');
-  document.getElementById('tName').value = '';
-  loadTeams();
 }
 
 /* ============================================================
    RESOURCES
    ============================================================ */
 async function loadResources() {
-  const { data } = await _sb.from('resources').select('*').order('name');
+  let data = [];
+  try {
+    data = await window.RF.resourcesAPI();
+  } catch (err) {
+    console.warn('loadResources error:', err);
+  }
   const grid = document.getElementById('resourcesGrid');
-  if (!data?.length) { grid.innerHTML = '<div class="empty-state"><div class="empty-icon">🏥</div><div class="empty-text">No resources found</div><div class="empty-sub">Run the seed SQL from shared.js</div></div>'; return; }
+  if (!data?.length) { grid.innerHTML = '<div class="empty-state"><div class="empty-icon">🏥</div><div class="empty-text">No resources found</div></div>'; return; }
   grid.innerHTML = data.map(r => {
     const pct = Math.min(100,(r.available_capacity/r.total_capacity)*100);
     const fillColor = pct > 30 ? 'var(--success)' : pct > 10 ? 'var(--warn)' : 'var(--danger)';
@@ -1722,8 +1750,12 @@ async function loadResources() {
 
 async function adjustCapacity(id, newCap, max) {
   if (newCap < 0 || newCap > max) return;
-  await _sb.from('resources').update({ available_capacity: newCap }).eq('id', id);
-  toast('Capacity updated','success');
+  try {
+    await window.RF.updateResourceAPI(id, { available_capacity: newCap });
+    toast('Capacity updated','success');
+  } catch (e) {
+    toast('Failed: ' + e.message, 'error');
+  }
   loadResources();
 }
 
@@ -1731,14 +1763,19 @@ async function adjustCapacity(id, newCap, max) {
    AREA ALERTS
    ============================================================ */
 async function loadAlerts() {
-  const { data } = await _sb.from('area_alerts').select('*').order('created_at',{ascending:false});
+  let data = [];
+  try {
+    data = await window.RF.alertsAPI();
+  } catch (err) {
+    console.warn('loadAlerts error:', err);
+  }
   const el = document.getElementById('alertsTable');
   if (!data?.length) { el.innerHTML='<div class="empty-state" style="padding:40px;"><div class="empty-icon">📡</div><div class="empty-text">No alerts yet</div></div>'; return; }
   el.innerHTML = `<div class="table-wrapper"><table>
     <thead><tr><th>Severity</th><th>Title</th><th>Area</th><th>Message</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
     <tbody>${data.map(a=>`
     <tr>
-      <td><span class="badge ${a.severity==='high'?'badge-pending':a.severity==='medium'?'badge-on_the_way':'badge-resolved'}">${a.severity}</span></td>
+      <td><span class="badge ${a.severity==='high'?'badge-pending':a.severity==='medium'?'badge-on_the_way':'badge-resolved'}">${(a.severity||'info').toUpperCase()}</span></td>
       <td style="font-weight:600;">${a.title}</td>
       <td>${a.area}</td>
       <td class="td-ellipsis">${a.message}</td>
@@ -1751,8 +1788,12 @@ async function loadAlerts() {
 }
 
 async function toggleAlert(id, active) {
-  await _sb.from('area_alerts').update({ active }).eq('id', id);
-  toast(`Alert ${active?'activated':'deactivated'}`, 'success');
+  try {
+    await window.RF.updateAlertAPI(id, { active });
+    toast(`Alert ${active?'activated':'deactivated'}`, 'success');
+  } catch (e) {
+    toast(`Failed to update alert: ${e.message}`, 'error');
+  }
   loadAlerts();
 }
 
@@ -1764,62 +1805,46 @@ async function submitBroadcast() {
   const sev   = document.getElementById('bSev').value;
   if (!title||!msg||!area) { toast('Fill in all fields.','warn'); return; }
   btn.disabled=true; btn.textContent='Broadcasting…';
-  const { error } = await _sb.from('area_alerts').insert([{ title, message:msg, area, severity:sev, active:true }]);
+  try {
+    await window.RF.createAlertAPI({ title, message:msg, area, severity:sev, active:true });
+    toast('Alert broadcast to all citizens!','success');
+    closeModal('broadcastModal');
+    ['bTitle','bMsg','bArea'].forEach(id=>document.getElementById(id).value='');
+    loadAlerts();
+    loadDashAlerts();
+  } catch (error) {
+    toast('Failed: ' + error.message, 'error');
+  }
   btn.disabled=false; btn.textContent='📡 Broadcast Now';
-  if (error) { toast('Failed: '+error.message,'error'); return; }
-  toast('Alert broadcast to all citizens!','success');
-  closeModal('broadcastModal');
-  ['bTitle','bMsg','bArea'].forEach(id=>document.getElementById(id).value='');
-  loadAlerts();
-  loadDashAlerts();
 }
 
 /* ============================================================
    DASHBOARD HELPERS
    ============================================================ */
 async function loadDashStats() {
-  if (!_sb && window.RF?.client) {
-    try { _sb = window.RF.client(); } catch (_) {}
-  }
-  // Try backend API first (runs via service key or mock token)
+  const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = (val !== undefined ? val : 0); };
   try {
-    const data = await window.RF.listIncidentsAPI({ limit: 500 });
-    const incs = Array.isArray(data) ? data : (data?.incidents || []);
-    let teams = [];
-    if (_sb) {
-      try {
-        const { data: teamRes } = await _sb.from('teams').select('status');
-        teams = teamRes || [];
-      } catch (_) {}
-    }
-    const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-    setTxt('sCritical', incs.filter(i=>i.priority===1&&i.status!=='resolved').length);
-    setTxt('sActive', incs.filter(i=>['assigned','on_the_way'].includes(i.status)).length);
-    setTxt('sPending', incs.filter(i=>i.status==='pending').length);
-    setTxt('sResolved', incs.filter(i=>i.status==='resolved').length);
-    setTxt('sTeamsAvail', teams.filter(t=>t.status==='available').length);
-    const pendingCount = incs.filter(i=>i.status==='pending').length;
+    const overview = await window.RF.overviewAPI();
+    const stats = overview?.stats || {};
+    setTxt('sCritical', stats.critical ?? 0);
+    setTxt('sActive', stats.active ?? 0);
+    setTxt('sPending', stats.pending ?? 0);
+    setTxt('sResolved', stats.resolved ?? 0);
+    setTxt('sTeamsAvail', stats.teams_available ?? 0);
+    const pendingCount = stats.pending ?? 0;
     const badge = document.getElementById('navBadge');
     if (badge) {
       badge.style.display = pendingCount > 0 ? '' : 'none';
       badge.textContent = pendingCount;
     }
-    return;
-  } catch (apiErr) {
-    if (!_sb) return;
+  } catch (err) {
+    console.warn('overviewAPI error, falling back to listIncidentsAPI:', err);
     try {
-      const [incRes, teamRes] = await Promise.all([
-        _sb.from('incident_reports').select('status,priority').limit(500),
-        _sb.from('teams').select('status'),
-      ]);
-      const incs  = incRes?.data  || [];
-      const teams = teamRes?.data || [];
-      const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+      const incs = (await window.RF.listIncidentsAPI({ limit: 500 })) || [];
       setTxt('sCritical', incs.filter(i=>i.priority===1&&i.status!=='resolved').length);
       setTxt('sActive', incs.filter(i=>['assigned','on_the_way'].includes(i.status)).length);
       setTxt('sPending', incs.filter(i=>i.status==='pending').length);
       setTxt('sResolved', incs.filter(i=>i.status==='resolved').length);
-      setTxt('sTeamsAvail', teams.filter(t=>t.status==='available').length);
       const pendingCount = incs.filter(i=>i.status==='pending').length;
       const badge = document.getElementById('navBadge');
       if (badge) {
@@ -1834,9 +1859,8 @@ async function loadTypeChart() {
   let data = [];
   try {
     data = await window.RF.listIncidentsAPI({ limit: 500 });
-  } catch (_) {
-    const res = await _sb.from('incident_reports').select('emergency_type').limit(500);
-    data = res.data || [];
+  } catch (err) {
+    console.warn('loadTypeChart error:', err);
   }
   const incs = Array.isArray(data) ? data : (data?.incidents || []);
   if (!incs.length) return;
@@ -1854,7 +1878,13 @@ async function loadTypeChart() {
 }
 
 async function loadDashAlerts() {
-  const { data } = await _sb.from('area_alerts').select('*').eq('active',true).order('created_at',{ascending:false}).limit(4);
+  let data = [];
+  try {
+    const alerts = await window.RF.alertsAPI();
+    data = (alerts || []).filter(a => a.active).slice(0, 4);
+  } catch (err) {
+    console.warn('loadDashAlerts error:', err);
+  }
   const el = document.getElementById('dashAlerts');
   if (!data?.length) { el.innerHTML='<div style="padding:16px;font-size:12px;color:var(--text-3);">No active alerts.</div>'; return; }
   el.innerHTML = data.map(a=>`
@@ -1868,14 +1898,20 @@ async function loadDashAlerts() {
 }
 
 async function loadSOSFeed() {
-  const { data } = await _sb.from('sos_alerts').select('*').order('created_at',{ascending:false}).limit(6);
+  let data = [];
+  try {
+    const list = await window.RF.sosAPI();
+    data = (list || []).slice(0, 6);
+  } catch (err) {
+    console.warn('loadSOSFeed error:', err);
+  }
   const el = document.getElementById('sosFeed');
   if (!data?.length) { el.innerHTML='<div style="padding:16px;font-size:12px;color:var(--text-3);">No SOS alerts.</div>'; return; }
   el.innerHTML = data.map(s=>`
     <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border);">
       <span style="font-size:16px;">🆘</span>
       <div style="flex:1;">
-        <div style="font-size:12px;font-weight:600;color:var(--danger);">${s.type?.toUpperCase()||'SOS ALERT'}</div>
+        <div style="font-size:12px;font-weight:600;color:var(--danger);">${(s.type||'SOS ALERT').toUpperCase()}</div>
         <div style="font-size:10px;color:var(--text-3);">${timeAgo(s.created_at)}</div>
       </div>
       <span class="badge ${s.status==='active'?'badge-on_the_way':'badge-resolved'}">${s.status}</span>
@@ -1884,16 +1920,14 @@ async function loadSOSFeed() {
 
 async function loadAnalytics() {
   const container = document.getElementById('analyticsStats');
-  if (!container) return; // Removed from UI
+  if (!container) return;
   let data = [];
   try {
     data = await window.RF.listIncidentsAPI({ limit: 500 });
-  } catch (_) {
-    const res = await _sb.from('incident_reports').select('*').limit(500);
-    data = res.data || [];
+  } catch (err) {
+    console.warn('loadAnalytics error:', err);
   }
   const incs = Array.isArray(data) ? data : (data?.incidents || []);
-  const { data: teams } = await _sb.from('teams').select('status');
   if (!incs.length) return;
 
   // stats cards

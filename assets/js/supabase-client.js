@@ -243,6 +243,20 @@
         auth: true,
       }),
 
+    // Backend API routes (bypass RLS infinite recursion)
+    overviewAPI: () => api("/api/incidents/overview", { method: "GET" }),
+    teamsAPI: () => api("/api/incidents/teams", { method: "GET" }),
+    createTeamAPI: (data) => api("/api/incidents/teams", { method: "POST", json: data, auth: true }),
+    updateTeamAPI: (id, patch) => api(`/api/incidents/teams/${id}`, { method: "PATCH", json: patch, auth: true }),
+    resourcesAPI: () => api("/api/incidents/resources", { method: "GET" }),
+    updateResourceAPI: (id, patch) => api(`/api/incidents/resources/${id}`, { method: "PATCH", json: patch, auth: true }),
+    alertsAPI: () => api("/api/incidents/alerts", { method: "GET" }),
+    createAlertAPI: (data) => api("/api/incidents/alerts", { method: "POST", json: data, auth: true }),
+    updateAlertAPI: (id, patch) => api(`/api/incidents/alerts/${id}`, { method: "PATCH", json: patch, auth: true }),
+    sosAPI: () => api("/api/incidents/sos", { method: "GET" }),
+    messagesAPI: (incidentId) => api(`/api/incidents/${incidentId}/messages`, { method: "GET" }),
+    sendMessageAPI: (incidentId, data) => api(`/api/incidents/${incidentId}/messages`, { method: "POST", json: data }),
+
     // Reads and realtime stay on Supabase for speed (demo-safe, no JWT required).
     fetchIncidents: (filters = {}) => {
       let q = sb().from("incident_reports").select("*").order("priority").order("created_at", { ascending: false }).limit(filters.limit || 50);

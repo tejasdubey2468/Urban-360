@@ -3281,12 +3281,11 @@
     async function initSB() {
       try {
         sb = window.RF.client();
-        const { error } = await sb.from('incident_reports').select('id').limit(1);
-        if (error && error.code !== 'PGRST116' && error.code !== '42P01') throw error;
+        await window.RF.listIncidentsAPI({ limit: 1 });
         setDB(true); showNotif('Connected to Supabase ✓', false);
       } catch (e) {
         setDB(false);
-        console.error('Supabase:', e);
+        console.error('Database connection:', e);
       }
     }
     function setDB(ok) {

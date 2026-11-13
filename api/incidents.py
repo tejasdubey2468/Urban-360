@@ -656,6 +656,56 @@ async def get_incident(incident_id: str, request: Request):
     return incident
 
 
+@app.get("/api/incidents/{incident_id}/messages")
+async def list_incident_messages(incident_id: str, request: Request):
+    """List chat messages for an incident."""
+    sb = get_client()
+    try:
+        res = (
+            sb.table("incident_messages")
+            .select("*")
+            .eq("incident_id", incident_id)
+            .order("created_at")
+            .execute()
+        )
+        return res.data or []
+    except Exception as e:
+        log.error("Failed to fetch messages", incident_id=incident_id, error=str(e))
+        return []
+
+
+@app.post("/api/incidents/{incident_id}/messages")
+@app.post("/api/incidents/{incident_id}/message")
+async def add_incident_message(incident_id: str, request: Request):
+    """Post a message to an incident chat thread."""
+    user = optional_auth(request)
+    try:
+        body = await request.json()
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid JSON body.")
+
+    msg_text = (body.get("message") or "").strip()
+    if not msg_text:
+        raise HTTPException(status_code=422, detail="Message cannot be empty.")
+
+    sender_name = body.get("sender_name") or (user.name if user else "Citizen")
+    sender_role = body.get("sender_role") or (user.role if user else "citizen")
+
+    sb = get_client()
+    try:
+        record = {
+            "incident_id": incident_id,
+            "sender_name": sender_name,
+            "sender_role": sender_role,
+            "message": msg_text,
+        }
+        res = sb.table("incident_messages").insert(record).execute()
+        return {"success": True, "message": res.data[0] if res.data else record}
+    except Exception as e:
+        log.error("Failed to add message", incident_id=incident_id, error=str(e))
+        raise HTTPException(status_code=500, detail="Failed to post message.")
+
+
 @app.patch("/api/incidents/{incident_id}")
 async def update_incident(incident_id: str, request: Request):
     """
