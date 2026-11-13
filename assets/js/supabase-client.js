@@ -227,12 +227,13 @@
       if (filters.reporterName) params.append("reporter_name", filters.reporterName);
       if (filters.limit) params.append("limit", filters.limit);
       if (filters.my) params.append("my", filters.my);
-      const res = await api(`/api/incidents?${params.toString()}`, { method: "GET", auth: true });
+      // Backend uses optional_auth — works with both real JWT and demo/mock users
+      const res = await api(`/api/incidents?${params.toString()}`, { method: "GET" });
       if (Array.isArray(res)) return res;
       if (Array.isArray(res?.incidents)) return res.incidents;
       return [];
     },
-    getIncidentAPI: (id) => api(`/api/incidents/${id}`, { method: "GET", auth: true }),
+    getIncidentAPI: (id) => api(`/api/incidents/${id}`, { method: "GET" }),
     updateIncidentStatusAPI: (id, patch) =>
       api(`/api/incidents/${id}`, { method: "PATCH", json: patch, auth: true }),
     dispatchTeamAPI: (incidentId, teamId, notes) =>

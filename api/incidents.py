@@ -419,6 +419,185 @@ async def list_incidents(request: Request):
     }
 
 
+# ── Admin & Dashboard Endpoints ─────────────────────────────────
+
+@app.get("/api/incidents/overview")
+async def get_overview(request: Request):
+    """
+    Consolidated dashboard feed: stats, incidents, teams, resources, alerts, sos.
+    Uses backend service client (bypasses broken client-side RLS).
+    """
+    sb = get_client()
+    try:
+        inc_res = sb.table("incident_reports").select("*").order("created_at", desc=True).limit(100).execute()
+        incs = inc_res.data or []
+
+        team_res = sb.table("teams").select("*").order("name").execute()
+        teams = team_res.data or []
+
+        res_res = sb.table("resources").select("*").order("name").execute()
+        resources = res_res.data or []
+
+        alert_res = sb.table("area_alerts").select("*").order("created_at", desc=True).limit(20).execute()
+        alerts = alert_res.data or []
+
+        sos_res = sb.table("sos_alerts").select("*").order("created_at", desc=True).limit(10).execute()
+        sos = sos_res.data or []
+
+        stats = {
+            "critical": len([i for i in incs if i.get("priority") == 1 and i.get("status") != "resolved"]),
+            "active": len([i for i in incs if i.get("status") in ("assigned", "on_the_way")]),
+            "pending": len([i for i in incs if i.get("status") == "pending"]),
+            "resolved": len([i for i in incs if i.get("status") == "resolved"]),
+            "teams_available": len([t for t in teams if t.get("status") == "available"]),
+            "total_incidents": len(incs),
+            "total_teams": len(teams),
+            "total_resources": len(resources),
+        }
+
+        return {
+            "success": True,
+            "stats": stats,
+            "incidents": incs,
+            "teams": teams,
+            "resources": resources,
+            "alerts": alerts,
+            "sos": sos,
+        }
+    except Exception as e:
+        log.error("Failed to load overview", error=str(e))
+        return {
+            "success": False,
+            "error": str(e),
+            "stats": {"critical": 0, "active": 0, "pending": 0, "resolved": 0, "teams_available": 0},
+            "incidents": [], "teams": [], "resources": [], "alerts": [], "sos": []
+        }
+
+
+@app.get("/api/incidents/teams")
+async def list_teams_api(request: Request):
+    sb = get_client()
+    try:
+        res = sb.table("teams").select("*").order("name").execute()
+        return res.data or []
+    except Exception as e:
+        log.error("Failed to load teams", error=str(e))
+        return []
+
+
+@app.post("/api/incidents/teams")
+async def create_team_api(request: Request):
+    user = require_auth(request)
+    require_role(user, "admin", "officer", "administrator")
+    body = await request.json()
+    sb = get_client()
+    try:
+        row = {
+            "name": body.get("name"),
+            "type": body.get("type", "other"),
+            "status": "available",
+            "current_load": 0,
+            "max_capacity": int(body.get("capacity") or 5),
+            "latitude": 19.1200,
+            "longitude": 72.8500,
+        }
+        res = sb.table("teams").insert([row]).execute()
+        return {"success": True, "team": res.data[0] if res.data else row}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to create department: {str(e)}")
+
+
+@app.patch("/api/incidents/teams/{team_id}")
+async def update_team_api(team_id: str, request: Request):
+    user = require_auth(request)
+    require_role(user, "admin", "officer", "administrator")
+    body = await request.json()
+    sb = get_client()
+    try:
+        res = sb.table("teams").update(body).eq("id", team_id).execute()
+        return {"success": True, "team": res.data[0] if res.data else {}}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update team: {str(e)}")
+
+
+@app.get("/api/incidents/resources")
+async def list_resources_api(request: Request):
+    sb = get_client()
+    try:
+        res = sb.table("resources").select("*").order("name").execute()
+        return res.data or []
+    except Exception as e:
+        log.error("Failed to load resources", error=str(e))
+        return []
+
+
+@app.patch("/api/incidents/resources/{resource_id}")
+async def update_resource_api(resource_id: str, request: Request):
+    user = require_auth(request)
+    require_role(user, "admin", "officer", "administrator")
+    body = await request.json()
+    sb = get_client()
+    try:
+        res = sb.table("resources").update(body).eq("id", resource_id).execute()
+        return {"success": True, "resource": res.data[0] if res.data else {}}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update resource: {str(e)}")
+
+
+@app.get("/api/incidents/alerts")
+async def list_alerts_api(request: Request):
+    sb = get_client()
+    try:
+        res = sb.table("area_alerts").select("*").order("created_at", desc=True).execute()
+        return res.data or []
+    except Exception as e:
+        log.error("Failed to load alerts", error=str(e))
+        return []
+
+
+@app.post("/api/incidents/alerts")
+async def create_alert_api(request: Request):
+    user = require_auth(request)
+    require_role(user, "admin", "officer", "administrator")
+    body = await request.json()
+    sb = get_client()
+    try:
+        row = {
+            "title": body.get("title"),
+            "message": body.get("message"),
+            "area": body.get("area"),
+            "severity": body.get("severity", "medium"),
+            "active": True,
+        }
+        res = sb.table("area_alerts").insert([row]).execute()
+        return {"success": True, "alert": res.data[0] if res.data else row}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to create alert: {str(e)}")
+
+
+@app.patch("/api/incidents/alerts/{alert_id}")
+async def update_alert_api(alert_id: str, request: Request):
+    user = require_auth(request)
+    require_role(user, "admin", "officer", "administrator")
+    body = await request.json()
+    sb = get_client()
+    try:
+        res = sb.table("area_alerts").update(body).eq("id", alert_id).execute()
+        return {"success": True, "alert": res.data[0] if res.data else {}}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update alert: {str(e)}")
+
+
+@app.get("/api/incidents/sos")
+async def list_sos_api(request: Request):
+    sb = get_client()
+    try:
+        res = sb.table("sos_alerts").select("*").order("created_at", desc=True).limit(20).execute()
+        return res.data or []
+    except Exception as e:
+        log.error("Failed to load SOS alerts", error=str(e))
+        return []
+
 
 @app.get("/api/incidents/{incident_id}")
 async def get_incident(incident_id: str, request: Request):
